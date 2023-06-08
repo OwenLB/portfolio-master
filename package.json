@@ -1,0 +1,23 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/content": "^2.6.0",
+    "@nuxt/image-edge": "^1.0.0-28059208.2abef1b",
+    "@types/node": "^18.16.13",
+    "nuxt": "^3.5.0",
+    "sass": "^1.62.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@lottiefiles/lottie-player": "^1.7.1",
+    "nuxt3": "^3.6.0-28102821.c6a7527e"
+  }
+}

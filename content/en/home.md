@@ -1,0 +1,15 @@
+---
+title: "FULL STACK<strong>WEB DEVELOPER</strong>"
+description: "Hello, I'm a French Full Stack developer, living in Brest. I love exploring new web technologies and I'm always looking for new skills to acquire."
+listen: "LISTENING TO"
+about: "ABOUT"
+about_text: "Hello, I'm a French Full Stack developer, living in Brest. Passionate about web development and design, I love exploring new web technologies and I'm always looking for new skills to acquire."
+about_button: "Read more"
+social: "SOCIAL"
+position: "POSITION"
+position_title: "Web developer at"
+projects: "PROJECTS"
+contact: "CONTACT"
+contact_mail: "Send an email"
+contact_phone: "Call"
+---
