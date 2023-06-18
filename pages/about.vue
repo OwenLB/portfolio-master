@@ -43,8 +43,8 @@ useSeoMeta({
 				</div>
         <div class="cell content">
           <img class="arc" src="../public/images/owen.webp">
-          <LinkText :label="content.resume"  link="https://file.notion.so/f/s/2d1b5624-6100-4643-bfa7-8d8990496786/CV-FullStack.pdf?id=5b1f09bc-62dd-4939-8e8c-ca1d4a6f4dfe&table=block&spaceId=3637db4b-78d4-4900-ad63-2197de0b9132&expirationTimestamp=1686252733990&signature=9tde8iXrzVK6ArP2j6TdJtL4JQP5V9QslFE-WuMX_7M&downloadName=CV-FullStack.pdf" external/>
-          <LinkText :label="content.photo"/>
+          <LinkText :label="content.resume"  link="https://cvws.icloud-content.com/B/ATqtkf26bs4Z6g9KB4hPgzivzGEQAXP3j0uBl89pJQiKOEoH85OhuhWg/CV-FullStack-Owen-LEBEC.pdf?o=AvUXFXwRYX8tbiVpf4m9ieZ1bQIfM6-Fdn0a5e14tvSu&v=1&x=3&a=CAog77qmv63YExSoMkniPM-6UXyLZr49j7FFEEe3q1Ppkd4SbxDqieD4jDEY6ua7-owxIgEAUgSvzGEQWgShuhWgaifhiKq0ZIhNcaj3703BxaJrJgo0bE7PWGzB6-ovWm-g6dSId5FrgYlyJ1k0te105EGhw0DeLfWZGdXi0IIXzEQIRzsNh7BhJHuFtm__NzYrSQ&e=1687105237&fl=&r=556c8e9c-7a68-4388-8ea2-16502d7d02cf-1&k=WJOQJjGBnTiv5JdDeBO-3w&ckc=com.apple.clouddocs&ckz=com.apple.CloudDocs&p=72&s=UCZ87BJqbq0ikflaaLyIan-NSdY&cd=i" external/>
+          <LinkText :label="content.photo" link="https://lebecowen.myportfolio.com" external/>
         </div>
 			</AppSection>
 
