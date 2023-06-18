@@ -17,12 +17,12 @@ description: "Hello, I'm a French web developer, living in Brest. I love explori
 
 ## Host
 
-**Name :** Ovh, Inc.
+**Name :** Netlify, Inc.
 
-**Address :** 2 rue Kellermann
+**Address :** 44 Montgomery Street, Suite 300
 
-**City :** 59100 Roubaix - France
+**City :** San Francisco, California 94104
 
-**Email :** [support@ovh.com](mailto:support@ovh.com)
+**Email :** [support@netlify.com](mailto:support@netlify.com)
 
-**Support :** [https://help.ovhcloud.com/](https://help.ovhcloud.com/)
+**Support :** [https://www.netlify.com/support](https://www.netlify.com/support)
