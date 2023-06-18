@@ -17,12 +17,12 @@ description: "Bonjour je m'appelle Owen, je suis un développeur full stack, qui
 
 ## Hébergeur
 
-**Nom :** Ovh, Inc.
+**Nom :** Netlify, Inc.
 
-**Addresse :** 2 rue Kellermann
+**Addresse :** 44 Montgomery Street, Suite 300
 
-**Ville :** 59100 Roubaix - France
+**Ville :** San Francisco, California 94104
 
-**Email :** [support@ovh.com](mailto:support@ovh.com)
+**Email :** [support@netlify.com](mailto:support@netlify.com)
 
-**Support :** [https://help.ovhcloud.com/](https://help.ovhcloud.com/)
+**Support :** [https://www.netlify.com/support](https://www.netlify.com/support)
