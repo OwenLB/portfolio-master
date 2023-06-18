@@ -103,6 +103,7 @@ onMounted(() => {
 					<div class="job__title">
 						<h3>{{ content.position_title }}</h3>
 						<LinkText external label="Arkea" link="https://www.cm-arkea.com/banque/assurance/credit/mutuel/c_13273/fr/page-d-accueil"/>
+            <p>Réalisation de POC au sein du service Innovation</p>
           </div>
 				</div>
 				<div class="cell cell--mobile"></div>
