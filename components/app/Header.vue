@@ -57,7 +57,6 @@ const toogle = async (event: Event, type: Toogle) => {
 		<div class="cell name">
 			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" to="/">
 				<AppIcon icon="logo"/>
-<!--        <img src="../../public/favicon.png" style="height:40px"/>-->
         <span>Owen Le Bec</span>
 			</NuxtLink>
 		</div>
