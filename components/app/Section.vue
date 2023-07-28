@@ -49,7 +49,7 @@ section {
 		}
 
 		&--triple-column {
-			grid-column: span 2;
+			grid-column: span 3;
 		}
 	}
 }
@@ -68,6 +68,10 @@ section {
 			&--double-row {
 				grid-row: span 2;
 			}
+
+      &--triple-row {
+        grid-row: span 3;
+      }
 
 			&--triple-column {
 				grid-column: span 3;
