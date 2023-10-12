@@ -80,9 +80,11 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="home__about">
-				<div class="cell cell--double-column">
-					<h2>{{ content.about }}</h2>
-					<p>{{ content.about_text }}</p>
+				<div class="cell cell--double-column about">
+          <div>
+            <h2>{{ content.about }}</h2>
+            <p>{{ content.about_text }}</p>
+          </div>
 					<LinkText :label="content.about_button" link="/about"/>
 				</div>
 				<div class="cell cell--mobile">
@@ -102,8 +104,8 @@ onMounted(() => {
 					<h2>{{ content.position }}</h2>
 					<div class="job__title">
 						<h3>{{ content.position_title }}</h3>
-						<LinkText external label="Arkea" link="https://www.cm-arkea.com/banque/assurance/credit/mutuel/c_13273/fr/page-d-accueil"/>
-            <p>Réalisation de POC au sein du service Innovation</p>
+						<LinkText external label="Thales" link="https://www.thalesgroup.com/fr"/>
+            <p>{{ content.mission }}</p>
           </div>
 				</div>
 				<div class="cell cell--mobile"></div>
@@ -207,6 +209,11 @@ onMounted(() => {
 	}
 
 	&__about {
+    .about {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 		.socials {
 			grid-column: span 2;
 			justify-content: space-between;
