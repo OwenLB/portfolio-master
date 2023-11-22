@@ -1,7 +1,7 @@
 ---
 title: "SafeWalk"
 type: "Bachelor's internship"
-description: "Safe Walk is a movement aimed at improving safety by enabling people to find companions to walk them home when they feel unsafe, in order to reduce the rate of assaults on the streets."
+description: "Safe Walk is a movement aimed at improving safety thanks to co-walking."
 git: [ "Figma","https://www.figma.com/file/fmVi3DbbRbxDBKesswiw5l/SafeWalk-App?type=design&node-id=0-1" ]
 web: [ "Visit the application","https://www.figma.com/proto/fmVi3DbbRbxDBKesswiw5l/SafeWalk-App?node-id=312-24244&scaling=min-zoom&page-id=0:1&starting-point-node-id=312:24244&show-proto-sidebar=1" ]
 stack: [

@@ -18,7 +18,7 @@ const props = defineProps<{
 			<span>{{ experience.from }}</span>
 			<hr>
 			<span>{{ experience.to }}</span>
-			<span>({{ experience.duration }})</span>
+			<span>{{ experience.duration }}</span>
 		</div>
 	</div>
 </template>

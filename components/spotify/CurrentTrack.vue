@@ -2,8 +2,7 @@
 <script lang="ts" setup>
 import {Spotify} from "~/types/spotify";
 import {Lang} from "~/types/lang";
-
-const lang = useLang()
+import {onMounted} from "#imports";
 
 interface SpotifyAnimation {
 	title: HTMLElement | null
@@ -12,32 +11,21 @@ interface SpotifyAnimation {
 		width: string
 	}
 }
-
-// const {data: spotify} = await useFetch<Spotify | boolean>('/api/spotify')
-const {data: spotify, error, refresh} = await useAsyncData<Spotify>('spotify', () => $fetch('/spotify'))
-console.log("spotify : " + spotify)
-console.log("error : " + error)
-console.log("refresh : " + refresh)
-
-setInterval(() => {
-	refresh()
-}, 2000)
-
-const url = computed(() => {
-	if (typeof spotify.value === 'object' && spotify.value !== null && spotify.value.isConnected) {
-		return spotify.value.url
-	}
-
-	return false
-})
-
-const spotifyAnimation: SpotifyAnimation = reactive({
+const spotifyAnimation: SpotifyAnimation = ({
 	title: null,
 	span: {
 		element: null,
 		width: '0',
 	}
 })
+
+const spotify: Spotify = {
+  title: "Superhero (Heroes & Villains)",
+  artist: "Metro Boomin, Metro Boomin, Chris Brown",
+  url: "https://songwhip.com/metro-boomin/superhero-heroes-and-villains",
+  isPlaying: true,
+  isConnected: true,
+};
 
 const assignTitleRef = (el: HTMLElement | null) => {
 	spotifyAnimation.title = el
@@ -46,19 +34,20 @@ const assignTitleRef = (el: HTMLElement | null) => {
 const assignTitleSpanRef = (el: HTMLElement | null) => {
 	spotifyAnimation.span.element = el
 }
-
 onMounted(() => {
+
 	if (spotifyAnimation.title && spotifyAnimation.span.element) {
-		if (spotifyAnimation.span.element.scrollWidth > spotifyAnimation.title.offsetWidth) {
+    if (spotifyAnimation.span.element.scrollWidth > spotifyAnimation.title.offsetWidth) {
 			spotifyAnimation.span.width = `-${spotifyAnimation.span.element.scrollWidth - spotifyAnimation.title.offsetWidth + 40}px`
-			spotifyAnimation.span.element.classList.add('animated')
+			console.log(spotifyAnimation.span.width)
+      spotifyAnimation.span.element.classList.add('animated')
 		}
 	}
 })
 </script>
 
 <template>
-	<component :is="spotify.isConnected ? 'a' : 'div'" :class="{spotify__link : spotify.isConnected}" :href="url"
+	<component :is="spotify.isConnected ? 'a' : 'div'" :class="{spotify__link : spotify.isConnected}" :href="spotify.url"
 			   class="spotify__pill"
 			   target="_blank">
 		<div :ref="assignTitleRef" class="spotify__pill_title">
@@ -110,7 +99,7 @@ onMounted(() => {
 				transform: translateX(0);
 			}
 			65%, 75% {
-				transform: translateX(v-bind('spotifyAnimation.span.width'));
+				transform: translateX(-390px);
 			}
 			90%, 100% {
 				transform: translateX(0);

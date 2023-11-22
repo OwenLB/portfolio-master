@@ -1,7 +1,7 @@
 ---
 title: "SafeWalk"
 type: "Stage de Licence"
-description: "Safe Walk est un mouvement visant à améliorer la sécurité en permettant aux personnes de trouver des compagnons pour les raccompagner lorsqu'ils se sentent en danger, afin de réduire le taux d'agressions dans les rues."
+description: "Safe Walk est un mouvement visant à améliorer la sécurité grâce au co-piétonnage."
 git: [ "Figma","https://www.figma.com/file/fmVi3DbbRbxDBKesswiw5l/SafeWalk-App?type=design&node-id=0-1" ]
 web: [ "Visiter l'application","https://www.figma.com/proto/fmVi3DbbRbxDBKesswiw5l/SafeWalk-App?node-id=312-24244&scaling=min-zoom&page-id=0:1&starting-point-node-id=312:24244&show-proto-sidebar=1" ]
 stack: [

@@ -163,7 +163,7 @@ h2 {
 		inset: -1px calc(100% + 1px) -1px -1px;
 		background: $primary;
 		z-index: 2;
-		transition: all 1s cubic-bezier(0.83, 0, 0.17, 1);
+		transition: all 0.6s cubic-bezier(0.83, 0, 0.17, 1);
 	}
 }
 

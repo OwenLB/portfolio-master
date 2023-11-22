@@ -1,9 +1,10 @@
 ---
 title: "DÉVELOPPEUR<strong>WEB FULL STACK</strong>"
 description: "Bonjour je m'appelle Owen, je suis un développeur full stack français, qui adore explorer de nouvelles technologies web."
-listen: "EN TRAIN D'ÉCOUTER"
+listen: "MA MUSIQUE DU MOMENT"
 about: "À PROPOS"
-about_text: "Bonjour, je suis un développeur full stack, vivant à Brest. Passionné par le développement web et le design, j'adore explorer de nouvelles technologies web et je suis toujours en quête de nouvelles compétences à acquérir."
+greetings_text: "Bonjour 👋"
+about_text: "Je suis un développeur full stack, vivant à Brest. Passionné par le développement web et le design, j'adore explorer de nouvelles technologies web et je suis toujours en quête de nouvelles compétences à acquérir."
 about_button: "En savoir plus"
 social: "SOCIAL"
 position: "POSTE"

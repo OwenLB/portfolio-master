@@ -82,7 +82,8 @@ onMounted(() => {
 			<AppSection id="home__about">
 				<div class="cell cell--double-column about">
           <div>
-            <h2>{{ content.about }}</h2>
+            <h2>{{ content.about }}</h2> <br/>
+            <p>{{ content.greetings_text }}</p>
             <p>{{ content.about_text }}</p>
           </div>
 					<LinkText :label="content.about_button" link="/about"/>

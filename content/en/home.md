@@ -1,9 +1,10 @@
 ---
 title: "FULL STACK<strong>WEB DEVELOPER</strong>"
 description: "Hello, I'm a French Full Stack developer, living in Brest. I love exploring new web technologies and I'm always looking for new skills to acquire."
-listen: "LISTENING TO"
+listen: "MY MUSIC OF THE MOMENT"
 about: "ABOUT"
-about_text: "Hello, I'm a French Full Stack developer, living in Brest. Passionate about web development and design, I love exploring new web technologies and I'm always looking for new skills to acquire."
+greetings_text: "Hello 👋"
+about_text: "I'm a French Full Stack developer, living in Brest. Passionate about web development and design, I love exploring new web technologies and I'm always looking for new skills to acquire."
 about_button: "Read more"
 social: "SOCIAL"
 position: "POSITION"

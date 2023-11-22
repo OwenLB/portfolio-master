@@ -44,7 +44,9 @@ useSeoMeta({
         <div class="cell cell--mobile"></div>
         <div class="cell cell--mobile"></div>
         <div class="cell me content">
-          <img class="arc" src="../public/images/owen.webp">
+          <div class="arc">
+            <img class="arc-image" src="../public/images/owen.webp">
+          </div>
           <LinkText :label="content.resume" link="/CV.pdf" external/>
           <LinkText :label="content.photo" link="https://lebecowen.myportfolio.com" external/>
         </div>
@@ -86,8 +88,16 @@ useSeoMeta({
     margin: 0 auto;
     border-radius: 50% 50% 0 0;
     background-color: #89d6ff;
+    padding-top: 6vh;
+    padding-right: 2.5vw;
+  }
+
+  .arc-image {
+    width:100%;
+    margin-right: 20px;
+    margin-bottom: -5px;
+    height:auto;
     object-fit: contain;
-    padding-top: 4vh;
   }
 }
 
