@@ -79,6 +79,7 @@ onMounted(() => {
 				</div>
 			</AppSection>
 
+
 			<AppSection id="home__about">
 				<div class="cell cell--double-column about">
           <div>
