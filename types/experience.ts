@@ -6,6 +6,9 @@ export interface Experience {
 	to: string;
 	duration: string;
 	content: string;
+	stack: {
+		name: string
+	}[]
 	sub_content: {
 		company: string
 		position: string
@@ -14,5 +17,9 @@ export interface Experience {
 		to: string
 		duration: string
 		content: string
+		stack: {
+			name: string
+			icon: string
+		}[]
 	}[];
 }
