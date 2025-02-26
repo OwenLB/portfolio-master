@@ -7,19 +7,49 @@ const props = defineProps<{
 </script>
 
 <template>
-	<div class="experience">
-		<h3>{{ experience.position }}</h3>
+  <div class="experience">
+    <div class="experience__header">
+      <h3>{{ experience.position }}</h3>
+      <div class="experience__stack">
+        <div>Techno 1</div>
+        <div>Techno 1</div>
+        <div>Techno 1</div>
+      </div>
+    </div>
 		<div class="experience__infos">
-			<span>{{ experience.compagny }}</span>
+			<span>{{ experience.company }}</span>
 			<hr>
 			<span>{{ experience.type }}</span>
+      |
+      <div class="experience__dates">
+        <span>{{ experience.from }}</span>
+        <hr>
+        <span>{{ experience.to }}</span>
+        <span>{{ experience.duration }}</span>
+      </div>
 		</div>
-		<div class="experience__dates">
-			<span>{{ experience.from }}</span>
-			<hr>
-			<span>{{ experience.to }}</span>
-			<span>{{ experience.duration }}</span>
-		</div>
+    <div class="experience__content">
+      <span>{{ experience.content }}</span>
+    </div>
+    <div class="experience__sub__content">
+      <div v-for="sub in experience.sub_content" class="sub-experience">
+        <h4>{{ sub.position }} - {{ sub.company }}</h4>
+        <div class="sub-experience__infos">
+          <span>{{ sub.type }}</span>
+          |
+          <div class="sub-experience__dates">
+            <span>{{ sub.from }}</span>
+            <hr>
+            <span>{{ sub.to }}</span>
+            <span>{{ sub.duration }}</span>
+          </div>
+        </div>
+        <div class="sub-experience__content">
+          <span>{{ sub.content }}</span>
+        </div>
+      </div>
+    </div>
+
 	</div>
 </template>
 
@@ -28,6 +58,24 @@ const props = defineProps<{
 	display: flex;
 	flex-direction: column;
 	gap: space(2);
+
+  .experience__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .experience__stack {
+      display: flex;
+      gap: space(2);
+
+      div {
+        background-color: #b9d0e8;
+        color: #061423;
+        padding: space(2);
+        border-radius: 32px;
+      }
+    }
+  }
 
 	&:not(:last-child) {
 		border-bottom: 1px solid var(--accent);

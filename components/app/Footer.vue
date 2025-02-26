@@ -25,7 +25,7 @@ const {data: links} = await useAsyncData('links', () => queryContent('/').where(
 			</NuxtLink>
 		</div>
 		<div class="cell date cell--desktop">
-			2023
+			2025
 		</div>
 		<div class="cell">
 		</div>

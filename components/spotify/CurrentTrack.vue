@@ -39,7 +39,6 @@ onMounted(() => {
 	if (spotifyAnimation.title && spotifyAnimation.span.element) {
     if (spotifyAnimation.span.element.scrollWidth > spotifyAnimation.title.offsetWidth) {
 			spotifyAnimation.span.width = `-${spotifyAnimation.span.element.scrollWidth - spotifyAnimation.title.offsetWidth + 40}px`
-			console.log(spotifyAnimation.span.width)
       spotifyAnimation.span.element.classList.add('animated')
 		}
 	}
