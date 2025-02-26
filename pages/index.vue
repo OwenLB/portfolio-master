@@ -5,9 +5,9 @@ import {Socials} from "~/types/social";
 import {Lang} from "~/types/lang";
 import {useRuntimeConfig} from "#app/nuxt";
 
-const props = defineProps<{
-	lang: Lang
-}>()
+  const props = defineProps<{
+    lang: Lang
+  }>()
 
 useHead({
 	link: [{
@@ -25,29 +25,9 @@ useSeoMeta({
 	description: content.value.description,
 })
 
-const projectsContainer = ref<HTMLElement | null>(null)
-const projectsVisibility = ref(false)
-const {data: projects}: {
-	data: Project[]
-} = await useAsyncData('projects', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', "_path"]).find(), {watch: [() => props.lang]})
-
 const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
-
-onMounted(() => {
-	const observer = new IntersectionObserver((entries) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				projectsVisibility.value = true
-			}
-		})
-	}, {
-		threshold: 0.6
-	})
-
-	observer.observe(projectsContainer.value as HTMLElement)
-})
 </script>
 
 <template>
@@ -112,13 +92,9 @@ onMounted(() => {
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--double-column cell--double-row">
-					<h2>{{ content.projects }}</h2>
-					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
-						<LinkProject v-for="(project,index) in projects" :key="project._path"
-									 :index="index"
-									 :label="(project.title as string)"
-									 :path="(project._path as string)"
-									 :type="project.type"/>
+          <h2>{{ content.experience }}</h2>
+          <div class="experiences-content">
+            <LinkExperience v-for="experience in content.experiences" :experience="experience"/>
 					</div>
 				</div>
 			</AppSection>

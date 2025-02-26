@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import {About} from "~/types/pages/about";
+import {Project} from "~/types/project";
+import {Lang} from "~/types/lang";
 
 const {path} = useRoute()
 const lang = useLang()
@@ -11,14 +13,38 @@ useHead({
 	}]
 })
 
+const props = defineProps<{
+  lang: Lang
+}>()
+
 const {data: content}: { data: About } = await useAsyncData('about', () => queryContent().where({
 	_path: path,
 	_locale: lang.value
 }).findOne(), {watch: [() => lang.value]})
 
+const projectsContainer = ref<HTMLElement | null>(null)
+const projectsVisibility = ref(false)
+const {data: projects}: {
+  data: Project[]
+} = await useAsyncData('projects', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', "_path"]).find(), {watch: [() => props.lang]})
+
 useSeoMeta({
 	title: content.value.title,
 	description: content.value.description,
+})
+
+onMounted(() => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        projectsVisibility.value = true
+      }
+    })
+  }, {
+    threshold: 0.6
+  })
+
+  observer.observe(projectsContainer.value as HTMLElement)
 })
 </script>
 
@@ -36,10 +62,14 @@ useSeoMeta({
 			</AppSection>
 			<AppSection id="about__experiences" desktop>
 				<div class="cell cell--double-column content">
-					<h2>{{ content.experience }}</h2>
-          <div class="experiences-content">
-					  <LinkExperience v-for="experience in content.experiences" :experience="experience"/>
-          </div>
+            <h2>{{ content.projects }}</h2>
+            <div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
+              <LinkProject v-for="(project,index) in projects" :key="project._path"
+                           :index="index"
+                           :label="(project.title as string)"
+                           :path="(project._path as string)"
+                           :type="project.type"/>
+            </div>
 				</div>
         <div class="cell cell--mobile"></div>
         <div class="cell cell--mobile"></div>
