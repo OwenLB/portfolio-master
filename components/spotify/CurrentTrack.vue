@@ -20,9 +20,9 @@ const spotifyAnimation: SpotifyAnimation = ({
 })
 
 const spotify: Spotify = {
-  title: "Superhero (Heroes & Villains)",
-  artist: "Metro Boomin, Metro Boomin, Chris Brown",
-  url: "https://songwhip.com/metro-boomin/superhero-heroes-and-villains",
+  title: "Sundress",
+  artist: "A$AP Rocky",
+  url: "https://songwhip-web.songwhip.com/aap-rocky/sundress-2018",
   isPlaying: true,
   isConnected: true,
 };
