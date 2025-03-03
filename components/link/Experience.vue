@@ -78,7 +78,7 @@ const props = defineProps<{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-bottom: 8px;
+    margin: 8px 0 8px 0;
 
     .experience__stack {
       display: flex;
