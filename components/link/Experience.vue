@@ -38,13 +38,13 @@ const props = defineProps<{
           <h3>{{ sub.position }}</h3>
           <div class="experience__stack">
             <div v-for="stack in sub.stack" :key="stack.name">
-              <img :src="`/icons/${stack.icon}.svg`" />
+              <img :src="`/icons/${stack.icon}.svg`"/>
               <span>{{ stack.name }}</span>
             </div>
           </div>
         </div>
         <div class="experience__infos">
-          <span>{{ sub.type }} {{sub.company}}</span>
+          <span>{{ sub.type }} {{ sub.company }}</span>
           |
           <div class="experience__dates">
             <span>{{ sub.from }}</span>
@@ -69,10 +69,15 @@ const props = defineProps<{
   flex-direction: column;
   gap: space(2);
 
+
+  @media screen and (max-width: $md) {
+    width: 325px;
+  }
+
   .experience__header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
 
     .experience__stack {
       display: flex;
@@ -115,6 +120,7 @@ const props = defineProps<{
     border-bottom: 1px solid var(--accent);
     padding: 12px 0 12px 0;
 
+
     &:last-child {
       border-bottom: none;
       padding: 12px 0 0 0;
@@ -142,6 +148,7 @@ const props = defineProps<{
     display: flex;
     align-items: center;
     gap: space(2);
+    flex-wrap: wrap;
 
     hr {
       height: 1px;
