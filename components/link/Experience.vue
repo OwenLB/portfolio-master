@@ -71,17 +71,19 @@ const props = defineProps<{
 
 
   @media screen and (max-width: $md) {
-    width: 325px;
+    width: 295px;
   }
 
   .experience__header {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-bottom: 8px;
 
     .experience__stack {
       display: flex;
       gap: space(2);
+      flex-wrap: wrap;
 
       div {
         display: flex;

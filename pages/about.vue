@@ -105,6 +105,23 @@ onMounted(() => {
 		}
 	}
 
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--main-space);
+
+    a {
+      opacity: 0;
+      transform: translateY(space(40));
+      transition: opacity 1s cubic-bezier(0.83, 0, 0.17, 1), transform 1s cubic-bezier(0.83, 0, 0.17, 1);
+    }
+
+    &.visible a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .experiences-content {
     height: 100%;
     display: flex;
