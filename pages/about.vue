@@ -62,10 +62,6 @@ onMounted(() => {
 			</AppSection>
 			<AppSection id="about__experiences" desktop>
 				<div class="cell cell--double-column content">
-<!--					<h2>{{ content.experience }}</h2>-->
-<!--          <div class="experiences-content">-->
-<!--					  <LinkExperience v-for="experience in content.experiences" :experience="experience"/>-->
-<!--          </div>-->
           <h2>{{ content.projects }}</h2>
           <div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
             <LinkProject v-for="(project,index) in projects" :key="project._path"
