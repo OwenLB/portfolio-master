@@ -39,6 +39,7 @@ experiences:
         type: "Mission"
         from: "September 2023"
         to: "December 2024"
+        duration: "(1 year et 4 months)"
         content: "Development of a scheduling tool for workshops"
         stack:
           - name: "Blazor"

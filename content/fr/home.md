@@ -25,6 +25,7 @@ experiences:
         type: "Projet Interne"
         from: "Décembre 2024"
         to: "Maintenant"
+        duration: ""
         content: "Gestion des ressources interne"
         stack:
           - name: "React"
@@ -39,6 +40,7 @@ experiences:
         type: "Mission"
         from: "Septembre 2023"
         to: "Décembre 2024"
+        duration: "(1 an et 4 mois)"
         content: "Développement d'un outil de planification pour les ateliers"
         stack:
           - name: "Blazor"

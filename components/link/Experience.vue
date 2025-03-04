@@ -141,6 +141,9 @@ const props = defineProps<{
 
   .sub__experience {
     border-bottom: 1px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
     padding: 12px 0 12px 0;
 
 
