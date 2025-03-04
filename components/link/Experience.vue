@@ -84,41 +84,58 @@ const props = defineProps<{
       display: flex;
       gap: space(2);
       flex-wrap: wrap;
-      @media screen and (max-width: $md) {
-        margin: 8px 0 8px 0;
-      }
 
+      @media screen and (max-width: $md) {
+        margin: 8px 0;
+      }
 
       div {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         padding: 0 12px;
         height: 36px;
         border: 1px solid var(--accent);
         border-radius: 32px;
         font-size: 0.8rem;
-        @include transition(border);
+        @include transition(border, padding, width);
 
         img {
-          height: 20px;
+          height: 0;
           width: auto;
-          margin-right: 8px;
-          filter: brightness(0) saturate(100%) invert(1);
-          @include transition(filter);
+          opacity: 0;
+          transform: translateX(-10px) scale(0.8);
+          @include transition(opacity 0.3s ease-out, transform 0.3s ease-out);
         }
 
         &:where(:hover, :focus, :focus-visible) {
           border: 1px solid var(--primary);
           outline: none;
+          padding-right: 20px; // Permet d'ajuster la taille avec douceur
 
           img {
-            filter: none;
+            height: 20px;
+            margin-right: 8px;
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            animation: bounceIn 0.4s ease-out;
           }
         }
-
-
       }
+    }
+  }
+
+  // Animation de rebond subtil à l'apparition
+  @keyframes bounceIn {
+    0% {
+      transform: translateX(-10px) scale(0.8);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(2px) scale(1.05);
+    }
+    100% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
     }
   }
 
