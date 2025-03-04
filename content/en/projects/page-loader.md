@@ -45,4 +45,5 @@ What I learned: This project gave me a better understanding of the possibilities
 
 # Conclusion:
 The "Animated Loader for a Landing Page" project was an opportunity to explore animations with Framer Motion while showcasing my front-end development skills. This captivating loader helps present the fictional design studio as a creative and innovative player in the industry, while creating a memorable user experience from the very first moments.
-:image{src="/images/projects/page-loader/mockup.webp" alt="Maquette de la page d'accueil"}
+
+:image{src="/images/projects/page-loader/mockup.webp" alt="Mockup of the landing page"}
