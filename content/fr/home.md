@@ -26,7 +26,7 @@ experiences:
         from: "Décembre 2024"
         to: "Maintenant"
         duration: ""
-        content: "Gestion des ressources interne"
+        content: "Développement d'un outil de destion des ressources interne"
         stack:
           - name: "React"
             icon: "react-icon"

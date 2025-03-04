@@ -19,7 +19,7 @@ description: "Bonjour je m'appelle Owen, je suis un développeur full stack, qui
 
 **Nom :** Netlify, Inc.
 
-**Addresse :** 44 Montgomery Street, Suite 300
+**Adresse :** 44 Montgomery Street, Suite 300
 
 **Ville :** San Francisco, California 94104
 

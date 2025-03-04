@@ -25,7 +25,7 @@ experiences:
         type: "Internal Project"
         from: "December 2024"
         to: "Now"
-        content: "Internal resource management"
+        content: "Development of a internal resource manager"
         stack:
           - name: "React"
             icon: "react-icon"
