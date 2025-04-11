@@ -77,7 +77,7 @@ onMounted(() => {
           <div class="arc">
             <img class="arc-image" src="../public/images/owen.webp">
           </div>
-          <LinkText :label="content.resume" link="/CV.pdf" external/>
+          <LinkText :label="content.resume" :link="content.resume_link" external/>
           <LinkText :label="content.photo" link="https://lebecowen.myportfolio.com" external/>
         </div>
         <div class="cell cell--mobile"></div>

@@ -3,6 +3,7 @@ title: "About me"
 description: "Hello, I'm a French Full Stack developer and designer, living in Brest. I love exploring new web technologies and I'm always looking for new skills to acquire."
 projects: "PROJECTS"
 resume: "Resume"
+resume_link: "/OWEN_LE_BEC_RESUME.pdf"
 photo: "Photography"
 ---
 Welcome to my website!

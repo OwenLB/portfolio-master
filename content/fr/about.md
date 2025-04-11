@@ -3,6 +3,7 @@ title: "À propos"
 description: "Bonjour je m'appelle Owen, je suis un développeur full stack, qui adore explorer de nouvelles technologies web."
 projects: "PROJETS"
 resume: "CV"
+resume_link: "/OWEN_LE_BEC_CV.pdf"
 photo: "Photographie"
 ---
 Bienvenue sur mon site !

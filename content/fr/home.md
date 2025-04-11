@@ -26,7 +26,7 @@ experiences:
         from: "Décembre 2024"
         to: "Maintenant"
         duration: ""
-        content: "Développement d'un outil de destion des ressources interne"
+        content: "Développement d'un outil de destion des ressources internes"
         stack:
           - name: "React"
             icon: "react-icon"
@@ -69,7 +69,7 @@ experiences:
     from: "Juin 2021"
     to: "Juillet 2021"
     duration: "(2 mois)"
-    content : "Création d une maquette et d une v0 de l application pour Safe Walk Brest"
+    content : "Création d'une maquette et d une v0 de l'application pour Safe Walk Brest"
     stack:
       - name: "Figma"
         icon: "figma-icon"
@@ -83,7 +83,7 @@ experiences:
     from: "Avril 2020"
     to: "Juillet 2020"
     duration: "(2 mois)"
-    content : "Mise à jour graphique de l outil de publication multicanal"
+    content : "Mise à jour graphique de l'outil de publication multicanal"
     stack:
       - name: "Twig"
         icon: "twig-icon"

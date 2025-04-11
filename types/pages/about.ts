@@ -5,6 +5,7 @@ export interface About extends MarkdownParsedContent {
 	description: string
 	experience: string
 	resume: string
+	resume_link: string
 	experiences: {
 		company: string
 		position: string
