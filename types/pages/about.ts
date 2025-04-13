@@ -6,22 +6,22 @@ export interface About extends MarkdownParsedContent {
 	experience: string
 	resume: string
 	resume_link: string
-	experiences: {
-		company: string
-		position: string
-		type: string
-		from: string
-		to: string
-		duration: string
-		content: string
-		sub_content: {
-			company: string
-			position: string
-			// type: string
-			// from: string
-			// to: string
-			// duration: string
-			// content: string
-		}[]
-	}[]
+	// experiences: {
+	// 	company: string
+	// 	position: string
+	// 	type: string
+	// 	from: string
+	// 	to: string
+	// 	duration: string
+	// 	content: string
+	// 	sub_content: {
+	// 		company: string
+	// 		position: string
+	// 		// type: string
+	// 		// from: string
+	// 		// to: string
+	// 		// duration: string
+	// 		// content: string
+	// 	}[]
+	// }[]
 }
