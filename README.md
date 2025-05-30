@@ -1,42 +1,59 @@
-# Nuxt 3 Minimal Starter
+# 🌐 Portfolio Développeur – Owen LE BEC
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Portfolio développé avec **Nuxt 3**, mettant en avant mon **parcours**, mes **compétences**, mes **projets** et les **moyens de me contacter**. Ce site a été conçu pour être **rapide**, **responsive** et **accessible**, avec une architecture moderne et minimaliste.
 
-## Setup
+🔗 [Voir le site en ligne](https://owenlebec.fr)
 
-Make sure to install the dependencies:
+---
+
+## ⚙️ Stack Technique
+
+- **Nuxt 3** (Vue 3, Composition API)
+- **SCSS** pour un design responsive et moderne
+- **TypeScript**
+- **Netlify** pour le déploiement
+
+---
+
+## ✨ Fonctionnalités
+
+- Présentation de mon **parcours** et de mes **compétences techniques**
+- **Section projets** avec aperçu et liens vers les dépôts GitHub / sites en ligne
+- **Animations douces** pour une navigation agréable
+- Design **responsive** optimisé pour mobile et desktop
+- Intégration des **liens de contact** et réseaux sociaux
+
+---
+
+## 🖼️ Aperçu
+
+![Mockup Portfolio](https://raw.githubusercontent.com/OwenLB/portfolio-master/refs/heads/main/portfolio-mockup.png?token=GHSAT0AAAAAADEZUC7RA4TN6LY2TZD2XYH62BZQK5Q)
+
+---
+
+## 🚀 Lancer le projet en local
 
 ```bash
-# yarn
-yarn install
-
-# npm
+git clone https://github.com/OwenLB/portfolio-master.git
+cd portfolio-master
 npm install
-
-# pnpm
-pnpm install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`
-
-```bash
 npm run dev
 ```
 
-## Production
+---
 
-Build the application for production:
+## 🏗️ Build & Déploiement
+
+### Générer le build de production
 
 ```bash
 npm run build
 ```
 
-Locally preview production build:
+### Prévisualisation locale
 
 ```bash
 npm run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+👉 Pour plus de détails, consulte la [documentation Nuxt 3](https://nuxt.com/docs/getting-started/deployment).
