@@ -146,7 +146,7 @@ onMounted(() => {
 				</div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
-				<div class="cell right-col content">
+				<div class="cell right-col cell--double-column content">
 					<div class="me">
 						<div class="arc">
 							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
