@@ -119,7 +119,7 @@ onMounted(() => {
 				</div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
-				<div class="cell cell--double-column cell--triple-row">
+				<div class="cell cell--double-column cell--double-row">
 					<h2>{{ content.experience }}</h2>
 					<div class="experiences-content">
 						<LinkExperience v-for="experience in content.experiences" :experience="experience"/>
@@ -137,16 +137,8 @@ onMounted(() => {
 				</div>
 			</AppSection>
 
-			<AppSection id="home__services">
-				<div class="cell services">
-					<h2>{{ content.contact }}</h2>
-					<LinkText :label="content.contact_mail" external link="mailto:lebec.owen@yahoo.fr"/>
-					<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
-				</div>
-			</AppSection>
-
 			<AppSection id="about__experiences">
-				<div class="cell cell--triple-column content">
+				<div class="cell cell--double-column content">
 					<h2>{{ aboutContent.projects }}</h2>
 					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
 						<LinkProject v-for="(project, index) in projects" :key="project._path"
@@ -156,6 +148,14 @@ onMounted(() => {
 									 :type="project.type"/>
 					</div>
 				</div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell contact">
+					<h2>{{ content.contact }}</h2>
+					<LinkText :label="content.contact_mail" external link="mailto:lebec.owen@yahoo.fr"/>
+					<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
+				</div>
+				<div class="cell cell--mobile"></div>
 			</AppSection>
 		</main>
 
@@ -279,7 +279,7 @@ onMounted(() => {
 		margin: 0 auto;
 		border-radius: 50% 50% 0 0;
 		background-color: #89d6ff;
-		padding-top: 6vh;
+		padding-top: 3vh;
 		padding-right: 2.5vw;
 	}
 
@@ -309,11 +309,6 @@ onMounted(() => {
 		}
 	}
 
-	&__services {
-		.services {
-			grid-column: span 2;
-		}
-	}
 }
 
 @media screen and (max-width: $md) {
@@ -326,11 +321,15 @@ onMounted(() => {
 
 @media screen and (min-width: $md) {
 	#home {
-		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto auto auto space(20);
+		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
 		&__projects .cell.job,
 		&__about .cell.socials {
+			grid-column: initial;
+		}
+
+		#about__experiences .cell.contact {
 			grid-column: initial;
 		}
 
@@ -341,12 +340,6 @@ onMounted(() => {
 						font-size: 6rem;
 					}
 				}
-			}
-		}
-
-		&__services {
-			.services {
-				grid-column: initial;
 			}
 		}
 	}
