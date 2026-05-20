@@ -119,7 +119,7 @@ onMounted(() => {
 				</div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
-				<div class="cell cell--double-column cell--double-row">
+				<div class="cell cell--double-column">
 					<h2>{{ content.experience }}</h2>
 					<div class="experiences-content">
 						<LinkExperience v-for="experience in content.experiences" :experience="experience"/>
@@ -127,18 +127,8 @@ onMounted(() => {
 				</div>
 			</AppSection>
 
-			<AppSection id="home__cv">
-				<div class="cell me content">
-					<div class="arc">
-						<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
-					</div>
-					<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
-					<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
-				</div>
-			</AppSection>
-
 			<AppSection id="about__experiences">
-				<div class="cell cell--double-column content">
+				<div class="cell cell--double-column cell--double-row content">
 					<h2>{{ aboutContent.projects }}</h2>
 					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
 						<LinkProject v-for="(project, index) in projects" :key="project._path"
@@ -148,7 +138,14 @@ onMounted(() => {
 									 :type="project.type"/>
 					</div>
 				</div>
-				<div class="cell cell--mobile"></div>
+				<div class="cell me content">
+					<div class="arc">
+						<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
+					</div>
+					<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
+					<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
+				</div>
+				<div class="cell cell--desktop"></div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell contact">
 					<h2>{{ content.contact }}</h2>
@@ -156,6 +153,7 @@ onMounted(() => {
 					<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
 				</div>
 				<div class="cell cell--mobile"></div>
+				<div class="cell cell--desktop"></div>
 			</AppSection>
 		</main>
 
@@ -166,7 +164,7 @@ onMounted(() => {
 
 <style lang="scss">
 #home {
-	grid-template-rows: space(20) 300px repeat(8, auto) space(20);
+	grid-template-rows: space(20) 300px repeat(7, auto) space(20);
 
 	&__hero_top {
 		.cell {
@@ -311,14 +309,6 @@ onMounted(() => {
 
 }
 
-@media screen and (max-width: $md) {
-	#home {
-		#home__cv .cell.me {
-			grid-column: span 2;
-		}
-	}
-}
-
 @media screen and (min-width: $md) {
 	#home {
 		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto auto space(20);
@@ -330,7 +320,7 @@ onMounted(() => {
 		}
 
 		#about__experiences .cell.contact {
-			grid-column: initial;
+			grid-column: 4;
 		}
 
 		&__hero_top {
