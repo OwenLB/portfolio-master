@@ -41,7 +41,6 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
 
     <template v-if="hasDetails(experience)">
       <button class="experience__toggle" @click="expanded = !expanded">
-        <span>{{ expanded ? 'Réduire' : 'Voir plus' }}</span>
         <svg :class="{ rotated: expanded }" fill="none" height="12" viewBox="0 0 12 12" width="12"
              xmlns="http://www.w3.org/2000/svg">
           <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -97,7 +96,6 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
 
         <template v-if="hasDetails(sub)">
           <button class="experience__toggle" @click="expandedSubs[i] = !expandedSubs[i]">
-            <span>{{ expandedSubs[i] ? 'Réduire' : 'Voir plus' }}</span>
             <svg :class="{ rotated: expandedSubs[i] }" fill="none" height="12" viewBox="0 0 12 12" width="12"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

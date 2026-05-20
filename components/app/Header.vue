@@ -3,7 +3,7 @@ import {Icon} from "~/types/icon";
 import {Theme} from "~/types/theme";
 import {Lang} from "~/types/lang";
 
-enum Toogle {
+enum Toggle {
 	Theme = 'theme',
 	Lang = 'lang',
 }
@@ -14,7 +14,7 @@ const iconState = ref<Icon>(theme.value === (Theme.Dark as Theme) ? Icon.Moon : 
 const lang = useLang()
 const switchState = ref(lang.value !== Lang.Fr)
 
-const toogle = async (event: Event, type: Toogle) => {
+const toggle = async (event: Event, type: Toggle) => {
 	const {currentTarget} = event
 	const html = document.querySelector('html')
 
@@ -22,10 +22,10 @@ const toogle = async (event: Event, type: Toogle) => {
 		html?.classList.add('page-leave-to')
 
 		setTimeout(() => {
-			if (type === Toogle.Theme) {
+			if (type === Toggle.Theme) {
 				theme.value = value as Theme
 				iconState.value = value === Theme.Dark ? Icon.Moon : Icon.Sun
-			} else if (type === Toogle.Lang) {
+			} else if (type === Toggle.Lang) {
 				lang.value = value as Lang
 				switchState.value = !switchState.value
 			}
@@ -34,13 +34,13 @@ const toogle = async (event: Event, type: Toogle) => {
 		}, 1000)
 	}
 
-	if (type === Toogle.Theme) {
+	if (type === Toggle.Theme) {
 		if (theme.value === (Theme.Dark as Theme)) {
 			setValue(Theme.Light)
 		} else {
 			setValue(Theme.Dark)
 		}
-	} else if (type === Toogle.Lang) {
+	} else if (type === Toggle.Lang) {
 		if (lang.value === Lang.Fr) {
 			setValue(Lang.En)
 		} else {
@@ -64,7 +64,7 @@ const toogle = async (event: Event, type: Toogle) => {
 		</div>
 		<div class="cell control">
 			<button :aria-checked="switchState" class="control__lang" role="switch" type="button"
-					@click.stop="toogle($event,Toogle.Lang)">
+					@click.stop="toggle($event,Toggle.Lang)">
 				<span :class="{current: lang === Lang.Fr}" class="control__lang_side">FR</span>
 				<span class="control__lang_switch">
 					<span></span>
@@ -73,7 +73,7 @@ const toogle = async (event: Event, type: Toogle) => {
 			</button>
 			<button :aria-label="lang === Lang.Fr ? 'Changer le theme de couleurs' : 'Change color theme'"
 					class="control__theme" type="button"
-					@click.stop="toogle($event,Toogle.Theme)">
+					@click.stop="toggle($event,Toggle.Theme)">
 				<AppIcon :icon="iconState" aria-hidden="true"/>
 			</button>
 		</div>
