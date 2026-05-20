@@ -195,6 +195,15 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     100% { transform: translateX(0) scale(1); opacity: 1; }
   }
 
+  &:hover {
+    > .experience__details-wrapper {
+      grid-template-rows: 1fr;
+    }
+    > .experience__toggle svg {
+      transform: rotate(180deg);
+    }
+  }
+
   .sub__experience {
     border-bottom: 1px solid var(--accent);
     display: flex;
@@ -205,6 +214,15 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     &:last-child {
       border-bottom: none;
       padding-bottom: 0;
+    }
+
+    &:hover {
+      > .experience__details-wrapper {
+        grid-template-rows: 1fr;
+      }
+      > .experience__toggle svg {
+        transform: rotate(180deg);
+      }
     }
   }
 
