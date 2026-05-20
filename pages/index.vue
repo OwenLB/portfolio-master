@@ -184,6 +184,10 @@ onMounted(() => {
 					font-weight: 300;
 					margin-top: space(6);
 
+					em {
+						font-style: italic;
+					}
+
 					strong {
 						display: block;
 						font-weight: bold;
