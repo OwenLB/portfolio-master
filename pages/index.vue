@@ -293,6 +293,7 @@ onMounted(() => {
 		.job {
 			grid-column: span 2;
 			justify-content: space-between;
+			min-height: calc(200px + #{space(16)} + 1.5rem);
 
 			&__title {
 				display: flex;
@@ -311,7 +312,7 @@ onMounted(() => {
 
 @media screen and (min-width: $md) {
 	#home {
-		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto auto space(20);
+		grid-template-rows: space(20) 300px 300px auto auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
 		&__projects .cell.job,
