@@ -1,7 +1,8 @@
 import type {MarkdownParsedContent} from '@nuxt/content/dist/runtime/types'
 
 export interface Home extends MarkdownParsedContent {
-	title: string
+	headline_start: string
+	headline_bold: string
 	description: string
 	listen: string
 	about: string

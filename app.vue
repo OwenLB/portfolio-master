@@ -24,7 +24,12 @@ useHead({
 		{
 			name: 'google-site-verification',
 			content: '9enTEnn4TDcfVaSIV1jMyTsCIZJhQEYHnzRlQhtEWDY'
-		}
+		},
+		{ property: 'og:site_name', content: 'Owen Le Bec' },
+		{ property: 'og:type', content: 'website' },
+		{ property: 'og:image', content: 'https://owenlebec.fr/images/owen.webp' },
+		{ name: 'twitter:card', content: 'summary_large_image' },
+		{ name: 'twitter:image', content: 'https://owenlebec.fr/images/owen.webp' },
 	],
 	script: [
 		{
@@ -36,10 +41,29 @@ useHead({
 })</script>
 
 <template>
+	<a class="skip-to-main" href="#main-content">
+		{{ lang === Lang.Fr ? 'Aller au contenu principal' : 'Skip to main content' }}
+	</a>
 	<NuxtPage :lang="lang"/>
 </template>
 
 <style lang="scss">
+.skip-to-main {
+	position: absolute;
+	left: -9999px;
+	top: space(2);
+	z-index: 999;
+	padding: space(2) space(4);
+	background: var(--primary);
+	color: $dark;
+	font-weight: 600;
+	border-radius: 4px;
+
+	&:focus {
+		left: space(2);
+	}
+}
+
 :root {
 	--main-space: #{space(6)};
 }

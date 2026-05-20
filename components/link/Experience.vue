@@ -14,10 +14,14 @@ const labels = computed(() => lang.value === Lang.Fr ? {
   responsibilities: 'Responsabilités',
   team: 'Équipe',
   results: 'Résultats',
+  expand: 'Voir les détails',
+  collapse: 'Réduire les détails',
 } : {
   responsibilities: 'Responsibilities',
   team: 'Team',
   results: 'Results',
+  expand: 'Show details',
+  collapse: 'Hide details',
 })
 
 const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 'results'>>) =>
@@ -52,7 +56,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     </div>
 
     <template v-if="hasDetails(experience)">
-      <button class="experience__toggle" @click="expanded = !expanded">
+      <button class="experience__toggle" :aria-label="expanded ? labels.collapse : labels.expand" :aria-expanded="expanded" @click="expanded = !expanded">
         <svg :class="{ rotated: expanded }" fill="none" height="12" viewBox="0 0 12 12" width="12"
              xmlns="http://www.w3.org/2000/svg">
           <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -107,7 +111,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         </div>
 
         <template v-if="hasDetails(sub)">
-          <button class="experience__toggle" @click="expandedSubs[i] = !expandedSubs[i]">
+          <button class="experience__toggle" :aria-label="expandedSubs[i] ? labels.collapse : labels.expand" :aria-expanded="expandedSubs[i] ?? false" @click="expandedSubs[i] = !expandedSubs[i]">
             <svg :class="{ rotated: expandedSubs[i] }" fill="none" height="12" viewBox="0 0 12 12" width="12"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

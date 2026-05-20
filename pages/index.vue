@@ -69,10 +69,10 @@ onMounted(() => {
 		<AppEffect/>
 		<AppHeader/>
 
-		<main>
+		<main id="main-content">
 			<AppSection id="home__hero_top" desktop>
 				<div class="cell cell--double-column headline">
-					<h1 v-html="content.title"></h1>
+					<h1>{{ content.headline_start }}<strong>{{ content.headline_bold }}</strong></h1>
 				</div>
 				<div class="cell responsive topographic">
 					<div class="topographic__svg">

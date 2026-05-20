@@ -37,9 +37,11 @@ onMounted(() => {
 </script>
 
 <template>
-	<component :is="spotify?.isConnected ? 'a' : 'div'" :class="{spotify__link : spotify?.isConnected}" :href="spotify?.url"
-			   class="spotify__pill"
-			   target="_blank">
+	<component :is="spotify?.isConnected ? 'a' : 'div'" :class="{spotify__link : spotify?.isConnected}"
+			   :href="spotify?.isConnected ? spotify.url : undefined"
+			   :target="spotify?.isConnected ? '_blank' : undefined"
+			   :rel="spotify?.isConnected ? 'noopener noreferrer' : undefined"
+			   class="spotify__pill">
 		<div :ref="assignTitleRef" class="spotify__pill_title">
 			<span :ref="assignTitleSpanRef">{{
 					spotify?.isConnected ? `${spotify.title} - ${spotify.artist}` : lang === Lang.Fr ? 'Déconnecté' : 'Disconnected'

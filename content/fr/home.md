@@ -1,5 +1,6 @@
 ---
-title: "INGÉNIEUR<strong>LOGICIEL — FULL STACK</strong>"
+headline_start: "INGÉNIEUR"
+headline_bold: "LOGICIEL — FULL STACK"
 description: "Ingénieur logiciel full stack. Front JS, back Java. En recherche de nouvelles opportunités, ouvert géographiquement."
 listen: "MA MUSIQUE DU MOMENT"
 about: "À PROPOS"
