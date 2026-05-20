@@ -1,6 +1,6 @@
 ---
-headline_start: "SOFTWARE"
-headline_bold: "ENGINEER — FULL STACK"
+headline_start: "SOFTWARE ENGINEER"
+headline_bold: "FULL STACK"
 description: "Full stack software engineer. JS front end, Java back end. Open to new opportunities, available for relocation."
 listen: "MY CURRENT MUSIC"
 about: "ABOUT"

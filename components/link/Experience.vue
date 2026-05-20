@@ -215,6 +215,10 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     cursor: pointer;
   }
 
+  &:hover > .experience__toggle {
+    color: var(--primary);
+  }
+
   .sub__experience {
     border-bottom: 1px solid var(--accent);
     display: flex;
@@ -227,6 +231,9 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       padding-bottom: 0;
     }
 
+    &:hover > .experience__toggle {
+      color: var(--primary);
+    }
   }
 
   .experience__sub__content {

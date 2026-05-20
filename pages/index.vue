@@ -187,6 +187,7 @@ onMounted(() => {
 					strong {
 						display: block;
 						font-weight: bold;
+						color: var(--primary);
 					}
 				}
 			}
