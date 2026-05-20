@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import {Home} from "~/types/pages/home";
+import {About} from "~/types/pages/about";
 import {Project} from "~/types/project";
 import {Socials} from "~/types/social";
 import {Lang} from "~/types/lang";
-import {useRuntimeConfig} from "#app/nuxt";
 
 const props = defineProps<{
 	lang: Lang
@@ -21,6 +21,15 @@ const {data: content}: { data: Home } = await useAsyncData('home', () => queryCo
 	_locale: props.lang
 }).findOne(), {watch: [() => props.lang]})
 
+const {data: aboutContent}: { data: About } = await useAsyncData('about-content', () => queryContent().where({
+	_path: '/about',
+	_locale: props.lang
+}).findOne(), {watch: [() => props.lang]})
+
+const {data: projects}: {
+	data: Project[]
+} = await useAsyncData('projects', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).find(), {watch: [() => props.lang]})
+
 useSeoMeta({
 	description: content.value.description,
 })
@@ -29,6 +38,24 @@ const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
+const projectsContainer = ref<HTMLElement | null>(null)
+const projectsVisibility = ref(false)
+
+onMounted(() => {
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				projectsVisibility.value = true
+			}
+		})
+	}, {
+		threshold: 0.6
+	})
+
+	if (projectsContainer.value) {
+		observer.observe(projectsContainer.value as HTMLElement)
+	}
+})
 </script>
 
 <template>
@@ -62,12 +89,11 @@ const {data: socials}: {
 
 			<AppSection id="home__about">
 				<div class="cell cell--double-column about">
-          <div>
-            <h2>{{ content.about }}</h2> <br/>
-            <p>{{ content.greetings_text }}</p>
-            <p>{{ content.about_text }}</p>
-          </div>
-					<LinkText :label="content.about_button" link="/about"/>
+					<div>
+						<h2>{{ content.about }}</h2> <br/>
+						<p>{{ content.greetings_text }}</p>
+						<p>{{ content.about_text }}</p>
+					</div>
 				</div>
 				<div class="cell cell--mobile">
 				</div>
@@ -81,30 +107,62 @@ const {data: socials}: {
 					</div>
 				</div>
 			</AppSection>
+
+			<AppSection id="about__description">
+				<div class="cell cell--triple-column content">
+					<h2>{{ aboutContent.title }}</h2>
+					<ContentRenderer :value="aboutContent" class="content"/>
+				</div>
+			</AppSection>
+
+			<AppSection id="about__experiences" desktop>
+				<div class="cell cell--double-column content">
+					<h2>{{ aboutContent.projects }}</h2>
+					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
+						<LinkProject v-for="(project, index) in projects" :key="project._path"
+									 :index="index"
+									 :label="(project.title as string)"
+									 :path="(project._path as string)"
+									 :type="project.type"/>
+					</div>
+				</div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell me content">
+					<div class="arc">
+						<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
+					</div>
+					<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
+					<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
+				</div>
+				<div class="cell cell--mobile"></div>
+			</AppSection>
+
 			<AppSection id="home__projects">
 				<div class="cell job">
 					<h2>{{ content.position }}</h2>
 					<div class="job__title">
 						<h3>{{ content.position_title }}</h3>
 						<LinkText external label="Thales" link="https://www.thalesgroup.com/fr"/>
-            <p>{{ content.mission }}</p>
-          </div>
+						<p>{{ content.mission }}</p>
+					</div>
 				</div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--double-column cell--double-row">
-          <h2>{{ content.experience }}</h2>
-          <div class="experiences-content">
-            <LinkExperience v-for="experience in content.experiences" :experience="experience"/>
-          </div>
+					<h2>{{ content.experience }}</h2>
+					<div class="experiences-content">
+						<LinkExperience v-for="experience in content.experiences" :experience="experience"/>
+					</div>
 				</div>
 			</AppSection>
+
 			<AppSection id="home__services">
 				<div class="cell services">
 					<h2>{{ content.contact }}</h2>
 					<LinkText :label="content.contact_mail" external link="mailto:lebec.owen@yahoo.fr"/>
 					<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
-        </div>
+				</div>
 			</AppSection>
 		</main>
 
@@ -115,7 +173,7 @@ const {data: socials}: {
 
 <style lang="scss">
 #home {
-	grid-template-rows: space(20) 300px repeat(6, auto) space(20);
+	grid-template-rows: space(20) 300px repeat(9, auto) space(20);
 
 	&__hero_top {
 		.cell {
@@ -158,7 +216,6 @@ const {data: socials}: {
 
 	&__hero_bottom {
 		.cell {
-
 			&.topographic {
 				padding: 0;
 				background: rgba(var(--accent-rgb), 0.6);
@@ -187,11 +244,12 @@ const {data: socials}: {
 	}
 
 	&__about {
-    .about {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+		.about {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
 		.socials {
 			grid-column: span 2;
 			justify-content: space-between;
@@ -203,6 +261,53 @@ const {data: socials}: {
 				gap: space(4);
 			}
 		}
+	}
+
+	#about__description {
+		H2 {
+			text-transform: uppercase;
+		}
+
+		.content {
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+		}
+	}
+
+	.projects {
+		display: flex;
+		flex-direction: column;
+		gap: var(--main-space);
+
+		a {
+			opacity: 0;
+			transform: translateY(space(40));
+			transition: opacity 1s cubic-bezier(0.83, 0, 0.17, 1), transform 1s cubic-bezier(0.83, 0, 0.17, 1);
+		}
+
+		&.visible a {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.arc {
+		width: 100%;
+		height: auto;
+		margin: 0 auto;
+		border-radius: 50% 50% 0 0;
+		background-color: #89d6ff;
+		padding-top: 6vh;
+		padding-right: 2.5vw;
+	}
+
+	.arc-image {
+		width: 100%;
+		margin-right: 20px;
+		margin-bottom: -5px;
+		height: auto;
+		object-fit: contain;
 	}
 
 	&__projects {
@@ -221,8 +326,6 @@ const {data: socials}: {
 				}
 			}
 		}
-
-
 	}
 
 	&__services {
@@ -234,16 +337,17 @@ const {data: socials}: {
 
 @media screen and (min-width: $md) {
 	#home {
-		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto space(20);
+		grid-template-rows: space(20) 300px 300px auto auto auto calc(200px + #{space(16)} + 1.5rem) auto space(20);
 
-		&__hero_bottom .cell.spotify, &__projects .cell.job, &__about .cell.socials {
+		&__hero_bottom .cell.spotify,
+		&__projects .cell.job,
+		&__about .cell.socials {
 			grid-column: initial;
 		}
 
 		&__hero_top {
 			.cell {
 				&.headline {
-
 					h1 {
 						font-size: 6rem;
 					}
@@ -255,6 +359,14 @@ const {data: socials}: {
 			.services {
 				grid-column: initial;
 			}
+		}
+	}
+}
+
+@media screen and (max-width: $md) {
+	#home {
+		#about__experiences .cell.me {
+			grid-column: span 2;
 		}
 	}
 }

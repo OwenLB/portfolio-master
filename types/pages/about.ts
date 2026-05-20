@@ -3,7 +3,8 @@ import type {MarkdownParsedContent} from '@nuxt/content/dist/runtime/types'
 export interface About extends MarkdownParsedContent {
 	title: string
 	description: string
-	experience: string
+	projects: string
+	photo: string
 	resume: string
 	resume_link: string
 	// experiences: {
