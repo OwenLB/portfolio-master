@@ -29,7 +29,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
 </script>
 
 <template>
-  <div class="experience">
+  <div :class="{ 'experience--clickable': hasDetails(experience) }" class="experience" @click="hasDetails(experience) && (expanded = !expanded)">
     <div class="experience__header">
       <h3>{{ experience.position }}</h3>
       <div class="experience__stack">
@@ -56,7 +56,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     </div>
 
     <template v-if="hasDetails(experience)">
-      <button class="experience__toggle" :aria-label="expanded ? labels.collapse : labels.expand" :aria-expanded="expanded" @click="expanded = !expanded">
+      <button class="experience__toggle" :aria-label="expanded ? labels.collapse : labels.expand" :aria-expanded="expanded" @click.stop="expanded = !expanded">
         <svg :class="{ rotated: expanded }" fill="none" height="12" viewBox="0 0 12 12" width="12"
              xmlns="http://www.w3.org/2000/svg">
           <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -85,8 +85,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       </div>
     </template>
 
-    <div class="experience__sub__content">
-      <div v-for="(sub, i) in experience.sub_content" :key="i" class="sub__experience">
+    <div class="experience__sub__content" @click.stop>
+      <div v-for="(sub, i) in experience.sub_content" :key="i" :class="{ 'experience--clickable': hasDetails(sub) }" class="sub__experience" @click="hasDetails(sub) && (expandedSubs[i] = !expandedSubs[i])">
         <div class="experience__header">
           <h3>{{ sub.position }}</h3>
           <div class="experience__stack">
@@ -111,7 +111,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         </div>
 
         <template v-if="hasDetails(sub)">
-          <button class="experience__toggle" :aria-label="expandedSubs[i] ? labels.collapse : labels.expand" :aria-expanded="expandedSubs[i] ?? false" @click="expandedSubs[i] = !expandedSubs[i]">
+          <button class="experience__toggle" :aria-label="expandedSubs[i] ? labels.collapse : labels.expand" :aria-expanded="expandedSubs[i] ?? false" @click.stop="expandedSubs[i] = !expandedSubs[i]">
             <svg :class="{ rotated: expandedSubs[i] }" fill="none" height="12" viewBox="0 0 12 12" width="12"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -211,13 +211,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     100% { transform: translateX(0) scale(1); opacity: 1; }
   }
 
-  &:hover {
-    > .experience__details-wrapper {
-      grid-template-rows: 1fr;
-    }
-    > .experience__toggle svg {
-      transform: rotate(180deg);
-    }
+  &--clickable {
+    cursor: pointer;
   }
 
   .sub__experience {
@@ -232,14 +227,6 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       padding-bottom: 0;
     }
 
-    &:hover {
-      > .experience__details-wrapper {
-        grid-template-rows: 1fr;
-      }
-      > .experience__toggle svg {
-        transform: rotate(180deg);
-      }
-    }
   }
 
   .experience__sub__content {
