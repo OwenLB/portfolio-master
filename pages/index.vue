@@ -104,38 +104,10 @@ onMounted(() => {
 					<div class="socials-links">
 						<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
 								  :link="social.link" external/>
+						<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
+						<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
 					</div>
 				</div>
-			</AppSection>
-
-			<AppSection id="about__description">
-				<div class="cell cell--triple-column content">
-					<h2>{{ aboutContent.title }}</h2>
-					<ContentRenderer :value="aboutContent" class="content"/>
-				</div>
-			</AppSection>
-
-			<AppSection id="about__experiences" desktop>
-				<div class="cell cell--double-column content">
-					<h2>{{ aboutContent.projects }}</h2>
-					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
-						<LinkProject v-for="(project, index) in projects" :key="project._path"
-									 :index="index"
-									 :label="(project.title as string)"
-									 :path="(project._path as string)"
-									 :type="project.type"/>
-					</div>
-				</div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell me content">
-					<div class="arc">
-						<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
-					</div>
-					<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
-					<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
-				</div>
-				<div class="cell cell--mobile"></div>
 			</AppSection>
 
 			<AppSection id="home__projects">
@@ -164,6 +136,19 @@ onMounted(() => {
 					<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
 				</div>
 			</AppSection>
+
+			<AppSection id="about__experiences">
+				<div class="cell cell--triple-column content">
+					<h2>{{ aboutContent.projects }}</h2>
+					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
+						<LinkProject v-for="(project, index) in projects" :key="project._path"
+									 :index="index"
+									 :label="(project.title as string)"
+									 :path="(project._path as string)"
+									 :type="project.type"/>
+					</div>
+				</div>
+			</AppSection>
 		</main>
 
 		<AppFooter/>
@@ -173,7 +158,7 @@ onMounted(() => {
 
 <style lang="scss">
 #home {
-	grid-template-rows: space(20) 300px repeat(9, auto) space(20);
+	grid-template-rows: space(20) 300px repeat(7, auto) space(20);
 
 	&__hero_top {
 		.cell {
@@ -263,18 +248,6 @@ onMounted(() => {
 		}
 	}
 
-	#about__description {
-		H2 {
-			text-transform: uppercase;
-		}
-
-		.content {
-			display: flex;
-			flex-direction: column;
-			gap: 24px;
-		}
-	}
-
 	.projects {
 		display: flex;
 		flex-direction: column;
@@ -290,24 +263,6 @@ onMounted(() => {
 			opacity: 1;
 			transform: translateY(0);
 		}
-	}
-
-	.arc {
-		width: 100%;
-		height: auto;
-		margin: 0 auto;
-		border-radius: 50% 50% 0 0;
-		background-color: #89d6ff;
-		padding-top: 6vh;
-		padding-right: 2.5vw;
-	}
-
-	.arc-image {
-		width: 100%;
-		margin-right: 20px;
-		margin-bottom: -5px;
-		height: auto;
-		object-fit: contain;
 	}
 
 	&__projects {
@@ -337,7 +292,7 @@ onMounted(() => {
 
 @media screen and (min-width: $md) {
 	#home {
-		grid-template-rows: space(20) 300px 300px auto auto auto calc(200px + #{space(16)} + 1.5rem) auto space(20);
+		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
 		&__projects .cell.job,
@@ -363,11 +318,4 @@ onMounted(() => {
 	}
 }
 
-@media screen and (max-width: $md) {
-	#home {
-		#about__experiences .cell.me {
-			grid-column: span 2;
-		}
-	}
-}
 </style>
