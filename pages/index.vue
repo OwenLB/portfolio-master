@@ -320,6 +320,7 @@ onMounted(() => {
 			grid-column: initial;
 		}
 
+		#about__experiences .cell.me,
 		#about__experiences .cell.contact {
 			grid-column: 4;
 		}
