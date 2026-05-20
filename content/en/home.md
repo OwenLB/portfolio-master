@@ -1,10 +1,10 @@
 ---
-title: "FULL STACK<strong>WEB DEVELOPER</strong>"
-description: "Hello, my name is Owen. I am a French full-stack developer who loves exploring new web technologies."
+title: "SOFTWARE<strong>ENGINEER — FULL STACK</strong>"
+description: "Full stack software engineer. JS front end, Java back end. Open to new opportunities, available for relocation."
 listen: "MY CURRENT MUSIC"
 about: "ABOUT"
 greetings_text: "Hello 👋"
-about_text: "I am a full-stack developer living in Brest. Passionate about web development and design, I love exploring new web technologies and am always eager to learn new skills."
+about_text: "Full stack software engineer. JS front end, Java back end. Looking for my next step, open to relocation. I do photography on the side."
 about_button: "Learn more"
 social: "SOCIAL"
 position: "POSITION"

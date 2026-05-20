@@ -1,10 +1,10 @@
 ---
-title: "DÉVELOPPEUR<strong>WEB FULL STACK</strong>"
-description: "Bonjour je m'appelle Owen, je suis un développeur full stack français, qui adore explorer de nouvelles technologies web."
+title: "INGÉNIEUR<strong>LOGICIEL — FULL STACK</strong>"
+description: "Ingénieur logiciel full stack. Front JS, back Java. En recherche de nouvelles opportunités, ouvert géographiquement."
 listen: "MA MUSIQUE DU MOMENT"
 about: "À PROPOS"
 greetings_text: "Bonjour 👋"
-about_text: "Je suis un développeur full stack, vivant à Brest. Passionné par le développement web et le design, j'adore explorer de nouvelles technologies web et je suis toujours en quête de nouvelles compétences à acquérir."
+about_text: "Ingénieur logiciel full stack. Front JS, back Java. En recherche de la prochaine étape, ouvert géographiquement. Je fais de la photo à côté."
 about_button: "En savoir plus"
 social: "SOCIAL"
 position: "POSTE"
