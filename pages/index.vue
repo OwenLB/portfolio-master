@@ -128,7 +128,7 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="about__experiences">
-				<div class="cell cell--double-column cell--double-row content">
+				<div class="cell cell--double-column content">
 					<h2>{{ aboutContent.projects }}</h2>
 					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
 						<LinkProject v-for="(project, index) in projects" :key="project._path"
@@ -138,22 +138,22 @@ onMounted(() => {
 									 :type="project.type"/>
 					</div>
 				</div>
-				<div class="cell me content">
-					<div class="arc">
-						<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell right-col content">
+					<div class="me">
+						<div class="arc">
+							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
+						</div>
+						<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
+						<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
 					</div>
-					<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
-					<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
+					<div class="contact">
+						<h2>{{ content.contact }}</h2>
+						<LinkText :label="content.contact_mail" external link="mailto:lebec.owen@yahoo.fr"/>
+						<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
+					</div>
 				</div>
-				<div class="cell cell--desktop"></div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell contact">
-					<h2>{{ content.contact }}</h2>
-					<LinkText :label="content.contact_mail" external link="mailto:lebec.owen@yahoo.fr"/>
-					<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
-				</div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--desktop"></div>
 			</AppSection>
 		</main>
 
@@ -289,6 +289,24 @@ onMounted(() => {
 		object-fit: contain;
 	}
 
+	#about__experiences {
+		.right-col {
+			justify-content: space-between;
+		}
+
+		.me {
+			display: flex;
+			flex-direction: column;
+			gap: space(4);
+		}
+
+		.contact {
+			display: flex;
+			flex-direction: column;
+			gap: space(4);
+		}
+	}
+
 	&__projects {
 		.job {
 			grid-column: span 2;
@@ -312,7 +330,7 @@ onMounted(() => {
 
 @media screen and (min-width: $md) {
 	#home {
-		grid-template-rows: space(20) 300px 300px auto auto auto auto space(20);
+		grid-template-rows: space(20) 300px 300px auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
 		&__projects .cell.job,
@@ -320,8 +338,7 @@ onMounted(() => {
 			grid-column: initial;
 		}
 
-		#about__experiences .cell.me,
-		#about__experiences .cell.contact {
+		#about__experiences .cell.right-col {
 			grid-column: 4;
 		}
 
