@@ -1,6 +1,4 @@
-import querystring from "querystring";
-import {Spotify} from "types/spotify";
-
+import {Spotify} from "~/types/spotify";
 
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`
@@ -20,10 +18,10 @@ export default defineEventHandler(async () => {
 				Authorization: `Basic ${basic}`,
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
-			body: querystring.stringify({
+			body: new URLSearchParams({
 				grant_type: "refresh_token",
-				refresh_token,
-			}),
+				refresh_token: refresh_token as string,
+			}).toString(),
 		});
 
 		return response.json();
@@ -47,7 +45,7 @@ export default defineEventHandler(async () => {
 
 	return {
 		title: track.item.name,
-		artist: track.item.artists.map((artist: any) => artist.name).join(", "),
+		artist: track.item.artists.map((a: { name: string }) => a.name).join(", "),
 		url: track.item.uri,
 		isPlaying: track.is_playing,
 		isConnected: true

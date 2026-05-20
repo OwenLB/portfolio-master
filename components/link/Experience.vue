@@ -1,12 +1,24 @@
 <script lang="ts" setup>
 import type {Experience, SubExperience} from "~/types/experience";
+import {Lang} from "~/types/lang";
 
 const props = defineProps<{
   experience: Experience
 }>()
 
+const lang = useLang()
 const expanded = ref(false)
 const expandedSubs = reactive<Record<number, boolean>>({})
+
+const labels = computed(() => lang.value === Lang.Fr ? {
+  responsibilities: 'Responsabilités',
+  team: 'Équipe',
+  results: 'Résultats',
+} : {
+  responsibilities: 'Responsibilities',
+  team: 'Team',
+  results: 'Results',
+})
 
 const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 'results'>>) =>
     !!(exp.responsibilities?.length || exp.team || exp.results?.length)
@@ -18,7 +30,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       <h3>{{ experience.position }}</h3>
       <div class="experience__stack">
         <div v-for="stack in experience.stack" :key="stack.name">
-          <img :src="`/icons/${stack.icon}.svg`" alt="stack icon"/>
+          <img :src="`/icons/${stack.icon}.svg`" :alt="stack.name"/>
           <span>{{ stack.name }}</span>
         </div>
       </div>
@@ -50,17 +62,17 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       <div :class="{ 'is-expanded': expanded }" class="experience__details-wrapper">
         <div class="experience__details">
           <template v-if="experience.responsibilities?.length">
-            <p class="details-label">Responsabilités</p>
+            <p class="details-label">{{ labels.responsibilities }}</p>
             <ul>
               <li v-for="r in experience.responsibilities" :key="r">{{ r }}</li>
             </ul>
           </template>
           <template v-if="experience.team">
-            <p class="details-label">Équipe</p>
+            <p class="details-label">{{ labels.team }}</p>
             <p>{{ experience.team }}</p>
           </template>
           <template v-if="experience.results?.length">
-            <p class="details-label">Résultats</p>
+            <p class="details-label">{{ labels.results }}</p>
             <ul>
               <li v-for="r in experience.results" :key="r">{{ r }}</li>
             </ul>
@@ -75,7 +87,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
           <h3>{{ sub.position }}</h3>
           <div class="experience__stack">
             <div v-for="stack in sub.stack" :key="stack.name">
-              <img :src="`/icons/${stack.icon}.svg`"/>
+              <img :src="`/icons/${stack.icon}.svg`" :alt="stack.name"/>
               <span>{{ stack.name }}</span>
             </div>
           </div>
@@ -105,17 +117,17 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
           <div :class="{ 'is-expanded': expandedSubs[i] }" class="experience__details-wrapper">
             <div class="experience__details">
               <template v-if="sub.responsibilities?.length">
-                <p class="details-label">Responsabilités</p>
+                <p class="details-label">{{ labels.responsibilities }}</p>
                 <ul>
                   <li v-for="r in sub.responsibilities" :key="r">{{ r }}</li>
                 </ul>
               </template>
               <template v-if="sub.team">
-                <p class="details-label">Équipe</p>
+                <p class="details-label">{{ labels.team }}</p>
                 <p>{{ sub.team }}</p>
               </template>
               <template v-if="sub.results?.length">
-                <p class="details-label">Résultats</p>
+                <p class="details-label">{{ labels.results }}</p>
                 <ul>
                   <li v-for="r in sub.results" :key="r">{{ r }}</li>
                 </ul>

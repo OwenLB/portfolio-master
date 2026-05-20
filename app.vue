@@ -16,8 +16,8 @@ useHead({
 	link: [
 		{
 			rel: 'icon',
-			// href: '/favicon.svg',
-			type: 'image/svg+xml',
+			href: '/favicon.ico',
+			type: 'image/x-icon',
 		}
 	],
 	meta: [
