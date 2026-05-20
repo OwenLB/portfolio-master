@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {Home} from "~/types/pages/home";
 import {About} from "~/types/pages/about";
+import {Experiences} from "~/types/pages/experiences";
 import {Project} from "~/types/project";
 import {Socials} from "~/types/social";
 import {Lang} from "~/types/lang";
@@ -21,8 +22,13 @@ const {data: content}: { data: Home } = await useAsyncData('home', () => queryCo
 	_locale: props.lang
 }).findOne(), {watch: [() => props.lang]})
 
-const {data: aboutContent}: { data: About } = await useAsyncData('about-content', () => queryContent().where({
-	_path: '/about',
+const {data: profileContent}: { data: About } = await useAsyncData('profile-content', () => queryContent().where({
+	_path: '/profile',
+	_locale: props.lang
+}).findOne(), {watch: [() => props.lang]})
+
+const {data: experiencesData}: { data: Experiences } = await useAsyncData('experiences', () => queryContent().where({
+	_path: '/experiences',
 	_locale: props.lang
 }).findOne(), {watch: [() => props.lang]})
 
@@ -113,7 +119,7 @@ onMounted(() => {
 					<h2>{{ content.position }}</h2>
 					<div class="job__title">
 						<h3>{{ content.position_title }}</h3>
-						<LinkText external label="Thales" link="https://www.thalesgroup.com/fr"/>
+						<LinkText external label="Thales" :link="content.thales_link"/>
 						<p>{{ content.mission }}</p>
 					</div>
 				</div>
@@ -122,14 +128,14 @@ onMounted(() => {
 				<div class="cell cell--double-column">
 					<h2>{{ content.experience }}</h2>
 					<div class="experiences-content">
-						<LinkExperience v-for="experience in content.experiences" :experience="experience"/>
+						<LinkExperience v-for="experience in experiencesData.items" :experience="experience"/>
 					</div>
 				</div>
 			</AppSection>
 
 			<AppSection id="about__experiences">
 				<div class="cell cell--double-column content">
-					<h2>{{ aboutContent.projects }}</h2>
+					<h2>{{ profileContent.projects }}</h2>
 					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
 						<LinkProject v-for="(project, index) in projects" :key="project._path"
 									 :index="index"
@@ -145,13 +151,13 @@ onMounted(() => {
 						<div class="arc">
 							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
 						</div>
-						<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
-						<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
+						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
+						<LinkText :label="profileContent.photo" link="https://lebecowen.myportfolio.com" external/>
 					</div>
 					<div class="contact">
 						<h2>{{ content.contact }}</h2>
-						<LinkText :label="content.contact_mail" external link="mailto:lebec.owen@yahoo.fr"/>
-						<LinkText :label="content.contact_phone" external link="tel:+33652063822"/>
+						<LinkText :label="content.contact_mail" :link="content.contact_mail_link" external/>
+						<LinkText :label="content.contact_phone" :link="content.contact_phone_link" external/>
 					</div>
 				</div>
 			</AppSection>

@@ -5,12 +5,17 @@ export interface Home extends MarkdownParsedContent {
 	description: string
 	listen: string
 	about: string
+	greetings_text: string
 	about_text: string
 	social: string
 	position: string
 	position_title: string
-	projects: string
+	thales_link: string
+	mission: string
+	experience: string
 	contact: string
 	contact_mail: string
+	contact_mail_link: string
 	contact_phone: string
+	contact_phone_link: string
 }
