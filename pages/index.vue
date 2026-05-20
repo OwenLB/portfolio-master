@@ -120,7 +120,6 @@ onMounted(() => {
 					<div class="job__title">
 						<h3>{{ content.position_title }}</h3>
 						<LinkText external label="Thales" :link="content.thales_link"/>
-						<p>{{ content.mission }}</p>
 					</div>
 				</div>
 				<div class="cell cell--mobile"></div>

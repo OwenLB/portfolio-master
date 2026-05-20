@@ -258,19 +258,28 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     all: unset;
     display: flex;
     align-items: center;
-    gap: space(2);
-    font-size: 0.8rem;
-    color: var(--primary);
     cursor: pointer;
-    width: fit-content;
-    @include transition(opacity);
+    width: 100%;
+    padding: space(3) 0;
+    color: var(--accent);
+    @include transition(color);
 
-    &:hover { opacity: 0.7; }
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+    }
 
     svg {
-      transition: transform 0.3s ease;
+      margin: 0 space(4);
+      flex-shrink: 0;
+      transition: transform 0.35s ease;
       &.rotated { transform: rotate(180deg); }
     }
+
+    &:hover { color: var(--primary); }
   }
 
   &__details-wrapper {

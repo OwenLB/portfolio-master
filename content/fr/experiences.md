@@ -6,7 +6,7 @@ items:
     from: "Septembre 2023"
     to: "Aujourd'hui"
     sub_content:
-      - company: "EDF (via Thales)"
+      - company: "EDF"
         position: "Ingénieur Logiciel Full Stack"
         type: "Mission"
         from: "Mai 2025"

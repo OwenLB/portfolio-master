@@ -6,7 +6,7 @@ items:
     from: "September 2023"
     to: "Now"
     sub_content:
-      - company: "EDF (via Thales)"
+      - company: "EDF"
         position: "Full Stack Software Engineer"
         type: "Mission"
         from: "May 2025"

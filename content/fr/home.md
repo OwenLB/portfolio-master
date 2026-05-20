@@ -8,7 +8,7 @@ about_text: "Ingénieur logiciel full stack. Front JS, back Java. En recherche d
 about_button: "En savoir plus"
 social: "SOCIAL"
 position: "POSTE"
-position_title: "Développeur web chez"
+position_title: "Développeur full stack chez"
 thales_link: "https://www.thalesgroup.com/fr"
 experience: "EXPÉRIENCES"
 contact: "CONTACT"
