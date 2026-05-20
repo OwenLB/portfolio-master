@@ -104,8 +104,6 @@ onMounted(() => {
 					<div class="socials-links">
 						<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
 								  :link="social.link" external/>
-						<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
-						<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
 					</div>
 				</div>
 			</AppSection>
@@ -121,11 +119,21 @@ onMounted(() => {
 				</div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
-				<div class="cell cell--double-column cell--double-row">
+				<div class="cell cell--double-column cell--triple-row">
 					<h2>{{ content.experience }}</h2>
 					<div class="experiences-content">
 						<LinkExperience v-for="experience in content.experiences" :experience="experience"/>
 					</div>
+				</div>
+			</AppSection>
+
+			<AppSection id="home__cv">
+				<div class="cell me content">
+					<div class="arc">
+						<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
+					</div>
+					<LinkText :label="aboutContent.resume" :link="aboutContent.resume_link" external/>
+					<LinkText :label="aboutContent.photo" link="https://lebecowen.myportfolio.com" external/>
 				</div>
 			</AppSection>
 
@@ -158,7 +166,7 @@ onMounted(() => {
 
 <style lang="scss">
 #home {
-	grid-template-rows: space(20) 300px repeat(7, auto) space(20);
+	grid-template-rows: space(20) 300px repeat(8, auto) space(20);
 
 	&__hero_top {
 		.cell {
@@ -265,6 +273,24 @@ onMounted(() => {
 		}
 	}
 
+	.arc {
+		width: 100%;
+		height: auto;
+		margin: 0 auto;
+		border-radius: 50% 50% 0 0;
+		background-color: #89d6ff;
+		padding-top: 6vh;
+		padding-right: 2.5vw;
+	}
+
+	.arc-image {
+		width: 100%;
+		margin-right: 20px;
+		margin-bottom: -5px;
+		height: auto;
+		object-fit: contain;
+	}
+
 	&__projects {
 		.job {
 			grid-column: span 2;
@@ -290,9 +316,17 @@ onMounted(() => {
 	}
 }
 
+@media screen and (max-width: $md) {
+	#home {
+		#home__cv .cell.me {
+			grid-column: span 2;
+		}
+	}
+}
+
 @media screen and (min-width: $md) {
 	#home {
-		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto auto space(20);
+		grid-template-rows: space(20) 300px 300px auto calc(200px + #{space(16)} + 1.5rem) auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
 		&__projects .cell.job,
