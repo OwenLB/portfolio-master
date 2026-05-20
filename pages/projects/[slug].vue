@@ -99,7 +99,7 @@ onBeforeMount(() => {
 
 			<AppSection id="project__related">
 				<div class="cell cell--triple-column content">
-					<h2>AUTRES PROJETS</h2>
+					<h2>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
 					<div class="projects">
 						<LinkProject v-for="project in related" :key="project._path" :label="project.title"
 									 :path="project._path" :type="project.type"/>

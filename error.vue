@@ -17,7 +17,7 @@ import "@lottiefiles/lottie-player";
 						autoplay
 						mode="normal"
 						src="/404.json"
-						style="width: 1200px"
+						style="width: 100%; max-width: 1200px"
 					>
 					</lottie-player>
 				</div>

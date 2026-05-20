@@ -2,30 +2,22 @@
 <script lang="ts" setup>
 import {Spotify} from "~/types/spotify";
 import {Lang} from "~/types/lang";
-import {onMounted} from "#imports";
 
 interface SpotifyAnimation {
 	title: HTMLElement | null
 	span: {
 		element: HTMLElement | null
-		width: string
 	}
 }
 const spotifyAnimation: SpotifyAnimation = ({
 	title: null,
 	span: {
 		element: null,
-		width: '0',
 	}
 })
 
-const spotify: Spotify = {
-  title: "Sundress",
-  artist: "A$AP Rocky",
-  url: "https://songwhip-web.songwhip.com/aap-rocky/sundress-2018",
-  isPlaying: true,
-  isConnected: true,
-};
+const lang = useLang()
+const { data: spotify } = await useFetch<Spotify>('/api/spotify')
 
 const assignTitleRef = (el: HTMLElement | null) => {
 	spotifyAnimation.title = el
@@ -34,27 +26,28 @@ const assignTitleRef = (el: HTMLElement | null) => {
 const assignTitleSpanRef = (el: HTMLElement | null) => {
 	spotifyAnimation.span.element = el
 }
-onMounted(() => {
 
+onMounted(() => {
 	if (spotifyAnimation.title && spotifyAnimation.span.element) {
-    if (spotifyAnimation.span.element.scrollWidth > spotifyAnimation.title.offsetWidth) {
-			spotifyAnimation.span.width = `-${spotifyAnimation.span.element.scrollWidth - spotifyAnimation.title.offsetWidth + 40}px`
-      spotifyAnimation.span.element.classList.add('animated')
+		if (spotifyAnimation.span.element.scrollWidth > spotifyAnimation.title.offsetWidth) {
+			spotifyAnimation.span.element.classList.add('animated')
 		}
 	}
 })
 </script>
 
 <template>
-	<component :is="spotify.isConnected ? 'a' : 'div'" :class="{spotify__link : spotify.isConnected}" :href="spotify.url"
-			   class="spotify__pill"
-			   target="_blank">
+	<component :is="spotify?.isConnected ? 'a' : 'div'" :class="{spotify__link : spotify?.isConnected}"
+			   :href="spotify?.isConnected ? spotify.url : undefined"
+			   :target="spotify?.isConnected ? '_blank' : undefined"
+			   :rel="spotify?.isConnected ? 'noopener noreferrer' : undefined"
+			   class="spotify__pill">
 		<div :ref="assignTitleRef" class="spotify__pill_title">
 			<span :ref="assignTitleSpanRef">{{
-					spotify.isConnected ? `${spotify.title} - ${spotify.artist}` : lang === Lang.Fr ? 'Déconnecté' : 'Disconnected'
+					spotify?.isConnected ? `${spotify.title} - ${spotify.artist}` : lang === Lang.Fr ? 'Déconnecté' : 'Disconnected'
 				}}</span>
 		</div>
-		<div :class="{'spotify__pill_icon--animated' : spotify.isConnected ? spotify.isPlaying : false  }"
+		<div :class="{'spotify__pill_icon--animated' : spotify?.isConnected ? spotify.isPlaying : false  }"
 			 aria-hidden="true"
 			 class="spotify__pill_icon">
 			<div class="spotify__pill_icon-bar"></div>

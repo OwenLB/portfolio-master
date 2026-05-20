@@ -10,6 +10,7 @@ const link = computed(() => props.external ? 'href' : 'to')
 
 <template>
 	<NuxtLink :[link]="props.link" :target="props.external? '_blank': '_self'"
+			  :rel="props.external ? 'noopener noreferrer' : undefined"
 			  class="text-link">
 		{{ props.label }}
 		<div class="text-link__icon">

@@ -4,7 +4,7 @@ export interface Project extends MarkdownParsedContent {
 	title: string
 	type: string
 	description: string
-	git: string
-	web?: string
+	git: [string, string]
+	web?: [string, string]
 	stack: string[]
 }

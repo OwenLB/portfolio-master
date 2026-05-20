@@ -3,10 +3,10 @@ import {Lang} from "~/types/lang";
 
 const lang = useLang()
 
-const {data: links} = await useAsyncData('links', () => queryContent('/').where({
-	_path: {$in: ['/about', '/legal']},
+const {data: legalLink} = await useAsyncData('legal', () => queryContent('/').where({
+	_path: '/legal',
 	_locale: lang.value
-}).find(), {watch: [() => lang.value]})
+}).findOne(), {watch: [() => lang.value]})
 </script>
 
 <template>
@@ -20,12 +20,10 @@ const {data: links} = await useAsyncData('links', () => queryContent('/').where(
 			</NuxtLink>
 		</div>
 		<div class="cell  links">
-			<NuxtLink v-for="link in links" :key="link._path" :to="link._path">
-				{{ link.title }}
-			</NuxtLink>
+			<NuxtLink v-if="legalLink" :to="legalLink._path">{{ legalLink.title }}</NuxtLink>
 		</div>
 		<div class="cell date cell--desktop">
-			2025
+			{{ new Date().getFullYear() }}
 		</div>
 		<div class="cell">
 		</div>

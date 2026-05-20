@@ -7,7 +7,7 @@ const lang = useLang()
 useHead({
 	link: [{
 		rel: 'canonical',
-		href: 'https://owenlebec.frF' + path
+		href: 'https://owenlebec.fr' + path
 	}]
 })
 
