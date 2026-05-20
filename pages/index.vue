@@ -292,7 +292,7 @@ onMounted(() => {
 	&__projects {
 		.job {
 			grid-column: span 2;
-			justify-content: space-between;
+			justify-content: flex-start;
 			min-height: calc(200px + #{space(16)} + 1.5rem);
 
 			&__title {
