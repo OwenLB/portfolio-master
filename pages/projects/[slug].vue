@@ -78,7 +78,7 @@ onBeforeMount(() => {
 				<div class="cell cell--double-column details">
 					<h2>DETAILS</h2>
 					<p>{{ content.description }}</p>
-					<LinkText :label="content.git[0]" :link="content.git[1]" external/>
+					<LinkText v-if="content.git" :label="content.git[0]" :link="content.git[1]" external/>
 					<LinkText v-if="content.web" :label="content.web[0]" :link="content.web[1]" external/>
 				</div>
 				<div class="cell stack">
