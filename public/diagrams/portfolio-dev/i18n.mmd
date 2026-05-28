@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant U as Utilisateur
+    participant Toggle as Header toggle FR↔EN
+    participant State as useState lang
+    participant Cookie as Cookie lang
+    participant Query as useAsyncData
+
+    U->>Toggle: Clic FR/EN
+    Toggle->>State: state.value = Lang.En
+    State->>Cookie: watch() → cookie = "en"
+    Note over Query: Déclaré avec watch: [() => props.lang]
+    State-->>Query: Invalidation automatique
+    Query->>Query: queryContent().where(_locale = "en")
+    Query-->>U: Contenu mis à jour in-place
+    Note over U: Pas de rechargement ni de navigation
