@@ -18,6 +18,7 @@ const {visible, transform} = useCursor()
 	border-radius: 50%;
 	filter: blur(space(20));
 	background: var(--primary);
+	will-change: transform;
 }
 
 .v-enter-active,

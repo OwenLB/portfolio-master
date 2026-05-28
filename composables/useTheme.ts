@@ -4,7 +4,7 @@ import {Theme} from '~/types/theme';
 export default () => {
 	let system = Theme.Light
 
-	if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+	if (import.meta.client && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 		system = Theme.Dark
 	}
 

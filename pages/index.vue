@@ -76,7 +76,7 @@ onMounted(() => {
 				</div>
 				<div class="cell responsive topographic">
 					<div class="topographic__svg">
-						<AppTopographic/>
+						<ClientOnly><AppTopographic/></ClientOnly>
 					</div>
 				</div>
 			</AppSection>
@@ -84,7 +84,7 @@ onMounted(() => {
 			<AppSection id="home__hero_bottom">
 				<div class="cell cell--double-column cell--desktop topographic">
 					<div class="topographic__svg">
-						<AppTopographic/>
+						<ClientOnly><AppTopographic/></ClientOnly>
 					</div>
 				</div>
 				<div class="cell spotify">
@@ -148,7 +148,7 @@ onMounted(() => {
 				<div class="cell right-col cell--double-column content">
 					<div class="me">
 						<div class="arc">
-							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp">
+							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp" width="420" height="420">
 						</div>
 						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
 						<LinkText :label="profileContent.photo" link="https://lebecowen.myportfolio.com" external/>

@@ -17,7 +17,7 @@ const spotifyAnimation: SpotifyAnimation = ({
 })
 
 const lang = useLang()
-const { data: spotify } = await useFetch<Spotify>('/api/spotify')
+const { data: spotify } = useFetch<Spotify>('/api/spotify', { server: false, lazy: true })
 
 const assignTitleRef = (el: HTMLElement | null) => {
 	spotifyAnimation.title = el

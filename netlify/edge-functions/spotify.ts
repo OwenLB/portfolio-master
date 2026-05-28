@@ -55,5 +55,5 @@ export default async () => {
 };
 
 export const config: Config = {
-	path: "/spotify",
+	path: "/api/spotify",
 };
