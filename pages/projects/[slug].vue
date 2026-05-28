@@ -218,6 +218,10 @@ onBeforeMount(() => {
 			figure img {
 				display: block;
 			}
+
+			.svg-wrapper svg {
+				background: transparent !important;
+			}
 		}
 	}
 
@@ -231,6 +235,77 @@ onBeforeMount(() => {
 				flex-grow: 1;
 			}
 		}
+	}
+}
+
+html[data-theme="dark"] #project__description .content .svg-wrapper svg {
+	// Flowchart nodes
+	.node rect, .node circle, .node ellipse, .node polygon, .node path {
+		fill: var(--accent) !important;
+		stroke: var(--primary) !important;
+	}
+
+	// Subgraphs / clusters
+	.cluster rect {
+		fill: var(--accent) !important;
+		stroke: var(--primary) !important;
+	}
+
+	// All SVG text
+	text, tspan {
+		fill: var(--text) !important;
+	}
+
+	// HTML inside foreignObject (flowchart node labels + edge labels)
+	foreignObject div, foreignObject span, foreignObject p {
+		color: var(--text) !important;
+		background-color: transparent !important;
+	}
+
+	// Edge label backgrounds
+	.edgeLabel, .edgeLabel p,
+	.labelBkg {
+		background-color: var(--background) !important;
+	}
+
+	.edgeLabel rect {
+		fill: var(--background) !important;
+		opacity: 1 !important;
+	}
+
+	// Flowchart edges
+	.flowchart-link, .edgePath .path {
+		stroke: rgba(246, 249, 252, 0.4) !important;
+	}
+
+	// Arrows
+	.marker, .arrowheadPath, [id$="-arrowhead"] path,
+	[id$="-crosshead"] path, [id$="-filled-head"] path {
+		fill: var(--text) !important;
+		stroke: var(--text) !important;
+	}
+
+	// Sequence: actor boxes + label boxes + activation boxes
+	.actor, .labelBox,
+	.activation0, .activation1, .activation2 {
+		fill: var(--accent) !important;
+		stroke: var(--primary) !important;
+	}
+
+	// Sequence: lifelines
+	.actor-line {
+		stroke: rgba(246, 249, 252, 0.2) !important;
+	}
+
+	// Sequence: message arrows
+	.messageLine0, .messageLine1 {
+		stroke: rgba(246, 249, 252, 0.5) !important;
+	}
+
+	// Sequence: notes
+	rect.note {
+		fill: color.adjust($dark-accent, $lightness: +6%) !important;
+		stroke: var(--primary) !important;
 	}
 }
 
