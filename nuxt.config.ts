@@ -3,14 +3,6 @@ export default defineNuxtConfig({
 	ssr: false,
 	app: {
 		pageTransition: {name: 'page', mode: 'out-in', appear: true},
-		head: {
-			link: [
-				{ rel: 'preload', href: '/fonts/PPFormulaCondensed-Bold.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
-				{ rel: 'preload', href: '/fonts/PPFormulaCondensed-Light.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
-				{ rel: 'preload', href: '/fonts/Strawford-Regular.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
-				{ rel: 'preload', href: '/fonts/Strawford-Medium.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
-			]
-		}
 	},
 	runtimeConfig: {
 		spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
@@ -24,15 +16,6 @@ export default defineNuxtConfig({
 					additionalData: '@use "@/assets/scss/style.scss" as *;'
 				}
 			}
-		},
-		build: {
-			minify: 'terser',
-			terserOptions: {
-				compress: {
-					drop_console: true,
-					drop_debugger: true,
-				}
-			}
 		}
 	},
 	modules: [
@@ -43,8 +26,7 @@ export default defineNuxtConfig({
 			fields: ['title', 'slug', 'type']
 		},
 		locales: ['fr', 'en'],
-		defaultLocale: 'fr',
-		highlight: false,
+		defaultLocale: 'fr'
 	},
 	image: {
 		provider: 'netlify',

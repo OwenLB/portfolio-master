@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-onMounted(async () => {
-	await import('@lottiefiles/lottie-player')
-})
+import "@lottiefiles/lottie-player";
 </script>
 
 <template>
