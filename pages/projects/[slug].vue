@@ -209,12 +209,17 @@ onBeforeMount(() => {
 				}
 			}
 
+			figure {
+				border-radius: 8px;
+				overflow: hidden;
+				border: 1px solid var(--accent);
+			}
+
 			figure img {
-				border-radius: 4px;
+				display: block;
 			}
 		}
 	}
-
 
 	&__related {
 		.projects {
@@ -227,10 +232,6 @@ onBeforeMount(() => {
 			}
 		}
 	}
-}
-
-html[data-theme="dark"] #project__description .content figure img {
-	filter: invert(1);
 }
 
 @media screen and (min-width: $md) {
