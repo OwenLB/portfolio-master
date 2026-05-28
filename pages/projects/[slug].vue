@@ -188,8 +188,33 @@ onBeforeMount(() => {
 				max-width: 100%;
 				object-fit: cover;
 			}
+
+			code {
+				font-family: 'Courier New', monospace;
+				font-size: 0.85em;
+				background: var(--accent);
+				color: var(--text);
+				padding: 1px space(2);
+				border-radius: 3px;
+				word-break: break-word;
+			}
+
+			ul li {
+				display: block;
+
+				&:before {
+					display: inline-block;
+					vertical-align: middle;
+					margin-right: space(4);
+				}
+			}
+
+			figure img {
+				border-radius: 4px;
+			}
 		}
 	}
+
 
 	&__related {
 		.projects {
@@ -202,6 +227,10 @@ onBeforeMount(() => {
 			}
 		}
 	}
+}
+
+html[data-theme="dark"] #project__description .content figure img {
+	filter: invert(1);
 }
 
 @media screen and (min-width: $md) {
