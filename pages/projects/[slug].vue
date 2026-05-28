@@ -219,9 +219,6 @@ onBeforeMount(() => {
 				display: block;
 			}
 
-			.svg-wrapper svg {
-				background: transparent !important;
-			}
 		}
 	}
 
