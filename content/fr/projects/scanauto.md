@@ -8,7 +8,6 @@ stack: [
   "React",
   "Tailwind CSS",
   "Django",
-  "Django REST Framework",
   "Claude API",
   "Supabase",
   "Firecrawl",
