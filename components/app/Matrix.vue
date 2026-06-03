@@ -9,7 +9,7 @@ onMounted(() => {
 	if (!ctx) return
 
 	// Trigger wave once across all Matrix instances (1st caller wins)
-	triggerMatrixWave(1500)
+	triggerMatrixWave(650)
 
 	const CHARS       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZｦｧｩｫｭｯｱｳｵｷｹｻｽｿﾁﾃﾅﾇﾉ0123456789<>[]|/\\'
 	const FS          = 9

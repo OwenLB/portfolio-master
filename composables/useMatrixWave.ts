@@ -6,7 +6,7 @@ const DURATION   = 2000  // ms for the wave to cross the page
 const PAGE_RANGE = 2600  // px of page height the wave covers
 const WAVE_START = -180  // px above the viewport before entering
 
-export function triggerMatrixWave(delayMs = 1500) {
+export function triggerMatrixWave(delayMs = 650) {
 	// Only the first instance to call this actually triggers the wave
 	if (triggered) return
 	triggered = true
