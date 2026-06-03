@@ -3,6 +3,7 @@ import {Home} from "~/types/pages/home";
 import {About} from "~/types/pages/about";
 import {Experiences} from "~/types/pages/experiences";
 import {Project} from "~/types/project";
+import {Socials} from "~/types/social";
 import {Lang} from "~/types/lang";
 
 const props = defineProps<{
@@ -34,6 +35,10 @@ const {data: experiencesData}: { data: Experiences } = await useAsyncData('exper
 const {data: projects}: {
 	data: Project[]
 } = await useAsyncData('projects', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).sort({order: 1}).find(), {watch: [() => props.lang]})
+
+const {data: socials}: {
+	data: Socials
+} = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
 useSeoMeta({
 	description: content.value.description,
@@ -90,11 +95,20 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="home__about">
-				<div class="cell cell--triple-column about">
+				<div class="cell cell--double-column about">
 					<div>
 						<h2>{{ content.about }}</h2> <br/>
 						<p>{{ content.greetings_text }}</p>
 						<p>{{ content.about_text }}</p>
+					</div>
+				</div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell socials">
+					<h2>{{ content.social }}</h2>
+					<div class="socials-links">
+						<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
+								  :link="social.link" external/>
 					</div>
 				</div>
 			</AppSection>
@@ -236,6 +250,17 @@ onMounted(() => {
 			justify-content: space-between;
 		}
 
+		.socials {
+			grid-column: span 2;
+			justify-content: space-between;
+
+			.socials-links {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				gap: space(4);
+			}
+		}
 	}
 
 	.projects {
@@ -319,7 +344,8 @@ onMounted(() => {
 		grid-template-rows: space(20) 300px 300px auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
-		&__projects .cell.job {
+		&__projects .cell.job,
+		&__about .cell.socials {
 			grid-column: initial;
 		}
 
