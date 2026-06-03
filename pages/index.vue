@@ -3,7 +3,6 @@ import {Home} from "~/types/pages/home";
 import {About} from "~/types/pages/about";
 import {Experiences} from "~/types/pages/experiences";
 import {Project} from "~/types/project";
-import {Socials} from "~/types/social";
 import {Lang} from "~/types/lang";
 
 const props = defineProps<{
@@ -40,9 +39,6 @@ useSeoMeta({
 	description: content.value.description,
 })
 
-const {data: socials}: {
-	data: Socials
-} = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
 const projectsContainer = ref<HTMLElement | null>(null)
 const projectsVisibility = ref(false)
@@ -101,17 +97,6 @@ onMounted(() => {
 						<p>{{ content.about_text }}</p>
 					</div>
 				</div>
-				<div class="cell cell--mobile">
-				</div>
-				<div class="cell cell--mobile">
-				</div>
-				<div class="cell socials">
-					<h2>{{ content.social }}</h2>
-					<div class="socials-links">
-						<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
-								  :link="social.link" external/>
-					</div>
-				</div>
 			</AppSection>
 
 			<AppSection id="home__projects">
@@ -151,7 +136,7 @@ onMounted(() => {
 							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp" width="420" height="420">
 						</div>
 						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
-						<LinkText :label="profileContent.photo" link="https://lebecowen.myportfolio.com" external/>
+						<LinkText :label="profileContent.photo" link="https://photo.owenlebec.fr" external/>
 					</div>
 					<div class="contact">
 						<h2>{{ content.contact }}</h2>
@@ -251,17 +236,6 @@ onMounted(() => {
 			justify-content: space-between;
 		}
 
-		.socials {
-			grid-column: span 2;
-			justify-content: space-between;
-
-			.socials-links {
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				gap: space(4);
-			}
-		}
 	}
 
 	.projects {
@@ -345,8 +319,7 @@ onMounted(() => {
 		grid-template-rows: space(20) 300px 300px auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
-		&__projects .cell.job,
-		&__about .cell.socials {
+		&__projects .cell.job {
 			grid-column: initial;
 		}
 
