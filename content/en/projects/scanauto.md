@@ -85,9 +85,23 @@ The core challenge was designing the orchestration pipeline: managing step depen
 
 ---
 
-### Frontend State Machine (Reducer)
+### AI Pipeline Dependencies
 
-![Frontend State Machine](/diagrams/scanauto/05-frontend-state-machine.svg)
+The analysis runs on 5 Claude calls chained and partially parallelised. Step dependencies are strict: each call only receives data from the steps it actually depends on.
+
+Before any LLM call, the server pre-computes `km/year`, `vehicle age`, and `listing age` — injected as immutable facts to prevent arithmetic errors on the model side.
+
+**R1 — Extraction (Haiku 4.5)** — First call, no dependencies. The raw listing is sent as-is. Claude extracts structured data: vehicle identification, mileage, options, seller signals, missing information.
+
+**R2 + R5 — Scoring & Practical Info (Sonnet 4.6 + Haiku 4.5, parallel)** — Both depend on R1 only. As soon as R1 completes, both calls fire simultaneously via independent Python threads. R2 computes the overall score, market positioning, and engine reliability analysis. R5 handles regulatory info in parallel: Crit'Air, registration, insurance estimate, fuel consumption.
+
+**R3 — Costs & Warnings (Sonnet 4.6)** — Depends on R1 + R2. Receives a slimmed context (relevant fields only, not full JSONs) to limit token usage on Sonnet. Produces upcoming repairs, 5-year cost projection, and a model-specific inspection checklist.
+
+**R4 — Negotiation (Haiku 4.5)** — Last call, minimal context: vehicle identity (R1), price and seller signals (R2), risk summary (R3), and the server-computed `market_positioning_percentage`. Generates a justified target price, a neutral seller message, and a depreciation projection at 2 and 5 years.
+
+Each result is streamed via SSE as soon as it's ready — the report builds progressively on the frontend. If R3 or R4 fail, the report still renders with a localised error state on the affected section.
+
+![AI Pipeline](/diagrams/scanauto/05-pipeline-ia.svg)
 
 ---
 

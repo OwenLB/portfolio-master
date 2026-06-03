@@ -85,9 +85,23 @@ Le challenge principal a été la conception du pipeline d'orchestration : gére
 
 ---
 
-### Gestion d'état frontend (reducer)
+### Dépendances et pipeline IA
 
-![Gestion d'état frontend](/diagrams/scanauto/05-frontend-state-machine.svg)
+L'analyse repose sur 5 appels Claude enchaînés et partiellement parallélisés. Les dépendances entre étapes sont strictes : chaque appel ne reçoit que les données des étapes dont il a réellement besoin.
+
+Avant tout appel LLM, le serveur pré-calcule `km/an`, `âge du véhicule` et `âge de l'annonce` — injectés comme faits immuables pour éviter les erreurs de calcul côté modèle.
+
+**R1 — Extraction (Haiku 4.5)** — Premier appel, aucune dépendance. L'annonce brute est envoyée telle quelle. Claude extrait les données structurées : identification, kilométrage, options, signaux vendeur, informations manquantes.
+
+**R2 + R5 — Scoring & Infos pratiques (Sonnet 4.6 + Haiku 4.5, en parallèle)** — Dépendent tous les deux de R1 uniquement. Dès que R1 termine, les deux appels partent simultanément via des threads Python indépendants. R2 calcule le score global, positionne le prix marché et analyse la fiabilité moteur. R5 traite en parallèle les infos réglementaires : Crit'Air, carte grise, assurance, consommation.
+
+**R3 — Coûts & Vigilance (Sonnet 4.6)** — Dépend de R1 + R2. Reçoit un contexte allégé (champs pertinents uniquement, pas les JSONs complets) pour limiter les tokens sur Sonnet. Produit les travaux imminents, la projection de coûts sur 5 ans et une checklist d'inspection spécifique au modèle.
+
+**R4 — Négociation (Haiku 4.5)** — Dernier appel, contexte minimal : identité du véhicule (R1), prix et signaux vendeur (R2), résumé des risques (R3), et le `positionnement_pourcentage` pré-calculé. Génère un prix cible argumenté, un message vendeur neutre et une projection de décote à 2 et 5 ans.
+
+Chaque résultat est streamé en SSE dès qu'il est prêt — le rapport se construit progressivement côté frontend. Si R3 ou R4 échouent, le rapport s'affiche quand même avec un état d'erreur localisé sur la section concernée.
+
+![Pipeline IA](/diagrams/scanauto/05-pipeline-ia.svg)
 
 ---
 
