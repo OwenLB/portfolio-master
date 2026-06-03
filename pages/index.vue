@@ -67,6 +67,7 @@ onMounted(() => {
 
 <template>
 	<div id="home" class="page">
+		<AppWave/>
 		<AppEffect/>
 		<AppHeader/>
 
