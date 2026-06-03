@@ -1,7 +1,7 @@
 ---
 title: 'ScanAuto'
 type: "Projet Personnel"
-description: "SaaS d'analyse de voitures d'occasion par IA — pipeline Claude multi-étapes avec streaming SSE, auth Supabase, BYOK et extension Chrome."
+description: "SaaS d'analyse de véhicules d'occasion par IA — pipeline Claude multi-étapes avec streaming SSE, auth Supabase, BYOK et extension Chrome."
 git: [ "GitHub", "https://github.com/OwenLB/ScanAuto" ]
 web: [ "scanauto.netlify.app", "https://scanauto.netlify.app" ]
 stack: [
@@ -24,7 +24,7 @@ stack: [
 
 ## Contexte
 
-ScanAuto est une application SaaS full-stack qui génère un rapport d'analyse complet sur une annonce de voiture d'occasion. L'utilisateur colle une URL ou un texte brut — leboncoin, lacentrale, AutoScout24 — et reçoit en moins de 60 secondes : un score global, une analyse de fiabilité moteur, une projection de coûts sur 5 ans et une stratégie de négociation argumentée. Le projet est né d'un constat simple : les acheteurs de véhicules d'occasion n'ont pas les outils pour évaluer rapidement si une annonce est honnête ou piégée.
+ScanAuto est une application SaaS full-stack qui génère un rapport d'analyse complet sur une annonce de véhicule d'occasion (voiture ou moto). L'utilisateur colle une URL leboncoin ou un texte brut et reçoit en moins de 60 secondes : un score global, une analyse de fiabilité moteur, une projection de coûts sur 5 ans et une stratégie de négociation argumentée. Le projet est né d'un besoin personnel avant tout : en cherchant ma propre voiture d'occasion, j'ai réalisé que les acheteurs particuliers n'ont aucun outil pour évaluer rapidement si une annonce est honnête ou piégée.
 
 ## Stack & Architecture
 

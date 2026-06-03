@@ -1,7 +1,7 @@
 ---
 title: 'ScanAuto'
 type: "Personal Project"
-description: "AI-powered used-car analysis SaaS — multi-step Claude pipeline with SSE streaming, Supabase auth, BYOK encryption, and a Chrome extension."
+description: "AI-powered used-vehicle analysis SaaS — multi-step Claude pipeline with SSE streaming, Supabase auth, BYOK encryption, and a Chrome extension."
 git: [ "GitHub", "https://github.com/OwenLB/ScanAuto" ]
 web: [ "scanauto.netlify.app", "https://scanauto.netlify.app" ]
 stack: [
@@ -24,7 +24,7 @@ stack: [
 
 ## Context
 
-ScanAuto is a full-stack SaaS application that generates comprehensive analysis reports for used-car listings. The user pastes a URL or raw text — from leboncoin, lacentrale, or AutoScout24 — and receives within 60 seconds: a global score, engine reliability analysis, 5-year cost projection, and a data-backed negotiation strategy. The project was born from a simple observation: private buyers have no tooling to quickly assess whether a listing is honest or a trap.
+ScanAuto is a full-stack SaaS application that generates comprehensive analysis reports for used-vehicle listings (cars and motorcycles). The user pastes a leboncoin URL or raw text and receives within 60 seconds: a global score, engine reliability analysis, 5-year cost projection, and a data-backed negotiation strategy. The project started as a personal need: while searching for my own used car, I realised private buyers have no tooling to quickly assess whether a listing is honest or a trap.
 
 ## Stack & Architecture
 
