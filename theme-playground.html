@@ -9,19 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Big+Shoulders+Display:wght@400;700;900&family=Unbounded:wght@400;700;900&family=Six+Caps&family=Chakra+Petch:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,700;1,300&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,600,700&display=swap" rel="stylesheet">
 <style>
+@font-face{font-family:'PP Formula Condensed';font-weight:300;src:url('./assets/fonts/PPFormulaCondensed-Light.woff2')format('woff2');font-display:swap}
+@font-face{font-family:'PP Formula Condensed';font-weight:bold;src:url('./assets/fonts/PPFormulaCondensed-Bold.woff2')format('woff2');font-display:swap}
+@font-face{font-family:'Strawford';font-weight:300;src:url('./assets/fonts/Strawford-Light.woff2')format('woff2');font-display:swap}
+@font-face{font-family:'Strawford';font-weight:400;src:url('./assets/fonts/Strawford-Regular.woff2')format('woff2');font-display:swap}
+@font-face{font-family:'Strawford';font-weight:500;src:url('./assets/fonts/Strawford-Medium.woff2')format('woff2');font-display:swap}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 /* ── Tokens ─────────────────────────────────────────────── */
 :root {
   --p: #237afd;
+  --p-grad: #237afd;
   --bg: #F6F9FC;
   --text: #09223B;
   --text2: #3a5068;
   --ac: #D7E5F2;
   --ac-rgb: 215,229,242;
   --border: rgba(0,0,0,0.07);
-  --font-head: 'Bebas Neue', sans-serif;
-  --font-body: 'Space Grotesk', system-ui, sans-serif;
+  --font-head: 'PP Formula Condensed', 'Bebas Neue', sans-serif;
+  --font-body: 'Strawford', system-ui, sans-serif;
   --r: 14px;
   --gap: 10px;
 }
@@ -184,56 +191,79 @@ aside h1 {
   color:var(--text); font-size:.82rem; transition:color .3s, border-color .3s;
 }
 .logo-text {
-  font-family:var(--font-head); font-size:1.3rem; font-weight:700;
-  color:var(--text); letter-spacing:.03em; transition:color .3s;
+  font-family:var(--font-head); font-size:1.4rem; font-weight:bold;
+  text-transform:uppercase; color:var(--text); letter-spacing:.02em; transition:color .3s;
 }
-.pnav { display:flex; gap:18px; font-size:.78rem; color:var(--text2); }
-.pnav-ctrl { display:flex; gap:10px; font-size:.72rem; color:var(--text2); }
+.pnav-ctrl { display:flex; gap:14px; font-size:.75rem; color:var(--text2); align-items:center; }
 
 .h1 {
   font-family:var(--font-head); color:var(--text);
   line-height:.95; transition:color .3s;
 }
-.h1 .big { font-size:clamp(2rem,4.5vw,4rem); font-weight:700; display:block; }
-.h1 .accent-word { color:var(--p); transition:color .3s; }
-.h1 .light-word { font-weight:300; opacity:.55; font-size:clamp(1.4rem,3vw,2.6rem); }
+.h1 .big { font-size:clamp(2.5rem,5vw,5rem); font-weight:bold; text-transform:uppercase; display:block; }
+.h1 .accent-word {
+  background:var(--p-grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; transition:background .3s;
+}
+.h1 .light-word { font-weight:300; opacity:.5; font-size:clamp(1.6rem,3.2vw,3rem); text-transform:uppercase; }
 
 .lbl {
-  font-size:.6rem; font-weight:600; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--text2); margin-bottom:6px;
+  font-size:.58rem; font-weight:500; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--text2); margin-bottom:auto;
   transition:color .3s;
 }
-.body { font-size:.8rem; line-height:1.65; color:var(--text2); transition:color .3s; }
-.tag {
-  display:inline-flex; align-items:center; gap:4px;
-  font-size:.68rem; font-weight:500;
-  color:var(--p); padding:3px 9px; border-radius:100px;
-  background:rgba(var(--ac-rgb),.5);
-  border:1px solid rgba(var(--ac-rgb),.9);
-  transition:color .3s, background .3s, border-color .3s;
+.body { font-size:.82rem; line-height:1.7; color:var(--text2); transition:color .3s; }
+
+/* Spotify pill — matching real component */
+.spotify-pill {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; padding:4px 4px 4px 4px;
+  border:1px solid var(--ac); border-radius:100px;
+  transition:border-color .3s; margin-top:auto;
 }
-.ptitle { font-family:var(--font-head); font-size:1.3rem; font-weight:700; color:var(--text); transition:color .3s; }
-.ptype { font-size:.7rem; color:var(--text2); margin-top:3px; transition:color .3s; }
-.link { font-size:.78rem; color:var(--p); transition:color .3s; display:flex; align-items:center; gap:3px; }
-.link::after { content:'↗'; font-size:.65rem; }
-.stitle { font-family:var(--font-head); font-size:.82rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text2); margin-bottom:10px; transition:color .3s; }
+.spotify-pill-text { flex:1; padding-left:10px; font-size:.82rem; font-weight:500; color:var(--text); overflow:hidden; white-space:nowrap; }
+.spotify-pill-icon {
+  background:var(--p-grad); border-radius:50%;
+  width:38px; height:38px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  transition:background .3s;
+}
+.spotify-pill-icon span {
+  display:block; background:#fff; width:3px; height:3px; border-radius:4px;
+}
+
+/* Text-link pill — matching real component */
+.text-link-pill {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 16px; height:48px;
+  border:1px solid var(--ac); border-radius:100px;
+  font-size:.84rem; color:var(--text); text-decoration:none;
+  transition:border-color .3s; cursor:pointer; background:transparent;
+  font-family:var(--font-body);
+}
+.text-link-pill .arrow { color:var(--p); transition:color .3s; }
+.text-link-pill:hover { border-color:var(--p); }
+
+/* Project rows */
+.proj-row {
+  display:flex; align-items:center; padding:9px 0;
+  border-bottom:1px solid var(--border);
+  font-family:var(--font-head); font-size:1.4rem; font-weight:bold;
+  text-transform:uppercase; color:var(--text);
+  transition:color .3s, border-color .3s;
+}
+.proj-row:last-child { border-bottom:none; }
+.proj-type { font-size:.6rem; font-weight:400; font-family:var(--font-body); color:var(--text2); margin-left:auto; text-transform:none; }
+
+/* Experience list */
+.stitle { font-size:.58rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--text2); margin-bottom:10px; transition:color .3s; }
 .exp {
   display:flex; justify-content:space-between; align-items:flex-start;
-  padding:7px 0; border-bottom:1px solid var(--border);
-  font-size:.78rem; color:var(--text); transition:color .3s, border-color .3s;
+  padding:8px 0; border-bottom:1px solid var(--border);
+  font-size:.8rem; color:var(--text); transition:color .3s, border-color .3s;
 }
 .exp span { color:var(--text2); font-size:.7rem; }
-.bar { height:3px; background:rgba(var(--ac-rgb),.5); border-radius:100px; margin-top:10px; overflow:hidden; }
-.bar-fill { height:100%; background:var(--p); width:40%; transition:background .3s; }
-.btn-p {
-  display:inline-flex; align-items:center; gap:5px;
-  background:var(--p); color:#fff; border:none;
-  padding:8px 14px; border-radius:8px; font-size:.78rem; font-weight:600;
-  cursor:pointer; font-family:var(--font-body); transition:background .3s;
-  margin-top:10px;
-}
-.spot-track { font-size:.78rem; color:var(--text); transition:color .3s; }
-.spot-artist { font-size:.68rem; color:var(--text2); margin-top:2px; transition:color .3s; }
+.exp:last-child { border-bottom:none; }
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px}
@@ -295,17 +325,36 @@ aside h1 {
 
   <!-- COLORS -->
   <div class="cs">
-    <h2>Couleur principale</h2>
+    <h2>Variantes bleues</h2>
     <div class="color-grid" id="col-list">
-      <div class="col-opt on"  data-c="#237afd" data-cd="#569dff"><div class="col-swatch" style="background:#237afd"></div><span class="col-name">Bleu<br>actuel</span></div>
-      <div class="col-opt"     data-c="#FF5500" data-cd="#ff7433"><div class="col-swatch" style="background:#FF5500"></div><span class="col-name">Orange<br>brûlant</span></div>
-      <div class="col-opt"     data-c="#FF0080" data-cd="#ff4dab"><div class="col-swatch" style="background:#FF0080"></div><span class="col-name">Hot<br>pink</span></div>
-      <div class="col-opt"     data-c="#00CFFF" data-cd="#33daff"><div class="col-swatch" style="background:#00CFFF"></div><span class="col-name">Cyan<br>électrique</span></div>
-      <div class="col-opt"     data-c="#C8FF00" data-cd="#d4ff33"><div class="col-swatch" style="background:#C8FF00"></div><span class="col-name">Acid<br>lime</span></div>
-      <div class="col-opt"     data-c="#7B2FFF" data-cd="#9d5fff"><div class="col-swatch" style="background:#7B2FFF"></div><span class="col-name">Violet<br>profond</span></div>
-      <div class="col-opt"     data-c="#00FF88" data-cd="#33ffaa"><div class="col-swatch" style="background:#00FF88"></div><span class="col-name">Neon<br>vert</span></div>
-      <div class="col-opt"     data-c="#FF2D55" data-cd="#ff6680"><div class="col-swatch" style="background:#FF2D55"></div><span class="col-name">Rouge<br>neon</span></div>
-      <div class="col-opt"     data-c="#FFB800" data-cd="#ffcc44"><div class="col-swatch" style="background:#FFB800"></div><span class="col-name">Or<br>chaud</span></div>
+      <!-- A: Minuit — très sombre → bleu primaire / sombre: primaire → bleu clair -->
+      <div class="col-opt" data-c="#237afd" data-cd="#569dff"
+           data-cg="linear-gradient(135deg,#05102e,#0c2878 60%,#237afd)"
+           data-cgd="linear-gradient(135deg,#237afd,#5daeff)">
+        <div class="col-swatch" style="background:linear-gradient(135deg,#05102e,#0c2878 60%,#237afd)"></div>
+        <span class="col-name">Minuit</span>
+      </div>
+      <!-- B: Marine — navy chaud → bleu roi / sombre: bleu roi → azure clair -->
+      <div class="col-opt" data-c="#2e80ff" data-cd="#70b0ff"
+           data-cg="linear-gradient(135deg,#091c3a,#163c96 60%,#2e80ff)"
+           data-cgd="linear-gradient(135deg,#1c5ae0,#70b0ff)">
+        <div class="col-swatch" style="background:linear-gradient(135deg,#091c3a,#163c96 60%,#2e80ff)"></div>
+        <span class="col-name">Marine</span>
+      </div>
+      <!-- C: Encre — indigo froid → électrique / sombre: indigo → pervenche -->
+      <div class="col-opt" data-c="#2354e8" data-cd="#7abcff"
+           data-cg="linear-gradient(135deg,#080e2c,#10228c 60%,#2354e8)"
+           data-cgd="linear-gradient(135deg,#2c60f0,#7abcff)">
+        <div class="col-swatch" style="background:linear-gradient(135deg,#080e2c,#10228c 60%,#2354e8)"></div>
+        <span class="col-name">Encre</span>
+      </div>
+      <!-- D: Azur clair + Marine sombre -->
+      <div class="col-opt on" data-c="#3a8cff" data-cd="#70b0ff"
+           data-cg="linear-gradient(135deg,#0e2248,#1a4aa0 60%,#3a8cff)"
+           data-cgd="linear-gradient(135deg,#1c5ae0,#70b0ff)">
+        <div class="col-swatch" style="background:linear-gradient(135deg,#0e2248,#1a4aa0 60%,#3a8cff)"></div>
+        <span class="col-name">Azur / Marine</span>
+      </div>
     </div>
   </div>
 </aside>
@@ -313,79 +362,80 @@ aside h1 {
 <!-- ════════════════════════ PREVIEW ════════════════════════ -->
 <div id="preview">
 
-  <!-- Header bar -->
+  <!-- Header -->
   <div class="pheader">
     <span class="logo-text">Owen Le Bec</span>
-    <div class="pnav"><span>Projets</span><span>À propos</span></div>
-    <div class="pnav-ctrl"><span>FR / EN</span><span>☀</span></div>
+    <div class="pnav-ctrl">
+      <span>FR</span>
+      <span style="display:inline-block;width:32px;height:18px;border:1px solid var(--ac);border-radius:10px;position:relative;cursor:pointer;">
+        <span style="display:block;width:8px;height:8px;background:var(--p);border-radius:50%;position:absolute;top:4px;left:4px;transition:.3s"></span>
+      </span>
+      <span>EN</span>
+      <span style="color:var(--text2)">☀</span>
+    </div>
   </div>
 
   <!-- Row 1 : hero -->
   <div class="bento">
-    <div class="cell cell-clear cell--2" style="min-height:160px;justify-content:flex-start;padding-top:22px">
+    <div class="cell cell-clear cell--2" style="min-height:170px;justify-content:flex-end">
       <div class="h1">
-        <span class="light-word">Designer &</span>
+        <span class="light-word">Designer &amp;</span>
         <span class="big">Développeur<br><span class="accent-word">Frontend.</span></span>
       </div>
     </div>
-    <div class="cell cell--2" style="min-height:160px;padding:0" id="pc1">
+    <div class="cell cell--2" style="min-height:170px;padding:0" id="pc1">
       <canvas id="cv1"></canvas>
     </div>
   </div>
 
-  <!-- Row 2 -->
+  <!-- Row 2 : canvas + spotify + job -->
   <div class="bento">
     <div class="cell cell--2" style="padding:0" id="pc2">
       <canvas id="cv2"></canvas>
     </div>
     <div class="cell">
       <div class="lbl">En écoute</div>
-      <div class="spot-track">Tame Impala</div>
-      <div class="spot-artist">Let It Happen</div>
-      <div class="bar"><div class="bar-fill"></div></div>
+      <div class="spotify-pill">
+        <span class="spotify-pill-text">Tame Impala — Let It Happen</span>
+        <div class="spotify-pill-icon"><span></span><span></span><span></span></div>
+      </div>
     </div>
     <div class="cell">
       <div class="lbl">Poste actuel</div>
-      <div class="body">Ingénieur Frontend</div>
-      <a class="link" style="margin-top:6px">Thales</a>
+      <a class="text-link-pill" style="margin-top:auto">Thales <span class="arrow">↗</span></a>
     </div>
   </div>
 
-  <!-- Row 3 -->
+  <!-- Row 3 : about + projects -->
   <div class="bento">
     <div class="cell cell--2">
       <div class="lbl">À propos</div>
-      <p class="body">Développeur frontend basé à Paris. Je conçois des interfaces web soignées, performantes et accessibles. Passionné par le design system, l'animation et l'expérience utilisateur.</p>
-      <button class="btn-p">Me contacter →</button>
+      <p class="body">Développeur frontend basé à Paris. Je conçois des interfaces web soignées, performantes et accessibles. Passionné par le design system et l'animation.</p>
+      <a class="text-link-pill" style="margin-top:auto">Me contacter <span class="arrow">↗</span></a>
     </div>
     <div class="cell cell--2">
       <div class="lbl">Projets</div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div class="ptitle">Portfolio</div><div class="ptype">Design System / Nuxt 3</div></div>
-          <span class="tag">Vue</span>
-        </div>
-        <div style="border-top:1px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:center">
-          <div><div class="ptitle">Photography</div><div class="ptype">Galerie / Next.js</div></div>
-          <span class="tag">React</span>
-        </div>
+      <div style="display:flex;flex-direction:column;margin-top:auto">
+        <div class="proj-row">Portfolio <span class="proj-type">Design System / Nuxt 3</span></div>
+        <div class="proj-row">Photography <span class="proj-type">Galerie / Next.js</span></div>
+        <div class="proj-row">Internship <span class="proj-type">Dashboard / React</span></div>
       </div>
     </div>
   </div>
 
-  <!-- Row 4 -->
+  <!-- Row 4 : experiences + contact -->
   <div class="bento">
     <div class="cell cell--3">
       <div class="stitle">Expériences</div>
       <div class="exp">Thales — Ingénieur Frontend <span>2023 → présent</span></div>
-      <div class="exp">Freelance — Dev & Design <span>2021 → 2023</span></div>
-      <div class="exp" style="border:none">Stage UX/UI — Agence <span>2021</span></div>
+      <div class="exp">Freelance — Dev &amp; Design <span>2021 → 2023</span></div>
+      <div class="exp">Stage UX/UI — Agence <span>2021</span></div>
     </div>
-    <div class="cell">
+    <div class="cell" style="gap:10px">
       <div class="lbl">Contact</div>
-      <a class="link" style="margin-bottom:5px">lebec.owen@gmail.com</a>
-      <a class="link">GitHub</a>
-      <a class="link" style="margin-top:3px">LinkedIn</a>
+      <a class="text-link-pill">lebec.owen@gmail.com <span class="arrow">↗</span></a>
+      <a class="text-link-pill">GitHub <span class="arrow">↗</span></a>
+      <a class="text-link-pill">LinkedIn <span class="arrow">↗</span></a>
     </div>
   </div>
 
@@ -398,8 +448,10 @@ aside h1 {
 let S = {
   font: 'f-bebas',
   pattern: 'matrix',
-  color: '#237afd',
-  colorDark: '#569dff',
+  color: '#3a8cff',
+  colorDark: '#70b0ff',
+  colorGrad: 'linear-gradient(135deg,#0e2248,#1a4aa0 60%,#3a8cff)',
+  colorGradDark: 'linear-gradient(135deg,#1c5ae0,#70b0ff)',
   theme: 'light',
 };
 
@@ -410,6 +462,12 @@ function getColor() {
   return S.theme === 'dark' ? S.colorDark : S.color;
 }
 
+function getGrad() {
+  return S.theme === 'dark'
+    ? (S.colorGradDark || S.colorDark)
+    : (S.colorGrad    || S.color);
+}
+
 function applyFont(f) {
   S.font = f;
   const p = document.getElementById('preview');
@@ -418,20 +476,25 @@ function applyFont(f) {
     el.classList.toggle('on', el.dataset.f === f));
 }
 
-function applyColor(c, cd) {
+function applyColor(c, cd, cg, cgd) {
   S.color = c; S.colorDark = cd;
-  document.getElementById('preview').style.setProperty('--p', getColor());
+  S.colorGrad = cg || null; S.colorGradDark = cgd || null;
+  const p = document.getElementById('preview');
+  p.style.setProperty('--p', getColor());
+  p.style.setProperty('--p-grad', getGrad());
   document.querySelectorAll('#col-list .col-opt').forEach(el =>
-    el.classList.toggle('on', el.dataset.c === c));
+    el.classList.toggle('on', el.dataset.c === c && (el.dataset.cg||'') === (cg||'')));
 }
 
 function setTheme(t) {
   S.theme = t;
   document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('preview').setAttribute('data-theme', t);
+  const p = document.getElementById('preview');
+  p.setAttribute('data-theme', t);
+  p.style.setProperty('--p', getColor());
+  p.style.setProperty('--p-grad', getGrad());
   document.getElementById('tb-light').classList.toggle('on', t==='light');
   document.getElementById('tb-dark').classList.toggle('on', t==='dark');
-  document.getElementById('preview').style.setProperty('--p', getColor());
 }
 
 // ──────────────────────────────────────────────────────────
@@ -835,7 +898,7 @@ document.querySelectorAll('#pat-list .pat-opt').forEach(el =>
   el.addEventListener('click', () => PAT.set(el.dataset.pat)));
 
 document.querySelectorAll('#col-list .col-opt').forEach(el =>
-  el.addEventListener('click', () => applyColor(el.dataset.c, el.dataset.cd)));
+  el.addEventListener('click', () => applyColor(el.dataset.c, el.dataset.cd, el.dataset.cg, el.dataset.cgd)));
 
 window.addEventListener('resize', () => PAT.resize());
 
@@ -846,6 +909,7 @@ setTimeout(() => {
   PAT.initThumbs();
   PAT.set('matrix');
   applyFont('f-bebas');
+  document.getElementById('preview').style.setProperty('--p-grad', getGrad());
 }, 100);
 </script>
 </body>
