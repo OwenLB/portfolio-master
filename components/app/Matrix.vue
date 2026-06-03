@@ -9,10 +9,10 @@ onMounted(() => {
 	if (!ctx) return
 
 	const CHARS      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZｦｧｩｫｭｯｱｳｵｷｹｻｽｿﾁﾃﾅﾇﾉ0123456789<>[]|/\\'
-	const FS         = 11    // column width in px
-	const TRAIL      = 10
-	const SPEED_MIN  = 0.35
-	const SPEED_MAX  = 0.75
+	const FS         = 9     // column width in px
+	const TRAIL      = 12
+	const SPEED_MIN  = 0.28
+	const SPEED_MAX  = 0.60
 	const BASE_ALPHA = 0.18  // always-visible opacity
 	const GLOW_EXTRA = 0.55  // bonus opacity near cursor
 	const GLOW_R     = 180   // glow radius in px
@@ -45,7 +45,7 @@ onMounted(() => {
 		cv.height = parent.offsetHeight || 200
 
 		const cols = Math.floor(cv.width / FS)
-		drops = Array.from({ length: cols * 2 }, (_, i) => ({
+		drops = Array.from({ length: cols * 3 }, (_, i) => ({
 			col:   i % cols,
 			y:     Math.random() * cv.height * 1.5,
 			speed: SPEED_MIN + Math.random() * (SPEED_MAX - SPEED_MIN),
