@@ -2,6 +2,8 @@
 title: 'Finixa'
 type: "Personal Project"
 description: "Mobile-first personal finance web app — expense tracking, envelope budgeting, and recurring transactions."
+git: [ "Git Repository", "https://github.com/OwenLB/Finixa" ]
+web: [ "Visit app", "https://finixa.net/" ]
 stack: [
   "Nuxt 4",
   "Vue 3",
