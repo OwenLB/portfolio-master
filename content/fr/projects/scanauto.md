@@ -1,5 +1,5 @@
 ---
-title: 'ScanAuto'
+title: 'Scan Auto'
 type: "Projet Personnel"
 description: "SaaS d'analyse de véhicules d'occasion par IA — pipeline Claude multi-étapes avec streaming SSE, auth Supabase, BYOK et extension Chrome."
 git: [ "GitHub", "https://github.com/OwenLB/ScanAuto" ]
