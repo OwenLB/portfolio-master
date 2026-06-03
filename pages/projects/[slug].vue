@@ -308,7 +308,7 @@ html[data-theme="dark"] #project__description .content .svg-wrapper svg {
 
 @media screen and (min-width: $md) {
 	#project {
-		grid-template-rows: space(20) 300px 300px repeat(2, auto) space(20);
+		grid-template-rows: space(20) 300px minmax(300px, auto) repeat(2, auto) space(20);
 
 		&__hero {
 			.cell--triple-column {
