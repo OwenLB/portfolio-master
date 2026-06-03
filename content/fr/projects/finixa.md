@@ -1,4 +1,5 @@
 ---
+order: 1
 title: 'Finixa'
 type: "Projet Personnel"
 description: "Application web mobile-first de gestion de finances personnelles — suivi de dépenses, budgets par enveloppe et transactions récurrentes."

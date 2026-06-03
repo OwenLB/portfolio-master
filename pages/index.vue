@@ -33,7 +33,7 @@ const {data: experiencesData}: { data: Experiences } = await useAsyncData('exper
 
 const {data: projects}: {
 	data: Project[]
-} = await useAsyncData('projects', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).find(), {watch: [() => props.lang]})
+} = await useAsyncData('projects', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).sort({order: 1}).find(), {watch: [() => props.lang]})
 
 useSeoMeta({
 	description: content.value.description,

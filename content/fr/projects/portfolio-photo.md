@@ -1,4 +1,5 @@
 ---
+order: 4
 title: 'Portfolio Photo'
 type: "Projet Personnel"
 description: "Portfolio photographique full-stack avec galerie justifiée, lightbox custom et back-office d'administration — pour remplacer Adobe Lightroom Web."

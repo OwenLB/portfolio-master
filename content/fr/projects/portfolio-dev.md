@@ -1,4 +1,5 @@
 ---
+order: 3
 title: 'Portfolio Développeur'
 type: "Projet Personnel"
 description: "Portfolio bilingue construit avec Nuxt 3 en mode SPA statique — contenu Markdown, intégration Spotify live et transitions de page CSS-only."
