@@ -1,0 +1,33 @@
+flowchart TD
+    INPUT["Annonce brute\n(URL ou texte)"]
+    PRECALC["Pré-calcul serveur\nkm/an · âge véhicule · âge annonce"]
+
+    INPUT --> PRECALC
+    PRECALC --> R1
+
+    R1["R1 — Extraction\nHaiku 4.5\nDonnées structurées, signaux vendeur,\ninfos manquantes"]
+
+    R1 --> R2
+    R1 --> R5
+
+    R2["R2 — Scoring & Fiabilité\nSonnet 4.6\nScore global /100, positionnement prix\nmarché, analyse motorisation"]
+    R5["R5 — Infos pratiques\nHaiku 4.5\nCrit'Air, carte grise, assurance,\nconsommation"]
+
+    R2 --> R3
+    R5 --> R3
+
+    R3["R3 — Coûts & Vigilance\nSonnet 4.6\nTravaux imminents, projection 5 ans,\nchecklist inspection (contexte allégé)"]
+
+    R3 --> R4
+
+    R4["R4 — Négociation\nHaiku 4.5\nPrix cible, message vendeur,\ndécote à 2 et 5 ans (contexte minimal)"]
+
+    R1 -. "SSE event:r1" .-> FE["Frontend\nrapport progressif"]
+    R2 -. "SSE event:r2" .-> FE
+    R5 -. "SSE event:r5" .-> FE
+    R3 -. "SSE event:r3" .-> FE
+    R4 -. "SSE event:r4 + complete" .-> FE
+
+    style R2 fill:#1a1a2e,color:#e0e0e0,stroke:#4a4a8a
+    style R3 fill:#1a1a2e,color:#e0e0e0,stroke:#4a4a8a
+    style PRECALC fill:#2a2a2a,color:#cccccc,stroke:#666

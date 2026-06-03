@@ -1,7 +1,7 @@
 ---
 title: 'ScanAuto'
 type: "Projet Personnel"
-description: "SaaS d'analyse de voitures d'occasion par IA — pipeline Claude multi-étapes avec streaming SSE, auth Supabase, BYOK et extension Chrome."
+description: "SaaS d'analyse de véhicules d'occasion par IA — pipeline Claude multi-étapes avec streaming SSE, auth Supabase, BYOK et extension Chrome."
 git: [ "GitHub", "https://github.com/OwenLB/ScanAuto" ]
 web: [ "scanauto.netlify.app", "https://scanauto.netlify.app" ]
 stack: [
@@ -24,7 +24,7 @@ stack: [
 
 ## Contexte
 
-ScanAuto est une application SaaS full-stack qui génère un rapport d'analyse complet sur une annonce de voiture d'occasion. L'utilisateur colle une URL ou un texte brut — leboncoin, lacentrale, AutoScout24 — et reçoit en moins de 60 secondes : un score global, une analyse de fiabilité moteur, une projection de coûts sur 5 ans et une stratégie de négociation argumentée. Le projet est né d'un constat simple : les acheteurs de véhicules d'occasion n'ont pas les outils pour évaluer rapidement si une annonce est honnête ou piégée.
+ScanAuto est une application SaaS full-stack qui génère un rapport d'analyse complet sur une annonce de véhicule d'occasion (voiture ou moto). L'utilisateur colle une URL leboncoin ou un texte brut et reçoit en moins de 60 secondes : un score global, une analyse de fiabilité moteur, une projection de coûts sur 5 ans et une stratégie de négociation argumentée. Le projet est né d'un besoin personnel avant tout : en cherchant ma propre voiture d'occasion, j'ai réalisé que les acheteurs particuliers n'ont aucun outil pour évaluer rapidement si une annonce est honnête ou piégée.
 
 ## Stack & Architecture
 
@@ -63,120 +63,48 @@ Le challenge principal a été la conception du pipeline d'orchestration : gére
 
 ### Architecture globale
 
-```mermaid
-graph TD
-    U[Utilisateur] -->|URL ou texte| FE[Frontend React\nNetlify]
-    FE -->|POST /api/analyze/ SSE| BE[Backend Django\nRender / Railway]
-    FE -->|Auth JWT| SB[(Supabase\nPostgreSQL + Auth)]
-    BE -->|Supabase auth.get_user| SB
-    BE -->|Sauvegarde analyses| SB
-    BE -->|Scraping URL| FC[Firecrawl API]
-    BE -->|R1 Haiku 4.5| CA[Claude API\nAnthropic]
-    BE -->|R2 Sonnet 4.6| CA
-    BE -->|R3 Sonnet 4.6| CA
-    BE -->|R4 Haiku 4.5| CA
-    BE -->|R5 Haiku 4.5| CA
-    EXT[Extension Chrome MV3\nleboncoin.fr] -->|prefill URL| FE
-```
+![Architecture globale](/diagrams/scanauto/01-architecture-globale.svg)
 
 ---
 
 ### Pipeline d'analyse (séquence)
 
-```mermaid
-sequenceDiagram
-    participant FE as Frontend
-    participant BE as Django
-    participant CA as Claude API
-    participant SB as Supabase
-
-    FE->>BE: POST /api/analyze/ (vehicule JSON)
-    BE->>SB: create_analysis(user_id) → analysis_id
-    BE->>CA: R1 — Haiku 4.5 (extraction)
-    CA-->>BE: r1 JSON
-    BE-->>FE: SSE event:r1
-    BE->>SB: save r1
-
-    par Parallel
-        BE->>CA: R2 — Sonnet 4.6 (scoring)
-        BE->>CA: R5 — Haiku 4.5 (infos pratiques)
-    end
-    CA-->>BE: r2 JSON
-    BE-->>FE: SSE event:r2
-    CA-->>BE: r5 JSON
-    BE-->>FE: SSE event:r5
-    BE->>SB: save r2 + r5
-
-    BE->>CA: R3 — Sonnet 4.6 (coûts, slim context)
-    CA-->>BE: r3 JSON
-    BE-->>FE: SSE event:r3
-
-    BE->>CA: R4 — Haiku 4.5 (négociation, slim context)
-    CA-->>BE: r4 JSON
-    BE-->>FE: SSE event:r4
-    BE->>SB: save r3 + r4 + status:complete
-    BE-->>FE: SSE event:complete
-```
+![Pipeline d'analyse](/diagrams/scanauto/02-pipeline-sequence.svg)
 
 ---
 
 ### Flux extension Chrome → app
 
-```mermaid
-flowchart LR
-    A[leboncoin.fr/annonce] -->|content.js s'exécute| B[Parse JSON-LD\n+ DOM fallbacks]
-    B --> C[chrome.storage.session]
-    C -->|icon click| D[Side Panel\nsidepanel.js]
-    D -->|Analyser| E[Ouvre ScanAuto\n#/?prefill=JSON]
-    E -->|VehicleForm mount| F[Pre-fill formulaire]
-    F -->|Submit| G[POST /api/analyze/]
-```
+![Flux extension Chrome](/diagrams/scanauto/03-extension-chrome-flow.svg)
 
 ---
 
 ### Sélection du modèle par étape
 
-```mermaid
-graph LR
-    R1["R1 — Extraction\nHaiku 4.5\n~1 500 tokens"] --> R2
-    R1 --> R5
-    R2["R2 — Scoring + Fiabilité\nSonnet 4.6\n~2 000 tokens"] --> R3
-    R5["R5 — Infos pratiques\nHaiku 4.5\n~1 000 tokens"] --> R3
-    R3["R3 — Coûts maintenance\nSonnet 4.6\n~3 000 tokens"] --> R4
-    R4["R4 — Négociation\nHaiku 4.5\n~1 500 tokens"]
-
-    style R2 fill:#1a1a1a,color:#f2f2f2
-    style R3 fill:#1a1a1a,color:#f2f2f2
-```
+![Sélection du modèle](/diagrams/scanauto/04-model-selection.svg)
 
 ---
 
-### Gestion d'état frontend (reducer)
+### Dépendances et pipeline IA
 
-```mermaid
-stateDiagram-v2
-    [*] --> idle
-    idle --> loading : START
-    loading --> loading : R1 / R2 / R3 / R4 / R5\n(sections révélées progressivement)
-    loading --> complete : COMPLETE
-    loading --> error : ERROR (fatal)
-    loading --> loading : error_r3 / error_r4\n(dégradation gracieuse)
-    complete --> idle : RESET
-    error --> idle : RESET
-```
+L'analyse repose sur 5 appels Claude enchaînés et partiellement parallélisés. Les dépendances entre étapes sont strictes : chaque appel ne reçoit que les données des étapes dont il a réellement besoin.
+
+Avant tout appel LLM, le serveur pré-calcule `km/an`, `âge du véhicule` et `âge de l'annonce` — injectés comme faits immuables pour éviter les erreurs de calcul côté modèle.
+
+**R1 — Extraction (Haiku 4.5)** — Premier appel, aucune dépendance. L'annonce brute est envoyée telle quelle. Claude extrait les données structurées : identification, kilométrage, options, signaux vendeur, informations manquantes.
+
+**R2 + R5 — Scoring & Infos pratiques (Sonnet 4.6 + Haiku 4.5, en parallèle)** — Dépendent tous les deux de R1 uniquement. Dès que R1 termine, les deux appels partent simultanément via des threads Python indépendants. R2 calcule le score global, positionne le prix marché et analyse la fiabilité moteur. R5 traite en parallèle les infos réglementaires : Crit'Air, carte grise, assurance, consommation.
+
+**R3 — Coûts & Vigilance (Sonnet 4.6)** — Dépend de R1 + R2. Reçoit un contexte allégé (champs pertinents uniquement, pas les JSONs complets) pour limiter les tokens sur Sonnet. Produit les travaux imminents, la projection de coûts sur 5 ans et une checklist d'inspection spécifique au modèle.
+
+**R4 — Négociation (Haiku 4.5)** — Dernier appel, contexte minimal : identité du véhicule (R1), prix et signaux vendeur (R2), résumé des risques (R3), et le `positionnement_pourcentage` pré-calculé. Génère un prix cible argumenté, un message vendeur neutre et une projection de décote à 2 et 5 ans.
+
+Chaque résultat est streamé en SSE dès qu'il est prêt — le rapport se construit progressivement côté frontend. Si R3 ou R4 échouent, le rapport s'affiche quand même avec un état d'erreur localisé sur la section concernée.
+
+![Pipeline IA](/diagrams/scanauto/05-pipeline-ia.svg)
 
 ---
 
 ### Architecture de sécurité BYOK
 
-```mermaid
-flowchart TD
-    U[Utilisateur] -->|Saisit clé Anthropic| FE[Frontend]
-    FE -->|HTTPS POST| BE[Django]
-    BE -->|Fernet.encrypt| ENC[Clé chiffrée]
-    ENC -->|Stockée| SB[(Supabase\nuser_profiles)]
-    BE2[Requête analyze] -->|Fernet.decrypt\nen mémoire uniquement| KEY[Clé en clair]
-    KEY -->|anthropic.Anthropic client| CA[Claude API]
-    KEY -.->|jamais loggée\njamais persistée en clair| X[ ]
-    SB -->|RLS: user_id = auth.uid| PRIV[Isolation totale\npar utilisateur]
-```
+![Architecture BYOK](/diagrams/scanauto/06-byok-security.svg)
