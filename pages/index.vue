@@ -90,7 +90,7 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="home__about">
-				<div class="cell cell--double-column about">
+				<div class="cell cell--triple-column about">
 					<div>
 						<h2>{{ content.about }}</h2> <br/>
 						<p>{{ content.greetings_text }}</p>
