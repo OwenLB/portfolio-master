@@ -5,20 +5,14 @@ description: "AI-powered used-vehicle analysis SaaS — multi-step Claude pipeli
 git: [ "GitHub", "https://github.com/OwenLB/ScanAuto" ]
 web: [ "scanauto.netlify.app", "https://scanauto.netlify.app" ]
 stack: [
-  "React 18",
-  "Vite",
+  "React",
   "Tailwind CSS",
-  "Django 4.2",
+  "Django",
   "Django REST Framework",
-  "Anthropic Claude API",
+  "Claude API",
   "Supabase",
-  "SSE",
-  "Python Threading",
   "Firecrawl",
-  "Chrome Extension MV3",
-  "Gunicorn",
-  "Netlify",
-  "Render"
+  "Chrome Extension MV3"
 ]
 ---
 
