@@ -195,7 +195,7 @@ onMounted(() => {
 				padding: 0;
 				position: relative;
 				overflow: hidden;
-				background: rgba(var(--accent-rgb), 0.6);
+				background: var(--background);
 			}
 		}
 	}
@@ -206,7 +206,7 @@ onMounted(() => {
 				padding: 0;
 				position: relative;
 				overflow: hidden;
-				background: rgba(var(--accent-rgb), 0.6);
+				background: var(--background);
 			}
 
 			&.spotify {

@@ -8,21 +8,17 @@ onMounted(() => {
 	const ctx = cv.getContext('2d')
 	if (!ctx) return
 
-	const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZｦｧｩｫｭｯｱｳｵｷｹｻｽｿﾁﾃﾅﾇﾉ0123456789<>[]|/\\'
-	const FS       = 11    // px — smaller = more columns = more density
-	const TRAIL    = 10    // characters in each drop's tail
-	const SPEED_MIN = 0.35
-	const SPEED_MAX = 0.75
-	const HOLE_MAX  = 0.82 // how transparent the character "windows" are
+	const CHARS      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZｦｧｩｫｭｯｱｳｵｷｹｻｽｿﾁﾃﾅﾇﾉ0123456789<>[]|/\\'
+	const FS         = 11    // column width in px
+	const TRAIL      = 10
+	const SPEED_MIN  = 0.35
+	const SPEED_MAX  = 0.75
+	const BASE_ALPHA = 0.18  // always-visible opacity
+	const GLOW_EXTRA = 0.55  // bonus opacity near cursor
+	const GLOW_R     = 180   // glow radius in px
 
 	let rafId: number
 	let drops: { col: number; y: number; speed: number; chars: string[] }[] = []
-
-	// Offscreen canvases (created once)
-	let maskCv: HTMLCanvasElement
-	let glowCv: HTMLCanvasElement
-	let maskCtx: CanvasRenderingContext2D
-	let glowCtx: CanvasRenderingContext2D
 
 	function rndChar() {
 		return CHARS[Math.floor(Math.random() * CHARS.length)]
@@ -38,31 +34,20 @@ onMounted(() => {
 		]
 	}
 
-	function getAccent(): string {
-		return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
+	function getBg(): string {
+		return getComputedStyle(document.documentElement).getPropertyValue('--background').trim()
 	}
 
 	function init() {
 		const parent = cv.parentElement
 		if (!parent) return
-		const w = parent.offsetWidth  || 300
-		const h = parent.offsetHeight || 200
-		cv.width = w; cv.height = h
+		cv.width  = parent.offsetWidth  || 300
+		cv.height = parent.offsetHeight || 200
 
-		if (!maskCv) {
-			maskCv = document.createElement('canvas')
-			glowCv = document.createElement('canvas')
-			maskCtx = maskCv.getContext('2d')!
-			glowCtx = glowCv.getContext('2d')!
-		}
-		maskCv.width = w; maskCv.height = h
-		glowCv.width = w; glowCv.height = h
-
-		const cols = Math.floor(w / FS)
-		// 2 drops per column offset in time → denser vertical coverage
+		const cols = Math.floor(cv.width / FS)
 		drops = Array.from({ length: cols * 2 }, (_, i) => ({
 			col:   i % cols,
-			y:     Math.random() * h * 1.5,
+			y:     Math.random() * cv.height * 1.5,
 			speed: SPEED_MIN + Math.random() * (SPEED_MAX - SPEED_MIN),
 			chars: Array.from({ length: TRAIL + 1 }, rndChar),
 		}))
@@ -73,42 +58,46 @@ onMounted(() => {
 		const h = cv.height
 		const [r, g, b] = getPrimary()
 
-		// ── 1. Glow layer (radial gradient at cursor position) ────
-		glowCtx.clearRect(0, 0, w, h)
+		// Background matches page background
+		ctx.fillStyle = getBg()
+		ctx.fillRect(0, 0, w, h)
+
+		ctx.font = `${FS}px 'Courier New', monospace`
+
+		// Cursor in canvas-local coordinates
 		const rect = cv.getBoundingClientRect()
 		const lx = cursor.x - rect.left
 		const ly = cursor.y - rect.top
-		const grad = glowCtx.createRadialGradient(lx, ly, 0, lx, ly, 220)
-		grad.addColorStop(0,    `rgba(${r},${g},${b},1)`)
-		grad.addColorStop(0.35, `rgba(${r},${g},${b},0.5)`)
-		grad.addColorStop(1,    `rgba(${r},${g},${b},0)`)
-		glowCtx.fillStyle = grad
-		glowCtx.fillRect(0, 0, w, h)
-
-		// ── 2. Mask layer: solid accent background + char holes ───
-		// Solid fill blocks glow everywhere by default
-		maskCtx.clearRect(0, 0, w, h)
-		maskCtx.globalCompositeOperation = 'source-over'
-		maskCtx.globalAlpha = 1
-		maskCtx.fillStyle = getAccent()
-		maskCtx.fillRect(0, 0, w, h)
-
-		// destination-out "carves" transparent holes shaped like characters
-		// → glow layer shows through only at those positions
-		maskCtx.globalCompositeOperation = 'destination-out'
-		maskCtx.font = `${FS}px 'Courier New', monospace`
 
 		for (const drop of drops) {
 			const x = drop.col * FS + 1
+
 			for (let j = 0; j <= TRAIL; j++) {
 				const charY = drop.y - j * FS
 				if (charY < -FS || charY > h) continue
 
 				const fade = 1 - j / TRAIL
-				maskCtx.globalAlpha = fade * HOLE_MAX
-				maskCtx.fillText(drop.chars[j], x, charY)
 
-				// Occasional shimmer on trail characters
+				// Base visibility (always on, fades along trail)
+				const base = fade * BASE_ALPHA
+
+				// Proximity bonus: characters near cursor glow extra
+				const dx   = x   - lx
+				const dy   = charY - ly
+				const dist = Math.sqrt(dx * dx + dy * dy)
+				const glow = Math.max(0, 1 - dist / GLOW_R) * GLOW_EXTRA
+
+				const alpha = base + glow
+
+				if (j === 0) {
+					// Head: white flash
+					ctx.fillStyle = `rgba(255,255,255,${Math.min(alpha * 1.6, 0.75).toFixed(3)})`
+				} else {
+					ctx.fillStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`
+				}
+
+				ctx.fillText(drop.chars[j], x, charY)
+
 				if (j > 0 && Math.random() > 0.97) drop.chars[j] = rndChar()
 			}
 
@@ -119,14 +108,6 @@ onMounted(() => {
 				drop.chars = Array.from({ length: TRAIL + 1 }, rndChar)
 			}
 		}
-		maskCtx.globalCompositeOperation = 'source-over'
-		maskCtx.globalAlpha = 1
-
-		// ── 3. Composite onto visible canvas ─────────────────────
-		// glow behind, mask on top → glow only escapes through char holes
-		ctx.clearRect(0, 0, w, h)
-		ctx.drawImage(glowCv, 0, 0)
-		ctx.drawImage(maskCv, 0, 0)
 
 		rafId = requestAnimationFrame(draw)
 	}
