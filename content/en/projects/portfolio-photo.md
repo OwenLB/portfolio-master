@@ -2,6 +2,7 @@
 title: 'Photo Portfolio'
 type: "Personal Project"
 description: "Full-stack photography portfolio with justified gallery, custom lightbox, and admin dashboard — built to replace an overpriced Adobe Lightroom subscription."
+git: [ "Git Repository", "https://github.com/OwenLB/portfolio-photo" ]
 web: [ "Live site", "https://photo.owenlebec.fr" ]
 stack: [
   "Astro 4",
