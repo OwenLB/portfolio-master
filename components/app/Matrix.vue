@@ -8,14 +8,19 @@ onMounted(() => {
 	const ctx = cv.getContext('2d')
 	if (!ctx) return
 
-	const CHARS      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZｦｧｩｫｭｯｱｳｵｷｹｻｽｿﾁﾃﾅﾇﾉ0123456789<>[]|/\\'
-	const FS         = 9     // column width in px
-	const TRAIL      = 12
-	const SPEED_MIN  = 0.28
-	const SPEED_MAX  = 0.60
-	const BASE_ALPHA = 0.18  // always-visible opacity
-	const GLOW_EXTRA = 0.55  // bonus opacity near cursor
-	const GLOW_R     = 180   // glow radius in px
+	// Trigger wave once across all Matrix instances (1st caller wins)
+	triggerMatrixWave(1500)
+
+	const CHARS       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZｦｧｩｫｭｯｱｳｵｷｹｻｽｿﾁﾃﾅﾇﾉ0123456789<>[]|/\\'
+	const FS          = 9
+	const TRAIL       = 12
+	const SPEED_MIN   = 0.28
+	const SPEED_MAX   = 0.60
+	const BASE_ALPHA  = 0.18  // always-visible opacity
+	const GLOW_EXTRA  = 0.55  // cursor proximity bonus
+	const GLOW_R      = 180   // cursor glow radius px
+	const WAVE_WIDTH  = 180   // half-width of the reveal wave px
+	const WAVE_BOOST  = 0.62  // peak opacity added by wave
 
 	let rafId: number
 	let drops: { col: number; y: number; speed: number; chars: string[] }[] = []
@@ -58,16 +63,18 @@ onMounted(() => {
 		const h = cv.height
 		const [r, g, b] = getPrimary()
 
-		// Background matches page background
 		ctx.fillStyle = getBg()
 		ctx.fillRect(0, 0, w, h)
 
 		ctx.font = `${FS}px 'Courier New', monospace`
 
-		// Cursor in canvas-local coordinates
+		// Cursor local coords
 		const rect = cv.getBoundingClientRect()
 		const lx = cursor.x - rect.left
 		const ly = cursor.y - rect.top
+
+		// Wave local Y (null when inactive)
+		const waveY = getWaveLocalY(cv)
 
 		for (const drop of drops) {
 			const x = drop.col * FS + 1
@@ -78,20 +85,23 @@ onMounted(() => {
 
 				const fade = 1 - j / TRAIL
 
-				// Base visibility (always on, fades along trail)
+				// Always-visible base
 				const base = fade * BASE_ALPHA
 
-				// Proximity bonus: characters near cursor glow extra
-				const dx   = x   - lx
-				const dy   = charY - ly
+				// Cursor proximity glow
+				const dx   = x      - lx
+				const dy   = charY  - ly
 				const dist = Math.sqrt(dx * dx + dy * dy)
 				const glow = Math.max(0, 1 - dist / GLOW_R) * GLOW_EXTRA
 
-				const alpha = base + glow
+				// Reveal wave (top-to-bottom sweep on page load)
+				const waveDist = waveY !== null ? Math.abs(charY - waveY) : 9999
+				const wave     = Math.max(0, 1 - waveDist / WAVE_WIDTH) * WAVE_BOOST
+
+				const alpha = base + glow + wave
 
 				if (j === 0) {
-					// Head: white flash
-					ctx.fillStyle = `rgba(255,255,255,${Math.min(alpha * 1.6, 0.75).toFixed(3)})`
+					ctx.fillStyle = `rgba(255,255,255,${Math.min(alpha * 1.6, 0.85).toFixed(3)})`
 				} else {
 					ctx.fillStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`
 				}
