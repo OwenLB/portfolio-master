@@ -32,7 +32,14 @@ onMounted(() => {
 	const WAVE_WIDTH  = 180   // half-width of the reveal wave px
 	const WAVE_BOOST  = 0.62  // peak opacity added by wave
 
-	let rafId: number
+	// On mobile we keep the animation but halve the draw rate (~30fps) — the
+	// expensive per-frame redraw is the cost, not the rAF callback itself.
+	const isMobile  = window.matchMedia('(max-width: 767px)').matches
+	const FRAME_MIN = isMobile ? 33 : 0  // ms between draws (0 = uncapped)
+
+	let rafId = 0
+	let running = false
+	let lastDraw = 0
 	let drops: { col: number; y: number; speed: number; chars: string[] }[] = []
 
 	function rndChar() {
@@ -128,25 +135,62 @@ onMounted(() => {
 			}
 		}
 
-		if (!prefersReduced) rafId = requestAnimationFrame(draw)
 	}
 
 	function onMove(e: MouseEvent) {
 		cursor.x = e.clientX
 		cursor.y = e.clientY
 	}
-	window.addEventListener('mousemove', onMove)
+
+	function loop(ts: number) {
+		if (!FRAME_MIN || ts - lastDraw >= FRAME_MIN) {
+			draw()
+			lastDraw = ts
+		}
+		rafId = requestAnimationFrame(loop)
+	}
+
+	function start() {
+		if (running || prefersReduced) return
+		running = true
+		// Only listen for the cursor glow while actually animating.
+		window.addEventListener('mousemove', onMove, {passive: true})
+		rafId = requestAnimationFrame(loop)
+	}
+
+	function stop() {
+		if (!running) return
+		running = false
+		cancelAnimationFrame(rafId)
+		window.removeEventListener('mousemove', onMove)
+	}
 
 	init()
-	draw()
+	draw() // paint one frame immediately (the only frame under reduced-motion)
 
 	const ro = new ResizeObserver(init)
 	if (cv.parentElement) ro.observe(cv.parentElement)
 
+	// A continuous rAF on an off-screen or background-tab canvas is pure wasted
+	// CPU — only run the loop while the canvas is visible and the tab is active.
+	let onScreen = true
+	function sync() {
+		if (onScreen && !document.hidden) start()
+		else stop()
+	}
+
+	const io = new IntersectionObserver((entries) => {
+		onScreen = entries.some((e) => e.isIntersecting)
+		sync()
+	})
+	io.observe(cv.parentElement || cv)
+	document.addEventListener('visibilitychange', sync)
+
 	onUnmounted(() => {
-		cancelAnimationFrame(rafId)
+		stop()
 		ro.disconnect()
-		window.removeEventListener('mousemove', onMove)
+		io.disconnect()
+		document.removeEventListener('visibilitychange', sync)
 	})
 })
 </script>
