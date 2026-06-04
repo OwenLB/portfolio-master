@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
 	compatibilityDate: '2026-05-28',
-	ssr: false,
+	ssr: true,
 	app: {
 		pageTransition: {name: 'page', mode: 'out-in', appear: true},
 		head: {
@@ -40,5 +40,11 @@ export default defineNuxtConfig({
 	},
 	image: {
 		provider: 'netlify',
+	},
+	nitro: {
+		prerender: {
+			crawlLinks: true,
+			routes: ['/', '/legal'],
+		},
 	}
 })
