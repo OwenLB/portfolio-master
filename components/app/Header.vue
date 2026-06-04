@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import {Icon} from "~/types/icon";
 import {Theme} from "~/types/theme";
 import {Lang} from "~/types/lang";
 
@@ -9,8 +8,6 @@ enum Toggle {
 }
 
 const theme = useTheme()
-const iconState = ref<Icon>(theme.value === (Theme.Dark as Theme) ? Icon.Moon : Icon.Sun)
-
 const lang = useLang()
 const switchState = ref(lang.value !== Lang.Fr)
 
@@ -20,7 +17,6 @@ const toggle = async (event: Event, type: Toggle) => {
 
 	if (type === Toggle.Theme) {
 		theme.value = theme.value === Theme.Dark ? Theme.Light : Theme.Dark
-		iconState.value = theme.value === Theme.Dark ? Icon.Moon : Icon.Sun
 		;(currentTarget as HTMLInputElement).blur()
 	} else if (type === Toggle.Lang) {
 		html?.classList.add('page-leave-to')
@@ -55,10 +51,32 @@ const toggle = async (event: Event, type: Toggle) => {
 				</span>
 				<span :class="{current: lang === (Lang.En as Lang)}" class="control__lang_side">EN</span>
 			</button>
-			<button :aria-label="lang === Lang.Fr ? 'Changer le theme de couleurs' : 'Change color theme'"
-					class="control__theme" type="button"
-					@click.stop="toggle($event,Toggle.Theme)">
-				<AppIcon :icon="iconState" aria-hidden="true"/>
+			<button
+				:aria-label="lang === Lang.Fr ? 'Changer le theme de couleurs' : 'Change color theme'"
+				:class="{ 'is-dark': theme === Theme.Dark }"
+				class="control__theme"
+				type="button"
+				@click.stop="toggle($event,Toggle.Theme)"
+			>
+				<svg aria-hidden="true" class="theme-icon" fill="none" height="24" overflow="visible" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+					<defs>
+						<mask id="theme-toggle-mask">
+							<rect fill="white" height="24" width="24"/>
+							<circle class="theme-icon__mask-circle" cx="22" cy="2" fill="black" r="5"/>
+						</mask>
+					</defs>
+					<g class="theme-icon__rays">
+						<line x1="12" x2="12" y1="2" y2="4"/>
+						<line x1="12" x2="12" y1="20" y2="22"/>
+						<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/>
+						<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"/>
+						<line x1="2" x2="4" y1="12" y2="12"/>
+						<line x1="20" x2="22" y1="12" y2="12"/>
+						<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"/>
+						<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"/>
+					</g>
+					<circle class="theme-icon__disc" cx="12" cy="12" mask="url(#theme-toggle-mask)" r="4"/>
+				</svg>
 			</button>
 		</div>
 		<div class="cell">
@@ -163,6 +181,39 @@ header {
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
 					outline: none;
+				}
+
+				.theme-icon {
+					display: block;
+
+					&__rays {
+						transform-origin: 12px 12px;
+						transition: opacity 0.4s ease, transform 0.5s ease;
+					}
+
+					&__disc {
+						transition: r 0.4s ease;
+					}
+
+					&__mask-circle {
+						transition: cx 0.5s cubic-bezier(0.4, 0, 0.2, 1), cy 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+					}
+				}
+
+				&.is-dark .theme-icon {
+					&__rays {
+						opacity: 0;
+						transform: scale(0.5) rotate(30deg);
+					}
+
+					&__disc {
+						r: 6;
+					}
+
+					&__mask-circle {
+						cx: 15;
+						cy: 9;
+					}
 				}
 			}
 		}
