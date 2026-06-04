@@ -17,10 +17,13 @@ watch(spotify, () => {
 	span.classList.remove('animated')
 	span.style.removeProperty('--scroll-distance')
 
+	const SPEED = 40 // px/s
 	const iconOffset = 26
 	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
 	if (overflow > 0) {
+		const duration = overflow / SPEED
 		span.style.setProperty('--scroll-distance', `${overflow}px`)
+		span.style.setProperty('--scroll-duration', `${duration}s`)
 		span.classList.add('animated')
 	}
 }, { flush: 'post' })
@@ -72,7 +75,7 @@ watch(spotify, () => {
 			white-space: nowrap;
 
 			&.animated {
-				animation: 4s translate 2s linear infinite;
+				animation: var(--scroll-duration) translate 2s linear infinite;
 			}
 		}
 
