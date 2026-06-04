@@ -58,7 +58,7 @@
 - [x] **P1 (M)** — Page « À propos / parcours » : **décidée non retenue** (jugée filler ; parcours déjà porté par la timeline d'expériences + les études de cas projet).
 - [x] **P1 (S)** — `about_button` (contenu mort) **supprimé** (FR + EN).
 - [ ] **P2 (S)** — Bloc « À propos » home = 2 phrases génériques → renforcer la voix. — `pages/index.vue:99-106`
-- [ ] **P2 (S)** ⏸️ — **Séniorité** à afficher près du headline — *en attente du cadrage (tu comptes depuis 2020/2021/2023 ?).* — `content/*/home.md`
+- [x] **P2 (S)** — **Séniorité** énoncée (« depuis 2021 », alternance comprise) dans la description + le bloc « À propos ». *Mise en avant près du headline → au passage structurel.* — `content/*/home.md`
 - [ ] **P3 (S)** — Ouvrir chaque projet par une phrase **résultat/impact**. — `content/*/projects/*.md`
 - [ ] **P3 (S)** — **Vérifier les démos live** (`finixa.net`, `scanauto.netlify.app`, `photo.owenlebec.fr`).
 
