@@ -3,37 +3,30 @@
 import {Spotify} from "~/types/spotify";
 import {Lang} from "~/types/lang";
 
-interface SpotifyAnimation {
-	title: HTMLElement | null
-	span: {
-		element: HTMLElement | null
-	}
-}
-const spotifyAnimation: SpotifyAnimation = ({
-	title: null,
-	span: {
-		element: null,
-	}
-})
-
 const lang = useLang()
 const { data: spotify } = useFetch<Spotify>('/api/spotify', { server: false, lazy: true })
 
-const assignTitleRef = (el: HTMLElement | null) => {
-	spotifyAnimation.title = el
-}
+const titleEl = ref<HTMLElement | null>(null)
+const spanEl  = ref<HTMLElement | null>(null)
 
-const assignTitleSpanRef = (el: HTMLElement | null) => {
-	spotifyAnimation.span.element = el
-}
+watch(spotify, () => {
+	const title = titleEl.value
+	const span  = spanEl.value
+	if (!title || !span) return
 
-onMounted(() => {
-	if (spotifyAnimation.title && spotifyAnimation.span.element) {
-		if (spotifyAnimation.span.element.scrollWidth > spotifyAnimation.title.offsetWidth) {
-			spotifyAnimation.span.element.classList.add('animated')
-		}
+	span.classList.remove('animated')
+	span.style.removeProperty('--scroll-distance')
+
+	const SPEED = 40 // px/s
+	const iconOffset = 26
+	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
+	if (overflow > 0) {
+		const duration = overflow / SPEED
+		span.style.setProperty('--scroll-distance', `${overflow}px`)
+		span.style.setProperty('--scroll-duration', `${duration}s`)
+		span.classList.add('animated')
 	}
-})
+}, { flush: 'post' })
 </script>
 
 <template>
@@ -42,8 +35,8 @@ onMounted(() => {
 			   :target="spotify?.isConnected ? '_blank' : undefined"
 			   :rel="spotify?.isConnected ? 'noopener noreferrer' : undefined"
 			   class="spotify__pill">
-		<div :ref="assignTitleRef" class="spotify__pill_title">
-			<span :ref="assignTitleSpanRef">{{
+		<div ref="titleEl" class="spotify__pill_title">
+			<span ref="spanEl">{{
 					spotify?.isConnected ? `${spotify.title} - ${spotify.artist}` : lang === Lang.Fr ? 'Déconnecté' : 'Disconnected'
 				}}</span>
 		</div>
@@ -82,7 +75,7 @@ onMounted(() => {
 			white-space: nowrap;
 
 			&.animated {
-				animation: 8s translate 2s linear infinite;
+				animation: var(--scroll-duration) translate 2s linear infinite;
 			}
 		}
 
@@ -91,7 +84,7 @@ onMounted(() => {
 				transform: translateX(0);
 			}
 			65%, 75% {
-				transform: translateX(-390px);
+				transform: translateX(calc(-1 * var(--scroll-distance)));
 			}
 			90%, 100% {
 				transform: translateX(0);

@@ -16,7 +16,14 @@ onMounted(() => {
 	const TRAIL       = 12
 	const SPEED_MIN   = 0.28
 	const SPEED_MAX   = 0.60
-	const BASE_ALPHA  = 0.18  // always-visible opacity
+	const BASE_ALPHA_DARK  = 0.18
+	const BASE_ALPHA_LIGHT = 0.40
+
+	function getBaseAlpha() {
+		return document.documentElement.dataset.theme === 'dark'
+			? BASE_ALPHA_DARK
+			: BASE_ALPHA_LIGHT
+	}
 	const GLOW_EXTRA  = 0.55  // cursor proximity bonus
 	const GLOW_R      = 180   // cursor glow radius px
 	const WAVE_WIDTH  = 180   // half-width of the reveal wave px
@@ -86,7 +93,7 @@ onMounted(() => {
 				const fade = 1 - j / TRAIL
 
 				// Always-visible base
-				const base = fade * BASE_ALPHA
+				const base = fade * getBaseAlpha()
 
 				// Cursor proximity glow
 				const dx   = x      - lx
