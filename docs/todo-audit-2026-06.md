@@ -23,6 +23,8 @@
 > - **Toggle langue « 1 fois sur 3 »** — `/` (FR) et `/en` sont rendus par le **même `index.vue`**, donc Vue réutilisait l'instance au lieu de la remonter ; combiné à des clés `useAsyncData` **statiques** (`'home'`, `'legal'`…) partageant le cache entre locales, le swap de contenu ne dépendait que d'un `watch` au timing non-déterministe. Corrigé : `<NuxtPage :key="lang">` (remount au changement de locale) + clés `useAsyncData` **scopées par locale** (home/legal/footer). Commit `e20f721`. *Leçon : sous i18n par URL, toute query locale-dépendante doit avoir une clé scopée par locale (déjà le cas dans `[slug].vue`).*
 >
 > **✅ Lot 4 — finitions a11y + correctifs sûrs réalisée le 2026-06-05** (4 commits, build validé) : landmarks `banner`/`contentinfo` + `aria-label` bouton langue, `figcaption` non dupliqué, descriptions SEO légales, **obfuscation contact home** (email + tél base64 décodés côté client, footer `.only`), `setTimeout` → `IntersectionObserver`. Détail + décisions (email reste yahoo, etc.) en bas.
+>
+> **✅ Lot 5 — performance runtime réalisée le 2026-06-05** (1 commit, build validé) : boucle Matrix en pause hors-écran (`IntersectionObserver`) + onglet caché (`visibilitychange`), `mousemove` actif seulement pendant l'anim (+`passive`), cap ~30 fps mobile ; lottie confirmé déjà lazy (chunk async chargé au 404). Desktop inchangé. *Reporté : lazy-load des SVG Finixa (risque CLS).*
 
 ---
 
@@ -57,13 +59,13 @@
 ## ⚡ Performance
 
 - [x] **P1 (M)** — **LCP** : résolu par le prerender (le contenu est peint sans attendre le JS).
-- [ ] **P2 (M)** — **≥ 2 instances de canvas Matrix** en `requestAnimationFrame` continu → une seule + pause `IntersectionObserver`/`visibilitychange`. — `pages/index.vue:85,91`, `components/app/Matrix.vue`
-- [ ] **P2 (S)** — **`mousemove` non throttlés** (Matrix × N + `useCursor`). — `components/app/Matrix.vue:133`, `composables/useCursor.ts:14`
+- [x] **P2 (M)** — **Boucle Matrix mise en pause** hors-écran (`IntersectionObserver`) + onglet caché (`visibilitychange`) : plus de `requestAnimationFrame` continu sur un canvas invisible. *(Les 2 instances sont conservées — fusionner en une seule changerait la grille du hero ; la pause règle le coût CPU.)* — `components/app/Matrix.vue`
+- [x] **P2 (S)** — **`mousemove` Matrix** : listener ajouté uniquement pendant l'animation (donc 0 hors-écran) + `passive`. *`useCursor` laissé tel quel (le curseur custom doit suivre au plus serré).* — `components/app/Matrix.vue`
 - [x] **P2 (S)** — **Flash de thème (FOUC)** : script inline `head` posant `data-theme` depuis le cookie avant peinture. — `nuxt.config.ts`
-- [ ] **P2 (S)** — Désactiver/alléger le **Matrix sur mobile** (`< $md`). — `pages/index.vue`
-- [ ] **P3 (M)** — Page Finixa : **~200 Ko de SVG inlinés** d'un coup → lazy-load sous la ligne de flottaison. — `components/content/ProseImg.vue:10-16`
+- [x] **P2 (S)** — **Matrix allégé sur mobile** : draw cappé à ~30 fps (`< 768px`) + pause hors-écran (le hero se met en pause dès le scroll). Animation conservée. — `components/app/Matrix.vue`
+- [ ] **P3 (M)** — Page Finixa : **~200 Ko de SVG inlinés** d'un coup → lazy-load sous la ligne de flottaison. *Reporté : `ProseImg` fait un `await useFetch` au setup (SVG inliné en SSR) ; passer en fetch client sur intersection retire les diagrammes du HTML prérendu et demande une stratégie de placeholder (risque de CLS). À faire avec preview.* — `components/content/ProseImg.vue:10-16`
 - [x] **P3 (S)** — Favicon **220 Ko → 2,6 Ko** : remplacé par un `favicon.svg` (monogramme logo, `#237afd`). Ancien `.ico` supprimé. — `public/favicon.svg`, `app.vue:16`
-- [ ] **P3 (M)** — `@lottiefiles/lottie-player` (seule dép. runtime) chargée juste pour le 404 → alléger/charger à la demande. — `package.json:21`, `error.vue`
+- [x] **P3 (M)** — `@lottiefiles/lottie-player` : **déjà optimal** — `import()` dynamique dans `error.vue` (`onMounted`, client-only) → Vite le met dans un chunk async chargé uniquement sur la page 404, jamais dans le bundle principal. *Rien à faire.* — `error.vue`
 
 ## ✍️ Contenu & narration
 
@@ -132,10 +134,11 @@
 
 - **Lot 4 — finitions a11y + petits correctifs sûrs** ✅ *réalisée le 2026-06-05* (4 commits thématiques, build validé) : landmarks `banner`/`contentinfo` + `aria-label` bouton langue, `figcaption` non dupliqué (`ProseImg`), descriptions SEO légales réécrites, **obfuscation contact home** (email + tél en base64 décodés côté client) + footer restreint à `.only` (plus de fuite de l'email legal dans chaque payload), `setTimeout` → `IntersectionObserver` (`[slug].vue`). *Décisions : email reste `@yahoo` (won't-fix), vérif Google = pas de double (meta conservée), `Experience` déjà clavier-OK, px→`space()` reporté (cosmétique).*
 
+- **Lot 5 — performance runtime** ✅ *réalisée le 2026-06-05* (1 commit, build validé) : boucle Matrix en pause hors-écran + onglet caché, `mousemove` actif seulement pendant l'anim (+passive), cap 30 fps mobile ; lottie confirmé déjà lazy (chunk 404). *Desktop inchangé — à confirmer sur preview.* **Reste de Lot 5 reporté** : lazy-load des ~200 Ko de SVG Finixa (risque CLS, à faire avec preview).
+
 ### Prochains lots (proposés — non démarrés)
 
-- **Lot 5 — performance runtime** (plus impactant, mais touche l'animation signature → à faire avec preview) : Matrix (une seule instance + pause `IntersectionObserver`/`visibilitychange` + `mousemove` throttlé + désactivation mobile) ; `@lottiefiles/lottie-player` chargé à la demande (404 only) ; lazy-load des ~200 Ko de SVG inlinés de Finixa.
-- **Reste épars (P3)** : px en dur → `space()` (`Experience.vue`) ; ouvrir chaque projet par une phrase résultat/impact ; vérifier les démos live.
+- **Reste épars (P3)** : lazy-load SVG Finixa (cf. ci-dessus) ; px en dur → `space()` (`Experience.vue`) ; ouvrir chaque projet par une phrase résultat/impact ; vérifier les démos live.
 
 - **Finitions ops Lot 3B** (action UI Netlify de ta part + suivi) : retrait du plugin sitemap legacy + nettoyage du bloc `[[plugins]]` de `netlify.toml`, vérif `Content-Type` du sitemap, régénération de `i18n.svg`.
 
