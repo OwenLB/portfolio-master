@@ -12,13 +12,15 @@
 > **✅ Lot 2 réalisé le 2026-06-04** (5 commits, un par thème) : contraste de l'accent clair (`#1a64d6`, ≈5.2:1), focus visible (`:focus-visible` global), anti-FOUC thème, stagger projets (120 ms), arc photo thémé (`--arc`).
 >
 > **✅ Lot 3A réalisé le 2026-06-04** (6 commits) : CI, en-têtes de sécurité (CSP Report-Only), JSON-LD `CreativeWork`, Spotify (prod-only + URL web), icônes stack tactiles, retrait `about_button`. Page « À propos » **volontairement abandonnée** (filler). **Lot 3B** (SSR/prerender, i18n par URL, sitemap, favicon) à faire **via la CI**.
+>
+> **🟢 Lot 3B — étape 1 (migration SSR + prerender)** : build validé (CI + Netlify) sur `7548b40` ; **runtime à valider sur le deploy preview**. i18n par URL / sitemap / favicon = session locale (`npm install`).
 
 ---
 
 ## 🔴 SEO, indexabilité & partage
 
-- [ ] **P1 (M)** — Sortir du SPA aveugle : activer le **prerender** (`nitro.prerender` / `routeRules` sur `/`, `/projects/*`, `/legal`) pour que le HTML contienne contenu + meta. *Débloque le reste de cette catégorie.* — `nuxt.config.ts`
-- [ ] **P1 (S)** — Valider après prerender : le **partage de lien projet** (LinkedIn/Slack/WhatsApp) doit afficher la bonne carte OG (aujourd'hui `useSeoMeta` injecté en JS, invisible des scrapers). — `pages/projects/[slug].vue:29-39`
+- [x] **P1 (M)** — **SSR + prerender activés** (`ssr: true` + `nitro.prerender.crawlLinks`) : le HTML prérendu contient contenu + meta OG + JSON-LD. Build validé (CI + Netlify) ; *runtime à confirmer sur le preview.* — `nuxt.config.ts`
+- [x] **P1 (S)** — **Cartes OG par projet** désormais dans le HTML prérendu (à vérifier via « afficher le code source » sur le preview). — `pages/projects/[slug].vue`
 - [x] **P2 (S)** — **JSON-LD `CreativeWork`** ajouté par projet (indexé une fois le SSR en place). — `pages/projects/[slug].vue`
 - [ ] **P2 (S)** — Vérifier le rendu HTML du **JSON-LD `Person`** après prerender. — `app.vue:43-58`
 - [ ] **P2 (S)** — Générer le **sitemap** automatiquement (`@nuxtjs/sitemap`) ; ajouter `lastmod` + alternates. — `public/sitemap.xml`
@@ -44,7 +46,7 @@
 
 ## ⚡ Performance
 
-- [ ] **P1 (M)** — **LCP** otage du JS (SPA) → résolu par le prerender.
+- [x] **P1 (M)** — **LCP** : résolu par le prerender (le contenu est peint sans attendre le JS).
 - [ ] **P2 (M)** — **≥ 2 instances de canvas Matrix** en `requestAnimationFrame` continu → une seule + pause `IntersectionObserver`/`visibilitychange`. — `pages/index.vue:85,91`, `components/app/Matrix.vue`
 - [ ] **P2 (S)** — **`mousemove` non throttlés** (Matrix × N + `useCursor`). — `components/app/Matrix.vue:133`, `composables/useCursor.ts:14`
 - [x] **P2 (S)** — **Flash de thème (FOUC)** : script inline `head` posant `data-theme` depuis le cookie avant peinture. — `nuxt.config.ts`
@@ -113,5 +115,6 @@
 - **Lot 1 — correctifs courts, faible risque** ✅ *fait le 2026-06-04* : skip-link, retrait adresse + téléphone, artefacts repo, reduced-motion, bugs Spotify (`>=400` + `item` null), code mort (`cover`).
 - **Lot 2 — a11y visuelle & UX** ✅ *fait le 2026-06-04* : contraste accent, focus visible, FOUC thème, stagger, arc thémé.
 - **Lot 3A — sûr, sans dépendance** ✅ *fait le 2026-06-04* : CI, en-têtes sécurité (CSP Report-Only), JSON-LD CreativeWork, dédup Spotify + URL web, icônes stack tactiles, retrait `about_button`.
-- **Lot 3B — architectural, à valider par build/CI** : migration SSR + prerender (SEO/OG/LCP), i18n par URL + hreflang (`@nuxtjs/i18n`), sitemap auto (`@nuxtjs/sitemap`), favicon 220 Ko à ré-exporter.
+- **Lot 3B étape 1 — migration SSR + prerender** ✅ *build validé le 2026-06-04* (CI + Netlify) : `ssr: true`, prerender `crawlLinks`, lottie client-only, réconciliation cookies langue/thème, `ignore: ['/.netlify']`. *Runtime à valider sur le preview ; docs (CLAUDE.md/case study) à actualiser ensuite.*
+- **Lot 3B étape 2 — bloqué ici (besoin `npm install` local)** : i18n par URL + hreflang (`@nuxtjs/i18n`), sitemap auto (`@nuxtjs/sitemap`), ré-export favicon 220 Ko.
 - **En attente de toi** : cadrage séniorité, vignettes projet above-the-fold (preview local).
