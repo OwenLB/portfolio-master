@@ -20,12 +20,13 @@ const toggle = async (event: Event, type: Toggle) => {
 		;(currentTarget as HTMLInputElement).blur()
 	} else if (type === Toggle.Lang) {
 		html?.classList.add('page-leave-to')
-		setTimeout(() => {
+		setTimeout(async () => {
 			lang.value = lang.value === Lang.Fr ? Lang.En : Lang.Fr
 			switchState.value = !switchState.value
 			;(currentTarget as HTMLInputElement).blur()
+			await nextTick()
 			html?.classList.remove('page-leave-to')
-		}, 1000)
+		}, 650)
 	}
 }
 </script>
