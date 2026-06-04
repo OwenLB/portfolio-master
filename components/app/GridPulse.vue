@@ -15,7 +15,7 @@ onMounted(() => {
 	const DURATION = 2500  // ms — maze traversal top-left → bottom-right
 	const TRAIL    = 120   // px — visible trail length
 
-	// ── build maze path (column serpentine, top-left → bottom-right) ──
+	// ── build maze path — inward spiral visiting every intersection ──
 	function buildPath(): string {
 		const cr = page.getBoundingClientRect()
 		const cells = Array.from(page.querySelectorAll<HTMLElement>('.cell'))
@@ -37,23 +37,24 @@ onMounted(() => {
 
 		if (xs.length < 2 || ys.length < 2) return ''
 
-		const yTop = ys[0]
-		const yBot = ys[ys.length - 1]
-		const pts: [number, number][] = [[xs[0], yTop]]
+		const pts: [number, number][] = []
+		let t = 0, b = ys.length - 1, l = 0, r = xs.length - 1
 
-		// Serpentine column by column — even cols go down, odd go up
-		for (let i = 0; i < xs.length; i++) {
-			const x    = xs[i]
-			const down = i % 2 === 0
-			pts.push([x, down ? yBot : yTop])
-			if (i < xs.length - 1)
-				pts.push([xs[i + 1], down ? yBot : yTop])
+		// Spiral inward — visits every intersection, starts top-left
+		while (t <= b && l <= r) {
+			for (let i = l; i <= r; i++) pts.push([xs[i], ys[t]])
+			t++
+			for (let j = t; j <= b; j++) pts.push([xs[r], ys[j]])
+			r--
+			if (t <= b) {
+				for (let i = r; i >= l; i--) pts.push([xs[i], ys[b]])
+				b--
+			}
+			if (l <= r) {
+				for (let j = b; j >= t; j--) pts.push([xs[l], ys[j]])
+				l++
+			}
 		}
-
-		// Guarantee end at bottom-right
-		const last = pts[pts.length - 1]
-		if (last[0] !== xs[xs.length - 1] || last[1] !== yBot)
-			pts.push([xs[xs.length - 1], yBot])
 
 		return pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x} ${y}`).join(' ')
 	}
