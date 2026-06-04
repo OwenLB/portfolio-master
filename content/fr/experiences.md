@@ -91,7 +91,7 @@ items:
       - "Programmation autonome ou en binôme sur la base de spécifications fonctionnelles."
     team: "Petites équipes de 1 à 3 développeurs, haut niveau d'autonomie. Échanges directs avec des experts fonctionnels pour valider les besoins et les cas d'usage."
     results:
-      - "Plus de 4 POC validés — gestion des internes, configuration du flex office, outils IA."
+      - "Plus de 4 POC validés — outils de gestion interne, configuration du flex office, outils IA."
       - "Plusieurs concepts transférés en production, prouvant leur viabilité technique et opérationnelle."
     stack:
       - name: "Vue"

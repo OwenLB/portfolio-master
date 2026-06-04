@@ -50,7 +50,7 @@ const toggle = async (event: Event, type: Toggle) => {
 				<span class="control__lang_switch">
 					<span></span>
 				</span>
-				<span :class="{current: lang === (Lang.En as Lang)}" class="control__lang_side">EN</span>
+				<span :class="{current: lang === Lang.En}" class="control__lang_side">EN</span>
 			</button>
 			<button
 				:aria-label="lang === Lang.Fr ? 'Changer le theme de couleurs' : 'Change color theme'"

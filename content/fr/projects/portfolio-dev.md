@@ -41,7 +41,7 @@ Portfolio personnel qui regroupe projets, expériences et informations de contac
 
 - **SVG inlinés pour les diagrammes** : `ProseImg.vue` détecte les images `.svg` et les récupère via `useFetch` pour les injecter en HTML brut dans un `.svg-wrapper`. Les diagrammes sont ainsi thémables via CSS — d'où les overrides explicites de `fill`, `stroke` et `color` sur les éléments SVG internes dans `[slug].vue` pour le mode sombre.
 
-- **Stagger animation via IntersectionObserver** : la liste des projets s'anime avec un `IntersectionObserver` (threshold 0.6). Chaque lien projet reçoit un `transitionDelay` calculé depuis son index (`index × 400ms`), créant l'entrée décalée sans librairie d'animation.
+- **Stagger animation via IntersectionObserver** : la liste des projets s'anime avec un `IntersectionObserver` (threshold 0.15). Chaque lien projet reçoit un `transitionDelay` calculé depuis son index (`index × 400ms`), créant l'entrée décalée sans librairie d'animation.
 
 ## Ce que j'ai appris
 

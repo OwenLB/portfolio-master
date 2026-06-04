@@ -19,7 +19,7 @@ const {data: legalLink} = await useAsyncData('legal', () => queryContent('/').wh
 				<span>Owen Le Bec</span>
 			</NuxtLink>
 		</div>
-		<div class="cell  links">
+		<div class="cell links">
 			<NuxtLink v-if="legalLink" :to="legalLink._path">{{ legalLink.title }}</NuxtLink>
 		</div>
 		<div class="cell date cell--desktop">

@@ -1,24 +1,26 @@
 <script lang="ts" setup>
 import {Legal} from "~/types/pages/legal";
 
-const {path} = useRoute()
+const route = useRoute()
 const lang = useLang()
 
 useHead({
 	link: [{
 		rel: 'canonical',
-		href: 'https://owenlebec.fr' + path
+		href: 'https://owenlebec.fr' + route.path
 	}]
 })
 
 const {data: content}: { data: Legal } = await useAsyncData('legal', () => queryContent().where({
-	_path: path,
+	_path: route.path,
 	_locale: lang.value
 }).findOne(), {watch: [() => lang.value]})
 
 useSeoMeta({
-	title: content.value.title,
-	description: content.value.description,
+	title: computed(() => content.value?.title),
+	description: computed(() => content.value?.description),
+	ogTitle: computed(() => content.value?.title),
+	ogDescription: computed(() => content.value?.description),
 })
 </script>
 
