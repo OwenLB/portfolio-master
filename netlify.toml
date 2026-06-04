@@ -1,3 +1,16 @@
+# The legacy "@netlify/plugin-sitemap" build plugin is still installed via the
+# Netlify UI. It used to generate the old static sitemap, but @nuxtjs/sitemap
+# now owns /sitemap.xml — prerendered as a `sitemap.xml/` directory. The legacy
+# plugin tries to open `dist/sitemap.xml` as a file and crashes with EISDIR.
+# Declaring the same plugin here lets netlify.toml take precedence over the UI
+# config, so it runs once with these inputs: redirect its output to a throwaway
+# file that doesn't collide with the directory.
+# TODO: remove this plugin in the Netlify UI, then delete this block.
+[[plugins]]
+  package = "@netlify/plugin-sitemap"
+  [plugins.inputs]
+    filePath = "sitemap-legacy.xml"
+
 # Security headers applied to every response.
 # Note: only headers are defined here — the build command and publish
 # directory stay configured in the Netlify UI, so this file does not change
