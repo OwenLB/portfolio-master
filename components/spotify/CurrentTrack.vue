@@ -21,7 +21,8 @@ watch(spotify, () => {
 	const iconOffset = 26
 	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
 	if (overflow > 0) {
-		const duration = overflow / SPEED
+		const MIN_DURATION = 3 // s
+		const duration = Math.max(overflow / SPEED, MIN_DURATION)
 		span.style.setProperty('--scroll-distance', `${overflow}px`)
 		span.style.setProperty('--scroll-duration', `${duration}s`)
 		span.classList.add('animated')
