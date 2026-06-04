@@ -10,6 +10,8 @@
 > **✅ Lot 1 réalisé le 2026-06-04** (6 commits, un par thème) : skip-link, retrait adresse + téléphone du legal, nettoyage des artefacts + `.idea`, `prefers-reduced-motion`, robustesse Spotify, code mort. Items cochés `[x]` ci-dessous.
 >
 > **✅ Lot 2 réalisé le 2026-06-04** (5 commits, un par thème) : contraste de l'accent clair (`#1a64d6`, ≈5.2:1), focus visible (`:focus-visible` global), anti-FOUC thème, stagger projets (120 ms), arc photo thémé (`--arc`).
+>
+> **✅ Lot 3A réalisé le 2026-06-04** (6 commits) : CI, en-têtes de sécurité (CSP Report-Only), JSON-LD `CreativeWork`, Spotify (prod-only + URL web), icônes stack tactiles, retrait `about_button`. Page « À propos » **volontairement abandonnée** (filler). **Lot 3B** (SSR/prerender, i18n par URL, sitemap, favicon) à faire **via la CI**.
 
 ---
 
@@ -17,7 +19,7 @@
 
 - [ ] **P1 (M)** — Sortir du SPA aveugle : activer le **prerender** (`nitro.prerender` / `routeRules` sur `/`, `/projects/*`, `/legal`) pour que le HTML contienne contenu + meta. *Débloque le reste de cette catégorie.* — `nuxt.config.ts`
 - [ ] **P1 (S)** — Valider après prerender : le **partage de lien projet** (LinkedIn/Slack/WhatsApp) doit afficher la bonne carte OG (aujourd'hui `useSeoMeta` injecté en JS, invisible des scrapers). — `pages/projects/[slug].vue:29-39`
-- [ ] **P2 (S)** — Ajouter le **JSON-LD `CreativeWork`** par projet. — `pages/projects/[slug].vue`
+- [x] **P2 (S)** — **JSON-LD `CreativeWork`** ajouté par projet (indexé une fois le SSR en place). — `pages/projects/[slug].vue`
 - [ ] **P2 (S)** — Vérifier le rendu HTML du **JSON-LD `Person`** après prerender. — `app.vue:43-58`
 - [ ] **P2 (S)** — Générer le **sitemap** automatiquement (`@nuxtjs/sitemap`) ; ajouter `lastmod` + alternates. — `public/sitemap.xml`
 - [ ] **P3 (S)** — Réécrire les **descriptions SEO légales** clichées/hors-sujet. — `content/fr/legal.md:3`, `content/en/legal.md:3`
@@ -53,42 +55,42 @@
 
 ## ✍️ Contenu & narration
 
-- [ ] **P1 (M)** — **Aucune vraie page « À propos / parcours »** : `about.vue` redirige vers `/`. En créer une, incarnée. — `pages/about.vue:1-9`
-- [ ] **P1 (S)** — `about_button: "En savoir plus"` = **contenu mort** → câbler ou supprimer. — `content/{fr,en}/home.md:9`
+- [x] **P1 (M)** — Page « À propos / parcours » : **décidée non retenue** (jugée filler ; parcours déjà porté par la timeline d'expériences + les études de cas projet).
+- [x] **P1 (S)** — `about_button` (contenu mort) **supprimé** (FR + EN).
 - [ ] **P2 (S)** — Bloc « À propos » home = 2 phrases génériques → renforcer la voix. — `pages/index.vue:99-106`
-- [ ] **P2 (S)** — **Séniorité jamais énoncée** → l'afficher près du headline. — `content/*/home.md`
+- [ ] **P2 (S)** ⏸️ — **Séniorité** à afficher près du headline — *en attente du cadrage (tu comptes depuis 2020/2021/2023 ?).* — `content/*/home.md`
 - [ ] **P3 (S)** — Ouvrir chaque projet par une phrase **résultat/impact**. — `content/*/projects/*.md`
 - [ ] **P3 (S)** — **Vérifier les démos live** (`finixa.net`, `scanauto.netlify.app`, `photo.owenlebec.fr`).
 
 ## 🧱 Qualité du code & architecture
 
-- [ ] **P1 (S)** — **Double implémentation Spotify** : garder une seule entre `server/api/spotify.ts` (Nitro, mort en static) et `netlify/edge-functions/spotify.ts` (Deno). — README.md:34
+- [x] **P1 (S)** — **Spotify dédupliqué** : route Nitro `server/api/spotify.ts` supprimée, seule l'edge function Deno (prod) reste.
 - [x] **P2 (S)** — Bug `response.status > 400` → `>= 400`. — `server/api/spotify.ts:38`, `netlify/edge-functions/spotify.ts:40`
 - [x] **P2 (S)** — Crash si `track.item` null (pub/podcast) → guard. — mêmes fichiers
 - [x] **P2 (S)** — **Code mort** : `const cover` jamais utilisé. — `pages/projects/[slug].vue:20-22`
 - [ ] **P2 (S)** — `setTimeout(execute, 1000)` artificiel → `onMounted`/scroll. — `pages/projects/[slug].vue:50-54`
 - [ ] **P2 (S)** — Collision clé `useAsyncData('legal')` entre `Footer.vue:6` et `legal.vue:14`. — renommer
 - [ ] **P3 (S)** — px en dur vs `space()`. — `components/link/Experience.vue`
-- [ ] **P2 (M)** — **Aucun test/CI** (`.github` absent) → Action `nuxt build` + `nuxt generate` sur PR ; option tests de fumée.
-- [ ] **P3 (S)** — `README.md` : Spotify décrit « Nitro/Netlify Functions » alors que c'est une edge function Deno. — `README.md:21,34`
+- [x] **P2 (M)** — **CI ajoutée** (`.github/workflows/ci.yml` : `npm ci` + `npm run generate` sur push/PR). Tests de fumée : optionnels, plus tard.
+- [x] **P3 (S)** — Docs (README, CLAUDE.md, case study FR/EN) corrigées : Spotify = edge function Deno.
 
 ## 🔒 Sécurité & vie privée
 
 - [x] **P1 (S)** — **Adresse postale + téléphone retirés** du legal (gardé nom, ville, email), FR + EN. — `content/fr/legal.md`, `content/en/legal.md`
 - [ ] **P2 (S)** — `mailto:`/`tel:` en clair = spam → obfusquer/form anti-spam. — `content/*/home.md:17,19`
-- [ ] **P2 (M)** — **Aucun en-tête de sécurité** → `netlify.toml` (CSP, X-Content-Type-Options, HSTS, Referrer-Policy). *(à créer)*
+- [x] **P2 (M)** — **En-têtes de sécurité** ajoutés (`netlify.toml` : X-Frame-Options, X-Content-Type-Options, Referrer-Policy, HSTS, Permissions-Policy + **CSP Report-Only**).
 - [x] ✅ À conserver — pas de secret exposé, `rel="noopener noreferrer"`, Umami sans cookie.
 
 ## 🎨 Design & UX
 
 - [x] **P2 (S)** — **Stagger projets** réduit `400ms → 120ms`/carte. — `components/link/Project.vue:13`
 - [x] **P2 (S)** — **Arc photo thémé** via token `--arc` (clair `#89d6ff` / sombre `#16395c`). — `pages/index.vue:276`, `assets/scss/style.scss`
-- [ ] **P3 (S)** — Lien Spotify ouvre une URI `spotify:` en `_blank` → utiliser `external_urls.spotify`. — spotify fn + `CurrentTrack.vue:35`
-- [ ] **P3 (S)** — Icônes de stack **hover-only** → afficher au repos sur mobile. — `components/link/Experience.vue:183-203`
+- [x] **P3 (S)** — Lien Spotify : renvoie `external_urls.spotify` (URL web) au lieu de l'URI `spotify:`.
+- [x] **P3 (S)** — Icônes de stack affichées au tactile (`@media (hover: none)`). — `components/link/Experience.vue`
 
 ## 👋 Première impression & structure de page
 
-- [ ] **P1 (S)** — **Aucun projet above-the-fold** → remonter 1-2 vignettes (Finixa, ScanAuto). — `pages/index.vue`
+- [ ] **P1 (S)** ⏸️ — **Projets above-the-fold** : remonter 1-2 vignettes — *reporté (restructure la grille home → à faire avec preview local).* — `pages/index.vue`
 - [ ] **P2 (S)** — **Pas de CTA contact** dans le 1er écran. — `pages/index.vue:157-161`
 - [ ] **P3 (S)** — **Accroche factuelle** d'une ligne sous le headline. — `content/*/home.md`
 
@@ -110,4 +112,6 @@
 
 - **Lot 1 — correctifs courts, faible risque** ✅ *fait le 2026-06-04* : skip-link, retrait adresse + téléphone, artefacts repo, reduced-motion, bugs Spotify (`>=400` + `item` null), code mort (`cover`).
 - **Lot 2 — a11y visuelle & UX** ✅ *fait le 2026-06-04* : contraste accent, focus visible, FOUC thème, stagger, arc thémé.
-- **Lot 3 — chantiers de fond** : prerender (débloque SEO/perf/i18n), page « À propos », i18n par URL + hreflang, en-têtes sécurité, CI.
+- **Lot 3A — sûr, sans dépendance** ✅ *fait le 2026-06-04* : CI, en-têtes sécurité (CSP Report-Only), JSON-LD CreativeWork, dédup Spotify + URL web, icônes stack tactiles, retrait `about_button`.
+- **Lot 3B — architectural, à valider par build/CI** : migration SSR + prerender (SEO/OG/LCP), i18n par URL + hreflang (`@nuxtjs/i18n`), sitemap auto (`@nuxtjs/sitemap`), favicon 220 Ko à ré-exporter.
+- **En attente de toi** : cadrage séniorité, vignettes projet above-the-fold (preview local).
