@@ -7,13 +7,9 @@ description: "Hello, I'm a French web developer, living in Brest. I love explori
 
 **Name :** Le Bec Owen
 
-**Address :** 7 Rue de Saint-Brieuc
-
 **City :** Brest 29200
 
 **Email :** [lebec.owen@yahoo.fr](mailto:lebec.owen@yahoo.fr)
-
-**Phone :** [+33 6 52 06 38 22](tel:+33652063822)
 
 ## Host
 
