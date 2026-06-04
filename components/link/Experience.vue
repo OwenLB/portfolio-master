@@ -188,6 +188,16 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
           @include transition(opacity 0.3s ease-out, transform 0.3s ease-out);
         }
 
+        // Touch devices have no hover state — reveal the icons by default.
+        @media (hover: none) {
+          img {
+            height: 20px;
+            margin-right: 8px;
+            opacity: 1;
+            transform: none;
+          }
+        }
+
         &:where(:hover, :focus, :focus-visible) {
           border: 1px solid var(--primary);
           padding-right: 20px;
