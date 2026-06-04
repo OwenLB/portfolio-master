@@ -107,7 +107,7 @@ header {
 				}
 
 				&:where(:hover, :focus, :focus-visible) {
-					@include gradient-text;
+					color: var(--primary);
 					outline: none;
 				}
 			}
@@ -168,7 +168,7 @@ header {
 				@include transition(color);
 
 				&:where(:hover, :focus, :focus-visible) {
-					@include gradient-text;
+					color: var(--primary);
 					outline: none;
 				}
 			}
