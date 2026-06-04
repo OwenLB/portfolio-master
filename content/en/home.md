@@ -13,8 +13,10 @@ thales_link: "https://www.thalesgroup.com/en"
 experience: "EXPERIENCE"
 contact: "CONTACT"
 contact_mail: "Send an email"
-contact_mail_link: "mailto:lebec.owen@yahoo.fr"
+# base64 of the full href, decoded client-side so the raw mailto:/tel: never
+# ships in the prerendered HTML or payload (anti-scraping). See LinkText.vue.
+contact_mail_b64: "bWFpbHRvOmxlYmVjLm93ZW5AeWFob28uZnI="
 contact_phone: "Call"
-contact_phone_link: "tel:+33652063822"
+contact_phone_b64: "dGVsOiszMzY1MjA2MzgyMg=="
 mission: "Development of internal web applications"
 ---

@@ -149,8 +149,8 @@ onMounted(() => {
 					</div>
 					<div class="contact">
 						<h2>{{ content.contact }}</h2>
-						<LinkText :label="content.contact_mail" :link="content.contact_mail_link" external/>
-						<LinkText :label="content.contact_phone" :link="content.contact_phone_link" external/>
+						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
+						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
 					</div>
 				</div>
 			</AppSection>

@@ -4,14 +4,17 @@ import {Lang} from "~/types/lang";
 const lang = useLang()
 const localePath = useLocalePath()
 
+// Only fetch what the footer renders (path + title). Pulling the full doc would
+// embed the whole legal body — including the mailto: contact — into every page's
+// payload (privacy leak + dead weight).
 const {data: legalLink} = await useAsyncData(`legal-link-${lang.value}`, () => queryContent('/').where({
 	_path: '/legal',
 	_locale: lang.value
-}).findOne(), {watch: [() => lang.value]})
+}).only(['_path', 'title']).findOne(), {watch: [() => lang.value]})
 </script>
 
 <template>
-	<footer>
+	<footer role="contentinfo">
 		<div class="cell">
 		</div>
 		<div class="cell name">
