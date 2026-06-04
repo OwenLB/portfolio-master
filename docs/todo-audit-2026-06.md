@@ -8,6 +8,8 @@
 **Légende :** `P1` fort impact cibles · `P2` moyen · `P3` polish — effort `(S/M/L)`.
 
 > **✅ Lot 1 réalisé le 2026-06-04** (6 commits, un par thème) : skip-link, retrait adresse + téléphone du legal, nettoyage des artefacts + `.idea`, `prefers-reduced-motion`, robustesse Spotify, code mort. Items cochés `[x]` ci-dessous.
+>
+> **✅ Lot 2 réalisé le 2026-06-04** (5 commits, un par thème) : contraste de l'accent clair (`#1a64d6`, ≈5.2:1), focus visible (`:focus-visible` global), anti-FOUC thème, stagger projets (120 ms), arc photo thémé (`--arc`).
 
 ---
 
@@ -30,8 +32,8 @@
 ## ♿ Accessibilité
 
 - [x] **P1 (S)** — **Skip-link cassé** hors home : ajouter `id="main-content"` aux `<main>` de `pages/projects/[slug].vue:62`, `pages/legal.vue:31`, `error.vue:9`. — `app.vue:62`
-- [ ] **P1 (S)** — **Contraste** `--primary #237afd` sur fond clair ≈ 3.7:1 → échoue AA texte normal. Foncer l'accent OU le réserver au texte ≥ 24 px. — `assets/scss/style.scss:47`
-- [ ] **P1 (S)** — **Focus visible** : `outline:none` généralisé → restaurer `:focus-visible { outline }`. — `Header.vue`, `link/Text.vue:67`, `link/Project.vue:93`, `app.vue:179`, `CurrentTrack.vue:202`
+- [x] **P1 (S)** — **Contraste** : accent clair foncé à `#1a64d6` (≈5.2:1, AA). — `assets/scss/style.scss`
+- [x] **P1 (S)** — **Focus visible** : règle globale `:focus-visible { outline }` + `outline:none` retirés. — `app.vue`, `Header.vue`, `Footer.vue`, `link/Text.vue`, `link/Project.vue`, `CurrentTrack.vue`, `link/Experience.vue`
 - [x] **P2 (S)** — **Reduced-motion** non respecté par Matrix rain, marquee Spotify, égaliseur → gater. — `components/app/Matrix.vue:64-127`, `components/spotify/CurrentTrack.vue:87,164`
 - [ ] **P2 (S)** — Pas de `<nav>` ni `role="banner/main/contentinfo"` : ajouter, OU retirer la revendication ARIA fausse de `content/*/projects/portfolio-dev.md:36`.
 - [ ] **P2 (S)** — Bouton **langue** sans libellé descriptif → `aria-label`. — `components/app/Header.vue:47`
@@ -43,7 +45,7 @@
 - [ ] **P1 (M)** — **LCP** otage du JS (SPA) → résolu par le prerender.
 - [ ] **P2 (M)** — **≥ 2 instances de canvas Matrix** en `requestAnimationFrame` continu → une seule + pause `IntersectionObserver`/`visibilitychange`. — `pages/index.vue:85,91`, `components/app/Matrix.vue`
 - [ ] **P2 (S)** — **`mousemove` non throttlés** (Matrix × N + `useCursor`). — `components/app/Matrix.vue:133`, `composables/useCursor.ts:14`
-- [ ] **P2 (S)** — **Flash de thème (FOUC)** : script inline anti-FOUC lisant le cookie avant peinture. — `composables/useTheme.ts`, `app.vue`
+- [x] **P2 (S)** — **Flash de thème (FOUC)** : script inline `head` posant `data-theme` depuis le cookie avant peinture. — `nuxt.config.ts`
 - [ ] **P2 (S)** — Désactiver/alléger le **Matrix sur mobile** (`< $md`). — `pages/index.vue`
 - [ ] **P3 (M)** — Page Finixa : **~200 Ko de SVG inlinés** d'un coup → lazy-load sous la ligne de flottaison. — `components/content/ProseImg.vue:10-16`
 - [ ] **P3 (S)** — `favicon.ico` = **220 Ko** → ré-exporter léger. — `public/favicon.ico`
@@ -79,8 +81,8 @@
 
 ## 🎨 Design & UX
 
-- [ ] **P2 (S)** — **Stagger projets** `index × 400ms` (4ᵉ carte ~1,2 s) → atténuer. — `components/link/Project.vue:13`
-- [ ] **P2 (S)** — **Couleur de l'arc photo en dur** `#89d6ff` → la thémer. — `pages/index.vue:276`
+- [x] **P2 (S)** — **Stagger projets** réduit `400ms → 120ms`/carte. — `components/link/Project.vue:13`
+- [x] **P2 (S)** — **Arc photo thémé** via token `--arc` (clair `#89d6ff` / sombre `#16395c`). — `pages/index.vue:276`, `assets/scss/style.scss`
 - [ ] **P3 (S)** — Lien Spotify ouvre une URI `spotify:` en `_blank` → utiliser `external_urls.spotify`. — spotify fn + `CurrentTrack.vue:35`
 - [ ] **P3 (S)** — Icônes de stack **hover-only** → afficher au repos sur mobile. — `components/link/Experience.vue:183-203`
 
@@ -107,5 +109,5 @@
 ~50 items : **P1 ≈ 11**, **P2 ≈ 22**, **P3 ≈ 17**.
 
 - **Lot 1 — correctifs courts, faible risque** ✅ *fait le 2026-06-04* : skip-link, retrait adresse + téléphone, artefacts repo, reduced-motion, bugs Spotify (`>=400` + `item` null), code mort (`cover`).
-- **Lot 2 — a11y visuelle & UX** : contraste accent, focus visible, FOUC thème, stagger, arc thémé.
+- **Lot 2 — a11y visuelle & UX** ✅ *fait le 2026-06-04* : contraste accent, focus visible, FOUC thème, stagger, arc thémé.
 - **Lot 3 — chantiers de fond** : prerender (débloque SEO/perf/i18n), page « À propos », i18n par URL + hreflang, en-têtes sécurité, CI.
