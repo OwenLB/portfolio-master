@@ -7,6 +7,8 @@
 
 **Légende :** `P1` fort impact cibles · `P2` moyen · `P3` polish — effort `(S/M/L)`.
 
+> **✅ Lot 1 réalisé le 2026-06-04** (6 commits, un par thème) : skip-link, retrait adresse + téléphone du legal, nettoyage des artefacts + `.idea`, `prefers-reduced-motion`, robustesse Spotify, code mort. Items cochés `[x]` ci-dessous.
+
 ---
 
 ## 🔴 SEO, indexabilité & partage
@@ -27,10 +29,10 @@
 
 ## ♿ Accessibilité
 
-- [ ] **P1 (S)** — **Skip-link cassé** hors home : ajouter `id="main-content"` aux `<main>` de `pages/projects/[slug].vue:62`, `pages/legal.vue:31`, `error.vue:9`. — `app.vue:62`
+- [x] **P1 (S)** — **Skip-link cassé** hors home : ajouter `id="main-content"` aux `<main>` de `pages/projects/[slug].vue:62`, `pages/legal.vue:31`, `error.vue:9`. — `app.vue:62`
 - [ ] **P1 (S)** — **Contraste** `--primary #237afd` sur fond clair ≈ 3.7:1 → échoue AA texte normal. Foncer l'accent OU le réserver au texte ≥ 24 px. — `assets/scss/style.scss:47`
 - [ ] **P1 (S)** — **Focus visible** : `outline:none` généralisé → restaurer `:focus-visible { outline }`. — `Header.vue`, `link/Text.vue:67`, `link/Project.vue:93`, `app.vue:179`, `CurrentTrack.vue:202`
-- [ ] **P2 (S)** — **Reduced-motion** non respecté par Matrix rain, marquee Spotify, égaliseur → gater. — `components/app/Matrix.vue:64-127`, `components/spotify/CurrentTrack.vue:87,164`
+- [x] **P2 (S)** — **Reduced-motion** non respecté par Matrix rain, marquee Spotify, égaliseur → gater. — `components/app/Matrix.vue:64-127`, `components/spotify/CurrentTrack.vue:87,164`
 - [ ] **P2 (S)** — Pas de `<nav>` ni `role="banner/main/contentinfo"` : ajouter, OU retirer la revendication ARIA fausse de `content/*/projects/portfolio-dev.md:36`.
 - [ ] **P2 (S)** — Bouton **langue** sans libellé descriptif → `aria-label`. — `components/app/Header.vue:47`
 - [ ] **P3 (S)** — `Experience.vue` : zone de dépliage `<div @click>` souris-only. — `components/link/Experience.vue:32,89`
@@ -59,9 +61,9 @@
 ## 🧱 Qualité du code & architecture
 
 - [ ] **P1 (S)** — **Double implémentation Spotify** : garder une seule entre `server/api/spotify.ts` (Nitro, mort en static) et `netlify/edge-functions/spotify.ts` (Deno). — README.md:34
-- [ ] **P2 (S)** — Bug `response.status > 400` → `>= 400`. — `server/api/spotify.ts:38`, `netlify/edge-functions/spotify.ts:40`
-- [ ] **P2 (S)** — Crash si `track.item` null (pub/podcast) → guard. — mêmes fichiers
-- [ ] **P2 (S)** — **Code mort** : `const cover` jamais utilisé. — `pages/projects/[slug].vue:20-22`
+- [x] **P2 (S)** — Bug `response.status > 400` → `>= 400`. — `server/api/spotify.ts:38`, `netlify/edge-functions/spotify.ts:40`
+- [x] **P2 (S)** — Crash si `track.item` null (pub/podcast) → guard. — mêmes fichiers
+- [x] **P2 (S)** — **Code mort** : `const cover` jamais utilisé. — `pages/projects/[slug].vue:20-22`
 - [ ] **P2 (S)** — `setTimeout(execute, 1000)` artificiel → `onMounted`/scroll. — `pages/projects/[slug].vue:50-54`
 - [ ] **P2 (S)** — Collision clé `useAsyncData('legal')` entre `Footer.vue:6` et `legal.vue:14`. — renommer
 - [ ] **P3 (S)** — px en dur vs `space()`. — `components/link/Experience.vue`
@@ -70,7 +72,7 @@
 
 ## 🔒 Sécurité & vie privée
 
-- [ ] **P1 (S)** — **Adresse postale perso publiée** + indexée → retirer (garder email + ville). — `content/fr/legal.md:11-16`, `content/en/legal.md`
+- [x] **P1 (S)** — **Adresse postale + téléphone retirés** du legal (gardé nom, ville, email), FR + EN. — `content/fr/legal.md`, `content/en/legal.md`
 - [ ] **P2 (S)** — `mailto:`/`tel:` en clair = spam → obfusquer/form anti-spam. — `content/*/home.md:17,19`
 - [ ] **P2 (M)** — **Aucun en-tête de sécurité** → `netlify.toml` (CSP, X-Content-Type-Options, HSTS, Referrer-Policy). *(à créer)*
 - [x] ✅ À conserver — pas de secret exposé, `rel="noopener noreferrer"`, Umami sans cookie.
@@ -90,12 +92,12 @@
 
 ## 🧹 Hygiène du repo & finitions
 
-- [ ] **P2 (S)** — Supprimer `components/link/package.json` (stub `npm init` mort).
-- [ ] **P2 (S)** — Supprimer artefacts dev : `theme-playground.html`, `gradient-implementation.md`, `portfolio-mockup.png`, `docs/scanauto/image.png`.
-- [ ] **P3 (S)** — Supprimer le favicon Nuxt résiduel `public/nuxt-favicon.ico`.
-- [ ] **P3 (S)** — Ne plus committer `.idea/` (ajouter au `.gitignore`).
-- [ ] **P3 (S)** — `.gitignore` ignore `*.png*` mais 2 PNG committés → cohérenciser.
-- [ ] **P3 (S)** — Typo « Addresse ». — `content/fr/legal.md:11`
+- [x] **P2 (S)** — Supprimer `components/link/package.json` (stub `npm init` mort).
+- [x] **P2 (S)** — Supprimer artefacts dev : `theme-playground.html`, `gradient-implementation.md`, `portfolio-mockup.png`, `docs/scanauto/image.png`.
+- [x] **P3 (S)** — Supprimer le favicon Nuxt résiduel `public/nuxt-favicon.ico`.
+- [x] **P3 (S)** — Ne plus committer `.idea/` (ajouter au `.gitignore`).
+- [x] **P3 (S)** — `.gitignore` ignore `*.png*` mais 2 PNG committés → cohérenciser.
+- [x] **P3 (S)** — Typo « Addresse » (ligne supprimée avec l'adresse). — `content/fr/legal.md`
 - [ ] **P3 (S)** — Email contact `@yahoo.fr` alors que `owenlebec.fr` dispo → `owen@owenlebec.fr`. — `content/*/home.md:17`, `legal.md`
 
 ---
@@ -104,6 +106,6 @@
 
 ~50 items : **P1 ≈ 11**, **P2 ≈ 22**, **P3 ≈ 17**.
 
-- **Lot 1 — correctifs courts, faible risque** : skip-link, retrait adresse, artefacts repo, reduced-motion, bugs Spotify (`>=400` + `item` null), code mort (`cover`).
+- **Lot 1 — correctifs courts, faible risque** ✅ *fait le 2026-06-04* : skip-link, retrait adresse + téléphone, artefacts repo, reduced-motion, bugs Spotify (`>=400` + `item` null), code mort (`cover`).
 - **Lot 2 — a11y visuelle & UX** : contraste accent, focus visible, FOUC thème, stagger, arc thémé.
 - **Lot 3 — chantiers de fond** : prerender (débloque SEO/perf/i18n), page « À propos », i18n par URL + hreflang, en-têtes sécurité, CI.
