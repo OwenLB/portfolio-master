@@ -59,7 +59,7 @@ onBeforeMount(() => {
 		<AppEffect/>
 		<AppHeader/>
 
-		<main>
+		<main id="main-content">
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>

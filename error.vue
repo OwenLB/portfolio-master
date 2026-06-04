@@ -6,7 +6,7 @@ import "@lottiefiles/lottie-player";
 	<div id="error" class="page">
 		<AppEffect/>
 		<AppHeader/>
-		<main>
+		<main id="main-content">
 			<AppSection id="error__empty_before">
 				<div class="cell cell--triple-column animation">
 				</div>

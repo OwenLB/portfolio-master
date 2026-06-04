@@ -28,7 +28,7 @@ useSeoMeta({
 	<div id="legal" class="page">
 		<AppEffect/>
 		<AppHeader/>
-		<main>
+		<main id="main-content">
 			<AppSection id="about__description">
 				<div class="cell cell--triple-column content">
 					<ContentRenderer :value="content" class="content"/>
