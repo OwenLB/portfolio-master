@@ -248,13 +248,17 @@ onMounted(() => {
 		@media (prefers-reduced-motion: no-preference) {
 			a {
 				opacity: 0;
-				transform: translateY(space(16));
+				// translate3d + backface-visibility keep the link on a stable GPU
+				// layer so it isn't re-rasterized when the transition ends — avoids
+				// the one-frame white flash on mobile (layer demotion).
+				transform: translate3d(0, space(16), 0);
+				backface-visibility: hidden;
 				transition: opacity 0.5s cubic-bezier(0.83, 0, 0.17, 1), transform 0.5s cubic-bezier(0.83, 0, 0.17, 1);
 			}
 
 			&.visible a {
 				opacity: 1;
-				transform: translateY(0);
+				transform: translate3d(0, 0, 0);
 			}
 		}
 	}
