@@ -51,6 +51,14 @@ watch(spotify, () => {
 </template>
 
 <style lang="scss">
+// Registered so the gradient edge color can interpolate during the theme
+// transition — a raw var(--background) in a gradient would snap instantly.
+@property --spotify-fade {
+	syntax: '<color>';
+	inherits: false;
+	initial-value: transparent;
+}
+
 .spotify__pill {
 	display: flex;
 	align-items: center;
@@ -99,16 +107,18 @@ watch(spotify, () => {
 			display: block;
 			width: space(3);
 			height: 100%;
+			--spotify-fade: var(--background);
+			transition: --spotify-fade var(--theme-t);
 		}
 
 		&:before {
 			left: -1px;
-			background: linear-gradient(to right, var(--background), transparent);
+			background: linear-gradient(to right, var(--spotify-fade), transparent);
 		}
 
 		&:after {
 			right: -1px;
-			background: linear-gradient(to left, var(--background), transparent);
+			background: linear-gradient(to left, var(--spotify-fade), transparent);
 		}
 	}
 

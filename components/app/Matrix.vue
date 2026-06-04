@@ -46,12 +46,6 @@ onMounted(() => {
 		]
 	}
 
-	function getBg(): string {
-		// Read the CSS-transitioning background-color of the parent cell — getComputedStyle
-		// returns the mid-transition interpolated value, keeping the canvas pixel-perfect in sync.
-		return getComputedStyle(cv.parentElement!).backgroundColor
-	}
-
 	function init() {
 		const parent = cv.parentElement
 		if (!parent) return
@@ -72,8 +66,9 @@ onMounted(() => {
 		const h = cv.height
 		const [r, g, b] = getPrimary()
 
-		ctx.fillStyle = getBg()
-		ctx.fillRect(0, 0, w, h)
+		// Keep the canvas transparent so the parent cell's CSS-transitioning
+		// background shows through — guarantees perfect theme-change sync.
+		ctx.clearRect(0, 0, w, h)
 
 		ctx.font = `${FS}px 'Courier New', monospace`
 
