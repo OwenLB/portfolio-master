@@ -46,10 +46,38 @@ onMounted(() => {
 		]
 	}
 
-	function getBg(): string {
-		// Read the computed (transitioning) value so the canvas stays in sync with the CSS theme transition
-		return getComputedStyle(document.documentElement).backgroundColor
+	function parseBgHex(): [number, number, number] {
+		const hex = getComputedStyle(document.documentElement)
+			.getPropertyValue('--background').trim().replace('#', '')
+		return [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16)]
 	}
+
+	let fromBg = parseBgHex()
+	let toBg: [number, number, number] = [...fromBg]
+	let tweenStart = -10000
+	const TWEEN_MS = 300
+
+	function easeInOut(t: number) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t }
+
+	function getBg(): string {
+		const ease = easeInOut(Math.min((performance.now() - tweenStart) / TWEEN_MS, 1))
+		const r = Math.round(fromBg[0] + (toBg[0] - fromBg[0]) * ease)
+		const g = Math.round(fromBg[1] + (toBg[1] - fromBg[1]) * ease)
+		const b = Math.round(fromBg[2] + (toBg[2] - fromBg[2]) * ease)
+		return `rgb(${r},${g},${b})`
+	}
+
+	const mo = new MutationObserver(() => {
+		const ease = easeInOut(Math.min((performance.now() - tweenStart) / TWEEN_MS, 1))
+		fromBg = [
+			Math.round(fromBg[0] + (toBg[0] - fromBg[0]) * ease),
+			Math.round(fromBg[1] + (toBg[1] - fromBg[1]) * ease),
+			Math.round(fromBg[2] + (toBg[2] - fromBg[2]) * ease),
+		]
+		toBg = parseBgHex()
+		tweenStart = performance.now()
+	})
+	mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
 	function init() {
 		const parent = cv.parentElement
@@ -145,6 +173,7 @@ onMounted(() => {
 	onUnmounted(() => {
 		cancelAnimationFrame(rafId)
 		ro.disconnect()
+		mo.disconnect()
 		window.removeEventListener('mousemove', onMove)
 	})
 })

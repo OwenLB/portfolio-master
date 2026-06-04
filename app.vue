@@ -175,7 +175,7 @@ h2 {
 	position: relative;
 	background: var(--background);
 	z-index: 2;
-	transition: background-color var(--theme-t), border-color var(--theme-t);
+	transition: background-color var(--theme-t);
 
 	&--desktop {
 		display: none;
