@@ -32,7 +32,9 @@ onMounted(() => {
 	const span  = spotifyAnimation.span.element
 	if (!title || !span) return
 
-	const overflow = span.scrollWidth - title.offsetWidth
+	// Include the icon (44px) + gap (16px) so text fully clears the round button
+	const iconOffset = 44 + 16
+	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
 	if (overflow > 0) {
 		span.style.setProperty('--scroll-distance', `${overflow}px`)
 		span.classList.add('animated')
@@ -86,7 +88,7 @@ onMounted(() => {
 			white-space: nowrap;
 
 			&.animated {
-				animation: 8s translate 2s linear infinite;
+				animation: 4s translate 2s linear infinite;
 			}
 		}
 
