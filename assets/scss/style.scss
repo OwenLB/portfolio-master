@@ -89,6 +89,14 @@ $md: 768px;
   transition: $transition-properties;
 }
 
+// Gradient text utility
+@mixin gradient-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 // Functions
 @function space($value) {
   @return $value * 4px;

@@ -167,6 +167,10 @@ onMounted(() => {
 #home {
 	grid-template-rows: space(20) 300px repeat(7, auto) space(20);
 
+	h2 {
+		@include gradient-text;
+	}
+
 	&__hero_top {
 		.cell {
 			&.headline {
@@ -187,7 +191,7 @@ onMounted(() => {
 					strong {
 						display: block;
 						font-weight: bold;
-						color: var(--primary);
+						@include gradient-text;
 					}
 				}
 			}
