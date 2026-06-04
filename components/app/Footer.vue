@@ -4,7 +4,7 @@ import {Lang} from "~/types/lang";
 const lang = useLang()
 const localePath = useLocalePath()
 
-const {data: legalLink} = await useAsyncData('legal-link', () => queryContent('/').where({
+const {data: legalLink} = await useAsyncData(`legal-link-${lang.value}`, () => queryContent('/').where({
 	_path: '/legal',
 	_locale: lang.value
 }).findOne(), {watch: [() => lang.value]})

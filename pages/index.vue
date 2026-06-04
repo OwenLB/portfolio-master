@@ -10,24 +10,24 @@ const props = defineProps<{
 	lang: Lang
 }>()
 
-const {data: content}: { data: Home } = await useAsyncData('home', () => queryContent().where({
+const {data: content}: { data: Home } = await useAsyncData(`home-${props.lang}`, () => queryContent().where({
 	_path: '/home',
 	_locale: props.lang
 }).findOne(), {watch: [() => props.lang]})
 
-const {data: profileContent}: { data: About } = await useAsyncData('profile-content', () => queryContent().where({
+const {data: profileContent}: { data: About } = await useAsyncData(`profile-content-${props.lang}`, () => queryContent().where({
 	_path: '/profile',
 	_locale: props.lang
 }).findOne(), {watch: [() => props.lang]})
 
-const {data: experiencesData}: { data: Experiences } = await useAsyncData('experiences', () => queryContent().where({
+const {data: experiencesData}: { data: Experiences } = await useAsyncData(`experiences-${props.lang}`, () => queryContent().where({
 	_path: '/experiences',
 	_locale: props.lang
 }).findOne(), {watch: [() => props.lang]})
 
 const {data: projects}: {
 	data: Project[]
-} = await useAsyncData('projects', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).sort({order: 1}).find(), {watch: [() => props.lang]})
+} = await useAsyncData(`projects-${props.lang}`, () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).sort({order: 1}).find(), {watch: [() => props.lang]})
 
 const {data: socials}: {
 	data: Socials

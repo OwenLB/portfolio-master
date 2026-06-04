@@ -4,7 +4,7 @@ import {Legal} from "~/types/pages/legal";
 const lang = useLang()
 
 // Content path has no locale prefix — always /legal, even on /en/legal.
-const {data: content}: { data: Legal } = await useAsyncData('legal', () => queryContent().where({
+const {data: content}: { data: Legal } = await useAsyncData(`legal-${lang.value}`, () => queryContent().where({
 	_path: '/legal',
 	_locale: lang.value
 }).findOne(), {watch: [() => lang.value]})

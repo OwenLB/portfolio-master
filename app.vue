@@ -69,7 +69,7 @@ useHead({
 	<a class="skip-to-main" href="#main-content">
 		{{ lang === Lang.Fr ? 'Aller au contenu principal' : 'Skip to main content' }}
 	</a>
-	<NuxtPage :lang="lang"/>
+	<NuxtPage :key="lang" :lang="lang"/>
 </template>
 
 <style lang="scss">
