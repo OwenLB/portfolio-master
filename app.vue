@@ -143,7 +143,7 @@ h2 {
 	font-weight: bold;
 	font-size: 1.125rem;
 	letter-spacing: 1px;
-	color: var(--primary);
+	@include gradient-text;
 	line-height: 1;
 
 	a {
@@ -185,7 +185,7 @@ h2 {
 		content: '';
 		position: absolute;
 		inset: -1px calc(100% + 1px) -1px -1px;
-		background: $primary;
+		background: var(--primary-gradient);
 		z-index: 2;
 		transition: all 0.6s cubic-bezier(0.83, 0, 0.17, 1);
 	}

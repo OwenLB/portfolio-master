@@ -57,7 +57,7 @@ const link = computed(() => props.external ? 'href' : 'to')
 				}
 
 				&:last-child {
-					color: var(--primary);
+					@include gradient-text;
 				}
 			}
 		}

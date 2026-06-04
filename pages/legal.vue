@@ -53,9 +53,9 @@ useSeoMeta({
 		}
 
 		a {
-			color: var(--primary);
+			@include gradient-text;
 			text-decoration: underline;
-			text-decoration-color: var(--background);
+			text-decoration-color: transparent;
 			text-underline-offset: 4px;
 			transition: text-decoration-color 0.2s ease-in-out;
 
