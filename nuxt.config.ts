@@ -3,6 +3,16 @@ export default defineNuxtConfig({
 	ssr: false,
 	app: {
 		pageTransition: {name: 'page', mode: 'out-in', appear: true},
+		head: {
+			script: [
+				{
+					// Set the theme before first paint to avoid a light flash for
+					// dark-mode users in SPA mode (data-theme is otherwise only applied on hydration).
+					innerHTML: `(function(){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);var t=m?decodeURIComponent(m[1]):(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+					tagPosition: 'head',
+				},
+			],
+		},
 	},
 	runtimeConfig: {
 		spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
