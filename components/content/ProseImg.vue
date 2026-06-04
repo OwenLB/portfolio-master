@@ -26,7 +26,9 @@ if (isSvg) {
 			role="img"
 		/>
 		<nuxt-img v-else :alt="alt" :src="src" sizes="xs:640 md:100vw"/>
-		<figcaption>{{ alt }}</figcaption>
+		<!-- Media already exposes `alt` as its accessible name (img alt / svg-wrapper
+		     aria-label); hide the duplicate caption from AT. -->
+		<figcaption aria-hidden="true">{{ alt }}</figcaption>
 	</figure>
 </template>
 

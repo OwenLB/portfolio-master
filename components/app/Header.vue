@@ -29,7 +29,7 @@ const toggle = (event: Event, type: Toggle) => {
 </script>
 
 <template>
-	<header>
+	<header role="banner">
 		<div class="cell">
 		</div>
 		<div class="cell name">
@@ -41,7 +41,8 @@ const toggle = (event: Event, type: Toggle) => {
 		<div class="cell cell--desktop">
 		</div>
 		<div class="cell control">
-			<button :aria-checked="switchState" class="control__lang" role="switch" type="button"
+			<button :aria-checked="switchState" :aria-label="lang === Lang.Fr ? 'Changer de langue' : 'Change language'"
+					class="control__lang" role="switch" type="button"
 					@click.stop="toggle($event,Toggle.Lang)">
 				<span :class="{current: lang === Lang.Fr}" class="control__lang_side">FR</span>
 				<span class="control__lang_switch">
