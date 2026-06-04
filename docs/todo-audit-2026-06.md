@@ -14,6 +14,8 @@
 > **✅ Lot 3A réalisé le 2026-06-04** (6 commits) : CI, en-têtes de sécurité (CSP Report-Only), JSON-LD `CreativeWork`, Spotify (prod-only + URL web), icônes stack tactiles, retrait `about_button`. Page « À propos » **volontairement abandonnée** (filler). **Lot 3B** (SSR/prerender, i18n par URL, sitemap, favicon) à faire **via la CI**.
 >
 > **🟢 Lot 3B — étape 1 (migration SSR + prerender)** : build validé (CI + Netlify) sur `7548b40` ; **runtime à valider sur le deploy preview**. i18n par URL / sitemap / favicon = session locale (`npm install`).
+>
+> **✅ Lot 3B — étape 2 réalisée le 2026-06-04** (session locale) : i18n par URL (`@nuxtjs/i18n`, `prefix_except_default`, `/en/…` + `hreflang` + canonical par locale), sitemap auto par locale (`@nuxtjs/sitemap`), favicon SVG (220 Ko → 2,6 Ko). **Build + prerender validés** (FR + EN, sitemap index par locale) ; **runtime à valider sur le deploy preview**.
 
 ---
 
@@ -22,16 +24,16 @@
 - [x] **P1 (M)** — **SSR + prerender activés** (`ssr: true` + `nitro.prerender.crawlLinks`) : le HTML prérendu contient contenu + meta OG + JSON-LD. Build validé (CI + Netlify) ; *runtime à confirmer sur le preview.* — `nuxt.config.ts`
 - [x] **P1 (S)** — **Cartes OG par projet** désormais dans le HTML prérendu (à vérifier via « afficher le code source » sur le preview). — `pages/projects/[slug].vue`
 - [x] **P2 (S)** — **JSON-LD `CreativeWork`** ajouté par projet (indexé une fois le SSR en place). — `pages/projects/[slug].vue`
-- [ ] **P2 (S)** — Vérifier le rendu HTML du **JSON-LD `Person`** après prerender. — `app.vue:43-58`
-- [ ] **P2 (S)** — Générer le **sitemap** automatiquement (`@nuxtjs/sitemap`) ; ajouter `lastmod` + alternates. — `public/sitemap.xml`
+- [x] **P2 (S)** — **JSON-LD `Person`** confirmé dans le HTML prérendu (`grep "@type":"Person"` sur `/index.html`). — `app.vue:43-58`
+- [x] **P2 (S)** — **Sitemap** auto via `@nuxtjs/sitemap` : index `sitemap_index.xml` → `fr-FR.xml` + `en-US.xml`, alternates hreflang gérés par l'intégration i18n. Ancien `public/sitemap.xml` statique supprimé.
 - [ ] **P3 (S)** — Réécrire les **descriptions SEO légales** clichées/hors-sujet. — `content/fr/legal.md:3`, `content/en/legal.md:3`
 - [ ] **P3 (S)** — Supprimer la **double vérification Google** (fichier HTML + meta `app.vue:25`). — `app.vue:24-27`
 
 ## 🌍 Internationalisation (i18n)
 
-- [ ] **P1 (L)** — i18n par cookie = **une seule URL/page** → anglais invisible des moteurs. Passer aux **préfixes d'URL** (`/en/...`) + **`hreflang`** (garder le cookie pour la préférence). — `composables/useLang.ts`, `nuxt.config.ts`
-- [ ] **P2 (S)** — Permettre de **deep-linker/partager une langue** (résolu par le point ci-dessus).
-- [ ] **P3 (S)** — Prerender les **deux langues** sur des chemins distincts.
+- [x] **P1 (L)** — **i18n par URL** via `@nuxtjs/i18n` (`prefix_except_default`) : FR à `/`, EN à `/en/…`, `hreflang` + canonical par locale (`useLocaleHead`), cookie `lang` conservé pour la préférence. `useLang()` renvoie désormais le `locale` i18n. — `composables/useLang.ts`, `nuxt.config.ts`
+- [x] **P2 (S)** — **Deep-link/partage d'une langue** : résolu (chaque langue a son URL).
+- [x] **P3 (S)** — **Prerender des deux langues** sur chemins distincts (`/` + `/en`), liens internes localisés via `localePath()`.
 
 ## ♿ Accessibilité
 
@@ -52,7 +54,7 @@
 - [x] **P2 (S)** — **Flash de thème (FOUC)** : script inline `head` posant `data-theme` depuis le cookie avant peinture. — `nuxt.config.ts`
 - [ ] **P2 (S)** — Désactiver/alléger le **Matrix sur mobile** (`< $md`). — `pages/index.vue`
 - [ ] **P3 (M)** — Page Finixa : **~200 Ko de SVG inlinés** d'un coup → lazy-load sous la ligne de flottaison. — `components/content/ProseImg.vue:10-16`
-- [ ] **P3 (S)** — `favicon.ico` = **220 Ko** → ré-exporter léger. — `public/favicon.ico`
+- [x] **P3 (S)** — Favicon **220 Ko → 2,6 Ko** : remplacé par un `favicon.svg` (monogramme logo, `#237afd`). Ancien `.ico` supprimé. — `public/favicon.svg`, `app.vue:16`
 - [ ] **P3 (M)** — `@lottiefiles/lottie-player` (seule dép. runtime) chargée juste pour le 404 → alléger/charger à la demande. — `package.json:21`, `error.vue`
 
 ## ✍️ Contenu & narration
@@ -71,7 +73,7 @@
 - [x] **P2 (S)** — Crash si `track.item` null (pub/podcast) → guard. — mêmes fichiers
 - [x] **P2 (S)** — **Code mort** : `const cover` jamais utilisé. — `pages/projects/[slug].vue:20-22`
 - [ ] **P2 (S)** — `setTimeout(execute, 1000)` artificiel → `onMounted`/scroll. — `pages/projects/[slug].vue:50-54`
-- [ ] **P2 (S)** — Collision clé `useAsyncData('legal')` entre `Footer.vue:6` et `legal.vue:14`. — renommer
+- [x] **P2 (S)** — Collision clé `useAsyncData('legal')` résolue : `Footer.vue` utilise désormais `'legal-link'`.
 - [ ] **P3 (S)** — px en dur vs `space()`. — `components/link/Experience.vue`
 - [x] **P2 (M)** — **CI ajoutée** (`.github/workflows/ci.yml` : `npm ci` + `npm run generate` sur push/PR). Tests de fumée : optionnels, plus tard.
 - [x] **P3 (S)** — Docs (README, CLAUDE.md, case study FR/EN) corrigées : Spotify = edge function Deno.
@@ -116,5 +118,5 @@
 - **Lot 2 — a11y visuelle & UX** ✅ *fait le 2026-06-04* : contraste accent, focus visible, FOUC thème, stagger, arc thémé.
 - **Lot 3A — sûr, sans dépendance** ✅ *fait le 2026-06-04* : CI, en-têtes sécurité (CSP Report-Only), JSON-LD CreativeWork, dédup Spotify + URL web, icônes stack tactiles, retrait `about_button`.
 - **Lot 3B étape 1 — migration SSR + prerender** ✅ *build validé le 2026-06-04* (CI + Netlify) : `ssr: true`, prerender `crawlLinks`, lottie client-only, réconciliation cookies langue/thème, `ignore: ['/.netlify']`. *Runtime à valider sur le preview ; docs (CLAUDE.md/case study) à actualiser ensuite.*
-- **Lot 3B étape 2 — bloqué ici (besoin `npm install` local)** : i18n par URL + hreflang (`@nuxtjs/i18n`), sitemap auto (`@nuxtjs/sitemap`), ré-export favicon 220 Ko.
+- **Lot 3B étape 2 — migration i18n par URL** ✅ *réalisée le 2026-06-04* (session locale, build + prerender validés) : `@nuxtjs/i18n` (`prefix_except_default`, `/en/…` + hreflang + canonical), `@nuxtjs/sitemap` (index par locale), favicon SVG (220 Ko → 2,6 Ko), liens internes localisés, collision `useAsyncData('legal')` corrigée. *Runtime à valider sur le deploy preview.*
 - **En attente de toi** : cadrage séniorité, vignettes projet above-the-fold (preview local).

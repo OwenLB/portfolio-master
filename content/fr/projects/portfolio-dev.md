@@ -2,7 +2,7 @@
 order: 3
 title: 'Portfolio Développeur'
 type: "Projet Personnel"
-description: "Portfolio bilingue construit avec Nuxt 3 en mode SPA statique — contenu Markdown, intégration Spotify live et transitions de page CSS-only."
+description: "Portfolio bilingue construit avec Nuxt 3 en SSR + prérendu statique — bilingue par URL (FR / EN), contenu Markdown, intégration Spotify live et transitions de page CSS-only."
 git: [ "Répertoire Git", "https://github.com/OwenLB/portfolio-master" ]
 web: [ "Voir le site", "https://owenlebec.fr" ]
 stack: [
@@ -11,6 +11,8 @@ stack: [
   "Vue 3",
   "@nuxt/content",
   "@nuxt/image",
+  "@nuxtjs/i18n",
+  "@nuxtjs/sitemap",
   "SCSS",
   "Netlify"
 ]
@@ -18,13 +20,14 @@ stack: [
 
 ## Contexte
 
-Portfolio personnel qui regroupe projets, expériences et informations de contact. Le site gère deux langues (FR/EN) sans module i18n dédié, embarque une intégration Spotify temps réel pour afficher le morceau en cours d'écoute, et est déployé statiquement sur Netlify. Même en mode purement statique, la route API Spotify tourne via une Netlify Edge Function (Deno).
+Portfolio personnel qui regroupe projets, expériences et informations de contact. Le site est bilingue par URL (FR à `/`, EN sous `/en/…`), embarque une intégration Spotify temps réel pour afficher le morceau en cours d'écoute, et est déployé sur Netlify en SSR + prérendu statique (chaque page des deux langues est générée à la build, avec `hreflang` et canonical). La route API Spotify tourne via une Netlify Edge Function (Deno).
 
 ## Stack & Architecture
 
-- **Nuxt 3 (`ssr: false`)** — mode SPA : le build (`nuxt generate`) produit un shell HTML statique, le rendu est entièrement client-side. Ce choix simplifie les transitions de page animées et la gestion de l'état global (thème, langue) sans contraintes d'hydratation serveur.
-- **@nuxt/content v2** — contenu entièrement en Markdown avec frontmatter typé TypeScript. Pas de base de données ni d'API REST — les fichiers `.md` sont la source de vérité, requêtés via `queryContent()`.
-- **i18n maison via cookie** — la langue active est un `useCookie()` couplé à un `useState` global (`useLang.ts`). Les queries `queryContent` filtrent par `_locale`, avec `watch()` pour un refetch automatique sans navigation.
+- **Nuxt 3 (`ssr: true` + prérendu)** — le build prérend chaque route des deux langues en HTML complet (`nitro.prerender.crawlLinks`), servi statiquement par Netlify puis hydraté côté client. Le HTML contient le contenu, les meta OG et le JSON-LD dès la première peinture (LCP + indexabilité), sans serveur Node à l'exécution.
+- **@nuxt/content v2** — contenu entièrement en Markdown avec frontmatter typé TypeScript. Pas de base de données ni d'API REST — les fichiers `.md` sont la source de vérité, requêtés via `queryContent()`. À noter : les `_path` de contenu ne portent pas de préfixe de locale (`/projects/finixa`), donc les requêtes ciblent le slug et non `route.path` (préfixé `/en` en anglais).
+- **i18n par URL (`@nuxtjs/i18n`, `prefix_except_default`)** — FR à `/`, EN sous `/en/…`, chaque langue ayant sa propre URL crawlable. `hreflang` + canonical par locale via `useLocaleHead()`, cookie `lang` conservé pour la préférence du visiteur. Changer de langue est une navigation (`switchLocalePath()`) — l'animation de volets est jouée par la transition de page. Les `queryContent` filtrent par `_locale`.
+- **Sitemap auto (`@nuxtjs/sitemap`)** — `/sitemap.xml` est un index par locale (`fr-FR.xml` + `en-US.xml`) généré depuis les routes prérendues, alimenté par l'URL canonique (`site.url`).
 - **SCSS sans framework CSS** — design system maison : fonction `space($n)` (= `n × 4px`), mixin `transition()`, variables CSS custom pour le thème clair/sombre (`--primary`, `--background`, `--accent`, `--text`).
 - **@nuxt/image avec provider Netlify** — les images de couverture des projets (`.webp`) sont servies via le CDN Netlify avec redimensionnement automatique à la livraison.
 - **Git LFS** — les `.webp` sont trackées via `.gitattributes` pour éviter de stocker des binaires lourds dans l'historique git.
@@ -37,7 +40,7 @@ Portfolio personnel qui regroupe projets, expériences et informations de contac
 
 - **Transition de page CSS-only** : les transitions utilisent le pseudo-élément `.cell:before` positionné hors écran par défaut (`inset: -1px calc(100% + 1px) -1px -1px`). La classe `.page-leave-to` le fait glisser sur toute la cellule, créant un effet de volets fermants coordonnés. Zéro JavaScript, uniquement les hooks Nuxt page transitions + CSS. Désactivé proprement via `prefers-reduced-motion`.
 
-- **Middleware de validation de slug** : `middleware/project.ts` exécute un `queryContent()` avant le rendu de la page projet. Si le slug n'existe pas dans la locale courante, `abortNavigation()` est appelé — la navigation est annulée proprement plutôt que de rendre une page vide.
+- **Middleware de validation de slug** : `middleware/project.ts` exécute un `queryContent()` avant le rendu de la page projet. Si le slug n'existe pas, `abortNavigation()` est appelé — la navigation est annulée proprement plutôt que de rendre une page vide. La vérification est indépendante de la locale (les projets existent en FR et EN), ce qui garde le middleware hors du cycle de vie i18n.
 
 - **SVG inlinés pour les diagrammes** : `ProseImg.vue` détecte les images `.svg` et les récupère via `useFetch` pour les injecter en HTML brut dans un `.svg-wrapper`. Les diagrammes sont ainsi thémables via CSS — d'où les overrides explicites de `fill`, `stroke` et `color` sur les éléments SVG internes dans `[slug].vue` pour le mode sombre.
 

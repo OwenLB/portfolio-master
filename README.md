@@ -33,14 +33,14 @@ pages/
 netlify/edge-functions/
   spotify.ts           → Edge Function Deno (échange refresh_token → track en cours)
 composables/
-  useLang.ts           → langue active (cookie + useState)
+  useLang.ts           → locale active (renvoie le `locale` de @nuxtjs/i18n)
   useTheme.ts          → thème clair/sombre (cookie + system-preference)
   useCursor.ts         → effet de lumière curseur
 middleware/
   project.ts           → validation du slug avant rendu
 ```
 
-**Système i18n** : pas de module dédié. La locale est un `useCookie()` couplé à un `useState` global. Les queries `queryContent` filtrent par `_locale` et se re-déclenchent via `watch()` au changement de langue — sans navigation ni rechargement.
+**Système i18n** : `@nuxtjs/i18n` en `prefix_except_default` — FR à `/`, EN sous `/en/…`, chaque langue ayant son URL crawlable (`hreflang` + canonical par locale, cookie `lang` pour la préférence). Changer de langue = navigation via `switchLocalePath()`. Les queries `queryContent` filtrent par `_locale`. Sitemap par locale généré par `@nuxtjs/sitemap`.
 
 **Layout CSS Grid** : `.page` définit une grille 4–5 colonnes. `AppHeader` et `AppSection` utilisent `display: contents`, rendant leurs cellules enfants participants directs de la grille du parent quelle que soit la profondeur dans l'arbre de composants.
 
