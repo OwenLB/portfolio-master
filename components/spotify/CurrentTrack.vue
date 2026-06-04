@@ -27,19 +27,25 @@ const assignTitleSpanRef = (el: HTMLElement | null) => {
 	spotifyAnimation.span.element = el
 }
 
-onMounted(() => {
+function checkScroll() {
 	const title = spotifyAnimation.title
 	const span  = spotifyAnimation.span.element
 	if (!title || !span) return
 
-	// Include the icon (44px) + gap (16px) so text fully clears the round button
-	const iconOffset = 44 + 16
-	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
-	if (overflow > 0) {
-		span.style.setProperty('--scroll-distance', `${overflow}px`)
-		span.classList.add('animated')
-	}
-})
+	span.classList.remove('animated')
+	span.style.removeProperty('--scroll-distance')
+
+	nextTick(() => {
+		const iconOffset = 44 + 16
+		const overflow = span.scrollWidth - title.offsetWidth + iconOffset
+		if (overflow > 0) {
+			span.style.setProperty('--scroll-distance', `${overflow}px`)
+			span.classList.add('animated')
+		}
+	})
+}
+
+watch(() => spotify.value, checkScroll)
 </script>
 
 <template>
