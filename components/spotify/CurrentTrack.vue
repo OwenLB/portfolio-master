@@ -121,7 +121,7 @@ onMounted(() => {
 
 	&_icon {
 		border-radius: 50%;
-		background: var(--primary-gradient);
+		background: var(--primary);
 		flex-shrink: 0;
 		display: flex;
 		align-items: center;
