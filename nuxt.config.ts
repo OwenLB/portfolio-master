@@ -29,7 +29,7 @@ export default defineNuxtConfig({
 		}
 	},
 	modules: [
-		'@nuxt/content', '@nuxt/image', '@nuxtjs/i18n'
+		'@nuxt/content', '@nuxt/image', '@nuxtjs/i18n', '@nuxtjs/sitemap'
 	],
 	content: {
 		navigation: {
@@ -37,6 +37,10 @@ export default defineNuxtConfig({
 		},
 		locales: ['fr', 'en'],
 		defaultLocale: 'fr'
+	},
+	// Canonical site URL — consumed by @nuxtjs/sitemap (and i18n baseUrl below).
+	site: {
+		url: 'https://owenlebec.fr',
 	},
 	i18n: {
 		locales: [
