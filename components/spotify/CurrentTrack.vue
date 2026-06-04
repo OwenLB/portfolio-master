@@ -17,7 +17,7 @@ watch(spotify, () => {
 	span.classList.remove('animated')
 	span.style.removeProperty('--scroll-distance')
 
-	const iconOffset = 44 + 16
+	const iconOffset = 16
 	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
 	if (overflow > 0) {
 		span.style.setProperty('--scroll-distance', `${overflow}px`)
