@@ -17,7 +17,7 @@ const {visible, transform} = useCursor()
 	height: space(80);
 	border-radius: 50%;
 	filter: blur(space(20));
-	background: var(--primary);
+	background: var(--primary-gradient);
 	will-change: transform;
 }
 
