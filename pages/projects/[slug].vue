@@ -34,6 +34,23 @@ useSeoMeta({
 	twitterImage: computed(() => `https://owenlebec.fr/images${route.path}.webp`),
 })
 
+useHead(() => ({
+	script: content.value ? [{
+		type: 'application/ld+json',
+		innerHTML: JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'CreativeWork',
+			name: content.value.title,
+			abstract: content.value.description,
+			url: 'https://owenlebec.fr' + route.path,
+			image: `https://owenlebec.fr/images${route.path}.webp`,
+			author: {'@type': 'Person', name: 'Owen Le Bec', url: 'https://owenlebec.fr'},
+			keywords: content.value.stack,
+			...(content.value.git ? {codeRepository: content.value.git[1]} : {}),
+		}),
+	}] : [],
+}))
+
 const {data: related, execute}: { data: Project[] } = await useAsyncData(
 	() => `related-${route.path}-${props.lang}`,
 	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(route.path, {before: 3, after: 3}),
