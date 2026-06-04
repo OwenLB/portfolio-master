@@ -89,10 +89,12 @@ html {
 	font-family: 'Strawford', sans-serif;
 	color: var(--text);
 	background: var(--background);
+	transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 body {
 	background: var(--background);
+	transition: background-color 0.3s ease-in-out;
 }
 
 .page {
@@ -103,6 +105,7 @@ body {
 	background: var(--accent);
 	overflow: hidden;
 	min-height: 100vh;
+	transition: background-color 0.3s ease-in-out;
 
 	main {
 		display: contents;
@@ -171,6 +174,7 @@ h2 {
 	position: relative;
 	background: var(--background);
 	z-index: 2;
+	transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 
 	&--desktop {
 		display: none;
