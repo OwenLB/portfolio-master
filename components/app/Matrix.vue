@@ -47,7 +47,8 @@ onMounted(() => {
 	}
 
 	function getBg(): string {
-		return getComputedStyle(document.documentElement).getPropertyValue('--background').trim()
+		// Read the computed (transitioning) value so the canvas stays in sync with the CSS theme transition
+		return getComputedStyle(document.documentElement).backgroundColor
 	}
 
 	function init() {

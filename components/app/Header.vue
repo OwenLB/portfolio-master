@@ -58,31 +58,9 @@ const toggle = async (event: Event, type: Toggle) => {
 				type="button"
 				@click.stop="toggle($event,Toggle.Theme)"
 			>
-				<!--
-					Action icon: light mode shows moon (→ go dark), dark mode shows sun (→ go light).
-					The mask circle slides in/out using transform to avoid cx/cy transition issues inside <mask>.
-					Base mask position (cx=22,cy=2) is off-canvas. Moon state translates it to (cx=15,cy=9)
-					to bite a crescent out of the disc.
-				-->
-				<svg aria-hidden="true" class="theme-icon" fill="none" height="24" overflow="visible" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-					<defs>
-						<mask id="theme-toggle-mask">
-							<rect fill="white" height="24" width="24"/>
-							<circle class="theme-icon__mask-circle" cx="22" cy="2" fill="black" r="5.5"/>
-						</mask>
-					</defs>
-					<g class="theme-icon__rays">
-						<line x1="12" x2="12" y1="2" y2="4"/>
-						<line x1="12" x2="12" y1="20" y2="22"/>
-						<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/>
-						<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"/>
-						<line x1="2" x2="4" y1="12" y2="12"/>
-						<line x1="20" x2="22" y1="12" y2="12"/>
-						<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"/>
-						<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"/>
-					</g>
-					<circle class="theme-icon__disc" cx="12" cy="12" mask="url(#theme-toggle-mask)" r="4"/>
-				</svg>
+				<span aria-hidden="true" class="sun-moon">
+					<span v-for="n in 8" :key="n" :style="{ '--n': n }" class="sun-moon__ray"/>
+				</span>
 			</button>
 		</div>
 		<div class="cell">
@@ -149,7 +127,7 @@ header {
 					padding: space(2);
 					border-radius: space(4);
 					border: 1px solid var(--accent);
-					@include transition(border);
+					transition: border-color var(--theme-t);
 
 					span {
 						display: block;
@@ -178,8 +156,9 @@ header {
 
 			.control__theme {
 				all: unset;
-				height: space(6);
 				cursor: pointer;
+				display: flex;
+				align-items: center;
 				@include transition(color);
 
 				&:where(:hover, :focus, :focus-visible) {
@@ -187,43 +166,55 @@ header {
 					outline: none;
 				}
 
-				.theme-icon {
+				// default = light mode → moon (action: go dark)
+				.sun-moon {
+					position: relative;
 					display: block;
+					width: 14px;
+					height: 14px;
+					border-radius: 50%;
+					background: currentColor;
+					transform-origin: center;
+					transition: transform 0.75s ease-in-out;
 
-					&__rays {
-						transform-origin: 12px 12px;
-						transition: opacity 0.4s ease, transform 0.5s ease;
-						// default = light mode → show moon → rays hidden
-						opacity: 0;
-						transform: scale(0.5) rotate(30deg);
+					&::after {
+						content: '';
+						position: absolute;
+						width: 12px;
+						height: 12px;
+						border-radius: 50%;
+						background: var(--background);
+						left: 6px;
+						bottom: 3px;
+						transition: transform 0.5s ease, left 0.25s ease, bottom 0.25s ease, background-color var(--theme-t);
 					}
 
-					&__disc {
-						transition: r 0.4s ease;
-						// default = light mode → moon disc larger
-						r: 6;
-					}
-
-					&__mask-circle {
-						// translate from base (cx=22,cy=2) to moon position (cx=15,cy=9)
-						transform: translate(-7px, 7px);
-						transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+					&__ray {
+						position: absolute;
+						top: 5px;
+						left: 5px;
+						width: 4px;
+						height: 4px;
+						border-radius: 50%;
+						background: currentColor;
+						transform-origin: center;
+						transform: rotate(calc((var(--n) - 1) * 45deg)) translateX(0);
+						transition: transform 0.5s ease-in-out;
 					}
 				}
 
-				// dark mode → show sun → rays visible, mask off-canvas
-				&.is-dark .theme-icon {
-					&__rays {
-						opacity: 1;
-						transform: scale(1) rotate(0deg);
+				// .is-dark = dark mode → sun (action: go light)
+				&.is-dark .sun-moon {
+					transform: scale(0.65);
+
+					&::after {
+						left: 12px;
+						bottom: 6px;
+						transform: scale(0);
 					}
 
-					&__disc {
-						r: 4;
-					}
-
-					&__mask-circle {
-						transform: translate(0, 0);
+					&__ray {
+						transform: rotate(calc((var(--n) - 1) * 45deg)) translateX(-13px);
 					}
 				}
 			}
