@@ -58,11 +58,17 @@ const toggle = async (event: Event, type: Toggle) => {
 				type="button"
 				@click.stop="toggle($event,Toggle.Theme)"
 			>
+				<!--
+					Action icon: light mode shows moon (→ go dark), dark mode shows sun (→ go light).
+					The mask circle slides in/out using transform to avoid cx/cy transition issues inside <mask>.
+					Base mask position (cx=22,cy=2) is off-canvas. Moon state translates it to (cx=15,cy=9)
+					to bite a crescent out of the disc.
+				-->
 				<svg aria-hidden="true" class="theme-icon" fill="none" height="24" overflow="visible" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
 					<defs>
 						<mask id="theme-toggle-mask">
 							<rect fill="white" height="24" width="24"/>
-							<circle class="theme-icon__mask-circle" cx="22" cy="2" fill="black" r="5"/>
+							<circle class="theme-icon__mask-circle" cx="22" cy="2" fill="black" r="5.5"/>
 						</mask>
 					</defs>
 					<g class="theme-icon__rays">
@@ -127,14 +133,12 @@ header {
 				padding: space(2) 0;
 
 				&_side {
-					@include transition(color);
 					font-size: 1rem;
 					opacity: 0.35;
-					transition: color 0.3s, opacity 0.3s, font-weight 0s;
+					transition: color 0.3s, opacity 0.3s;
 
 					&.current {
 						color: var(--primary);
-						font-weight: 700;
 						opacity: 1;
 					}
 				}
@@ -189,30 +193,37 @@ header {
 					&__rays {
 						transform-origin: 12px 12px;
 						transition: opacity 0.4s ease, transform 0.5s ease;
-					}
-
-					&__disc {
-						transition: r 0.4s ease;
-					}
-
-					&__mask-circle {
-						transition: cx 0.5s cubic-bezier(0.4, 0, 0.2, 1), cy 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-					}
-				}
-
-				&.is-dark .theme-icon {
-					&__rays {
+						// default = light mode → show moon → rays hidden
 						opacity: 0;
 						transform: scale(0.5) rotate(30deg);
 					}
 
 					&__disc {
+						transition: r 0.4s ease;
+						// default = light mode → moon disc larger
 						r: 6;
 					}
 
 					&__mask-circle {
-						cx: 15;
-						cy: 9;
+						// translate from base (cx=22,cy=2) to moon position (cx=15,cy=9)
+						transform: translate(-7px, 7px);
+						transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+					}
+				}
+
+				// dark mode → show sun → rays visible, mask off-canvas
+				&.is-dark .theme-icon {
+					&__rays {
+						opacity: 1;
+						transform: scale(1) rotate(0deg);
+					}
+
+					&__disc {
+						r: 4;
+					}
+
+					&__mask-circle {
+						transform: translate(0, 0);
 					}
 				}
 			}
