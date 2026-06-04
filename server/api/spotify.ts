@@ -35,13 +35,19 @@ export default defineEventHandler(async () => {
 		},
 	});
 
-	if (response.status === 204 || response.status > 400) {
+	if (response.status === 204 || response.status >= 400) {
 		return {
 			isConnected: false
 		} as Pick<Spotify, 'isConnected'>;
 	}
 
 	const track = await response.json();
+
+	if (!track?.item) {
+		return {
+			isConnected: false
+		} as Pick<Spotify, 'isConnected'>;
+	}
 
 	return {
 		title: track.item.name,
