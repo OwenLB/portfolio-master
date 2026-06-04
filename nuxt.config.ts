@@ -45,6 +45,10 @@ export default defineNuxtConfig({
 		prerender: {
 			crawlLinks: true,
 			routes: ['/', '/legal'],
+			// @nuxt/image (Netlify provider) emits <link rel="preload"> to
+			// /.netlify/images?... which only exists at runtime on Netlify's CDN.
+			// Don't let the crawler try to prerender it (would 404 and fail the build).
+			ignore: ['/.netlify'],
 		},
 	}
 })
