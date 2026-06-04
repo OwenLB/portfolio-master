@@ -60,10 +60,22 @@ const {data: related, execute}: { data: Project[] } = await useAsyncData(
 	}
 )
 
-onBeforeMount(() => {
-	setTimeout(() => {
+// Lazy-load the "related projects" query when its section scrolls into view,
+// instead of after an arbitrary 1s delay.
+const relatedRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+	if (!relatedRef.value) {
 		execute()
-	}, 1000)
+		return
+	}
+	const observer = new IntersectionObserver((entries, obs) => {
+		if (entries.some((entry) => entry.isIntersecting)) {
+			execute()
+			obs.disconnect()
+		}
+	}, {rootMargin: '200px'})
+	observer.observe(relatedRef.value)
 })
 </script>
 
@@ -110,7 +122,7 @@ onBeforeMount(() => {
 			</AppSection>
 
 			<AppSection id="project__related">
-				<div class="cell cell--triple-column content">
+				<div ref="relatedRef" class="cell cell--triple-column content">
 					<h2>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
 					<div class="projects">
 						<LinkProject v-for="project in related" :key="project._path" :label="project.title"
