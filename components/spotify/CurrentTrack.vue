@@ -84,7 +84,9 @@ watch(spotify, () => {
 			white-space: nowrap;
 
 			&.animated {
-				animation: var(--scroll-duration) translate 2s linear infinite;
+				@media (prefers-reduced-motion: no-preference) {
+					animation: var(--scroll-duration) translate 2s linear infinite;
+				}
 			}
 		}
 
@@ -162,10 +164,12 @@ watch(spotify, () => {
 		}
 
 		&--animated .spotify__pill_icon-bar {
-			animation-name: pulse;
-			animation-duration: 1s;
-			animation-iteration-count: infinite;
-			animation-timing-function: linear;
+			@media (prefers-reduced-motion: no-preference) {
+				animation-name: pulse;
+				animation-duration: 1s;
+				animation-iteration-count: infinite;
+				animation-timing-function: linear;
+			}
 		}
 
 		@keyframes pulse {

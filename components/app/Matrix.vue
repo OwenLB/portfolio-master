@@ -8,6 +8,9 @@ onMounted(() => {
 	const ctx = cv.getContext('2d')
 	if (!ctx) return
 
+	// Respect reduced-motion: render a single static frame, no perpetual loop.
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 	// Trigger wave once across all Matrix instances (1st caller wins)
 	triggerMatrixWave(650)
 
@@ -115,15 +118,17 @@ onMounted(() => {
 				if (j > 0 && Math.random() > 0.97) drop.chars[j] = rndChar()
 			}
 
-			drop.y += drop.speed
-			if (drop.y - TRAIL * FS > h) {
-				drop.y = -TRAIL * FS
-				drop.speed = SPEED_MIN + Math.random() * (SPEED_MAX - SPEED_MIN)
-				drop.chars = Array.from({ length: TRAIL + 1 }, rndChar)
+			if (!prefersReduced) {
+				drop.y += drop.speed
+				if (drop.y - TRAIL * FS > h) {
+					drop.y = -TRAIL * FS
+					drop.speed = SPEED_MIN + Math.random() * (SPEED_MAX - SPEED_MIN)
+					drop.chars = Array.from({ length: TRAIL + 1 }, rndChar)
+				}
 			}
 		}
 
-		rafId = requestAnimationFrame(draw)
+		if (!prefersReduced) rafId = requestAnimationFrame(draw)
 	}
 
 	function onMove(e: MouseEvent) {
