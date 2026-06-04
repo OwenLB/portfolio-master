@@ -45,6 +45,7 @@
 $white: #FFFFFF;
 $green: #1EFDB3;
 $primary: #237afd;
+$primary-on-light: #1a64d6; // light-theme accent — meets WCAG AA (~5.2:1) on $light
 $dark-primary: #569dff;
 $dark: #09223B;
 $dark-background: #061423;
@@ -55,7 +56,7 @@ $dark-accent: #15243D;
 $dark-accent-rgb: 21, 36, 61;
 
 :root {
-  --primary: #{$primary};
+  --primary: #{$primary-on-light};
   --text: #{$dark};
   --text-accent: #{color.adjust($dark, $lightness: +16%)};
   --background: #{$light};
