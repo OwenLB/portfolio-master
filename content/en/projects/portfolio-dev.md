@@ -18,7 +18,7 @@ stack: [
 
 ## Context
 
-Personal portfolio covering projects, work experience, and contact information. The site handles two languages (FR/EN) without a dedicated i18n module, embeds a live Spotify integration to display the currently playing track, and is deployed statically on Netlify. Even in fully static mode, the Spotify API route runs as a Netlify Function via Nitro.
+Personal portfolio covering projects, work experience, and contact information. The site handles two languages (FR/EN) without a dedicated i18n module, embeds a live Spotify integration to display the currently playing track, and is deployed statically on Netlify. Even in fully static mode, the Spotify API route runs as a Netlify Edge Function (Deno).
 
 ## Stack & Architecture
 
@@ -28,7 +28,7 @@ Personal portfolio covering projects, work experience, and contact information. 
 - **SCSS without a CSS framework** — custom design system: `space($n)` function (= `n × 4px`), `transition()` mixin, CSS custom properties for light/dark theming (`--primary`, `--background`, `--accent`, `--text`).
 - **@nuxt/image with Netlify provider** — project cover images (`.webp`) are served through the Netlify CDN with on-the-fly resizing at delivery.
 - **Git LFS** — `.webp` files are tracked via `.gitattributes` to avoid storing large binaries in git history.
-- **Nitro server route** — `/server/api/spotify.ts` runs as a Netlify Function. Exchanges a refresh token for an access token on every request, without storing tokens in memory or exposing credentials client-side.
+- **Netlify Edge Function (Deno)** — `netlify/edge-functions/spotify.ts` serves the `/api/spotify` route. Exchanges a refresh token for an access token on every request, without storing tokens or exposing credentials client-side.
 - **Umami Analytics** — async script loaded via `useHead`, no cookies, no personal data sent to third parties.
 
 ## Notable technical points

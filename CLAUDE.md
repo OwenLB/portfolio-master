@@ -41,7 +41,7 @@ File-based (`pages/`). `pages/projects/[slug].vue` uses a route middleware (`mid
 
 ### Spotify Integration
 
-`server/api/spotify.ts` — server-only route that exchanges a refresh token for an access token and returns the currently playing track. Credentials are kept server-side via environment variables:
+`netlify/edge-functions/spotify.ts` — Netlify edge function (Deno) that exchanges a refresh token for an access token and returns the currently playing track. Credentials are kept server-side via environment variables:
 
 - `SPOTIFY_CLIENT_ID`
 - `SPOTIFY_CLIENT_SECRET`

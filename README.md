@@ -14,7 +14,7 @@ Portfolio personnel déployé sur [owenlebec.fr](https://owenlebec.fr). Bilingue
 | @nuxt/content v2 | Système de contenu Markdown — source de vérité sans base de données |
 | @nuxt/image | Optimisation des images à la livraison via le provider Netlify |
 | SCSS | Design system maison (`space()`, `transition()`, variables CSS custom) |
-| Netlify | Hébergement statique + Netlify Functions pour la route Spotify |
+| Netlify | Hébergement statique + Edge Function (Deno) pour la route Spotify |
 | Git LFS | Stockage des images `.webp` hors de l'historique git |
 | Umami | Analytics privacy-first, sans cookie |
 
@@ -30,8 +30,8 @@ pages/
   index.vue            → home
   about.vue
   projects/[slug].vue  → page projet dynamique
-server/api/
-  spotify.ts           → Netlify Function (échange refresh_token → track en cours)
+netlify/edge-functions/
+  spotify.ts           → Edge Function Deno (échange refresh_token → track en cours)
 composables/
   useLang.ts           → langue active (cookie + useState)
   useTheme.ts          → thème clair/sombre (cookie + system-preference)
