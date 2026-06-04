@@ -62,6 +62,7 @@ $dark-accent-rgb: 21, 36, 61;
   --background: #{$light};
   --accent: #{$light-accent};
   --accent-rgb: #{$light-accent-rgb};
+  --arc: #89d6ff;
 }
 
 
@@ -72,6 +73,7 @@ html[data-theme="dark"] {
   --background: #{$dark-background};
   --accent: #{$dark-accent};
   --accent-rgb: #{$dark-accent-rgb};
+  --arc: #16395c;
 }
 
 // Breakpoints

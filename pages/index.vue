@@ -273,7 +273,7 @@ onMounted(() => {
 		height: auto;
 		margin: 0 auto;
 		border-radius: 50% 50% 0 0;
-		background-color: #89d6ff;
+		background-color: var(--arc);
 		padding-top: 3vh;
 		padding-right: 2.5vw;
 	}
