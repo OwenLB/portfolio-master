@@ -17,10 +17,6 @@ const props = defineProps<{
 	lang: Lang
 }>()
 
-const cover = computed(() => {
-	return `url("/images${route.path}.webp") no-repeat center / cover`
-})
-
 const {data: content}: { data: Project } = await useAsyncData(
 	() => `project-${route.path}-${props.lang}`,
 	() => queryContent().where({_path: route.path, _locale: props.lang}).findOne()
