@@ -18,34 +18,18 @@ const toggle = async (event: Event, type: Toggle) => {
 	const {currentTarget} = event
 	const html = document.querySelector('html')
 
-	const setValue = (value: Lang | Theme) => {
+	if (type === Toggle.Theme) {
+		theme.value = theme.value === Theme.Dark ? Theme.Light : Theme.Dark
+		iconState.value = theme.value === Theme.Dark ? Icon.Moon : Icon.Sun
+		;(currentTarget as HTMLInputElement).blur()
+	} else if (type === Toggle.Lang) {
 		html?.classList.add('page-leave-to')
-
 		setTimeout(() => {
-			if (type === Toggle.Theme) {
-				theme.value = value as Theme
-				iconState.value = value === Theme.Dark ? Icon.Moon : Icon.Sun
-			} else if (type === Toggle.Lang) {
-				lang.value = value as Lang
-				switchState.value = !switchState.value
-			}
-			(currentTarget as HTMLInputElement).blur()
+			lang.value = lang.value === Lang.Fr ? Lang.En : Lang.Fr
+			switchState.value = !switchState.value
+			;(currentTarget as HTMLInputElement).blur()
 			html?.classList.remove('page-leave-to')
 		}, 1000)
-	}
-
-	if (type === Toggle.Theme) {
-		if (theme.value === (Theme.Dark as Theme)) {
-			setValue(Theme.Light)
-		} else {
-			setValue(Theme.Dark)
-		}
-	} else if (type === Toggle.Lang) {
-		if (lang.value === Lang.Fr) {
-			setValue(Lang.En)
-		} else {
-			setValue(Lang.Fr)
-		}
 	}
 }
 </script>
@@ -122,10 +106,19 @@ header {
 				align-items: center;
 				gap: space(4);
 				cursor: pointer;
+				padding: space(2) 0;
 
 				&_side {
 					@include transition(color);
 					font-size: 1rem;
+					opacity: 0.35;
+					transition: color 0.3s, opacity 0.3s, font-weight 0s;
+
+					&.current {
+						color: var(--primary);
+						font-weight: 700;
+						opacity: 1;
+					}
 				}
 
 				&_switch {
