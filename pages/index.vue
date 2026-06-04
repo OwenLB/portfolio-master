@@ -76,13 +76,13 @@ onMounted(() => {
 				<div class="cell cell--double-column headline">
 					<h1>{{ content.headline_start }}<strong>{{ content.headline_bold }}</strong></h1>
 				</div>
-				<div class="cell responsive topographic">
+				<div class="cell responsive matrix">
 					<ClientOnly><AppMatrix/></ClientOnly>
 				</div>
 			</AppSection>
 
 			<AppSection id="home__hero_bottom">
-				<div class="cell cell--double-column cell--desktop topographic">
+				<div class="cell cell--double-column cell--desktop matrix">
 					<ClientOnly><AppMatrix/></ClientOnly>
 				</div>
 				<div class="cell spotify">
@@ -192,7 +192,7 @@ onMounted(() => {
 				}
 			}
 
-			&.topographic {
+			&.matrix {
 				padding: 0;
 				position: relative;
 				overflow: hidden;
@@ -203,7 +203,7 @@ onMounted(() => {
 
 	&__hero_bottom {
 		.cell {
-			&.topographic {
+			&.matrix {
 				padding: 0;
 				position: relative;
 				overflow: hidden;

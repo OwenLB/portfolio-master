@@ -66,6 +66,7 @@ useHead({
 
 :root {
 	--main-space: #{space(6)};
+	--theme-t: 0.3s ease-in-out;
 }
 
 ::-moz-selection {
@@ -89,10 +90,12 @@ html {
 	font-family: 'Strawford', sans-serif;
 	color: var(--text);
 	background: var(--background);
+	transition: background-color var(--theme-t), color var(--theme-t);
 }
 
 body {
 	background: var(--background);
+	transition: background-color var(--theme-t);
 }
 
 .page {
@@ -103,6 +106,7 @@ body {
 	background: var(--accent);
 	overflow: hidden;
 	min-height: 100vh;
+	transition: background-color var(--theme-t);
 
 	main {
 		display: contents;
@@ -171,6 +175,7 @@ h2 {
 	position: relative;
 	background: var(--background);
 	z-index: 2;
+	transition: background-color var(--theme-t);
 
 	&--desktop {
 		display: none;

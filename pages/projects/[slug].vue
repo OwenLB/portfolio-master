@@ -2,12 +2,12 @@
 import {Project} from "~/types/project";
 import {Lang} from "~/types/lang";
 
-const {path} = useRoute()
+const route = useRoute()
 
 useHead({
 	link: [{
 		rel: 'canonical',
-		href: 'https://owenlebec.fr' + path
+		href: computed(() => 'https://owenlebec.fr' + route.path)
 	}]
 })
 
@@ -18,35 +18,27 @@ const props = defineProps<{
 }>()
 
 const cover = computed(() => {
-	return `url("/images${path}.webp") no-repeat center / cover`
+	return `url("/images${route.path}.webp") no-repeat center / cover`
 })
 
-const {data: content}: { data: Project } = await useAsyncData('project', () => queryContent().where({
-	_path: path,
-	_locale: props.lang
-}).findOne(), {watch: [() => props.lang]})
+const {data: content}: { data: Project } = await useAsyncData(
+	() => `project-${route.path}-${props.lang}`,
+	() => queryContent().where({_path: route.path, _locale: props.lang}).findOne()
+)
 
 useSeoMeta({
-	title: content.value.title,
-	description: content.value.description,
+	title: computed(() => content.value?.title),
+	description: computed(() => content.value?.description),
 })
 
-const {
-	data: related,
-	execute
-}: {
-	data: Project[]
-} = await useAsyncData('related', () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(path, {
-	before: 3,
-	after: 3
-}), {
-	immediate: false,
-	transform: (projects) =>
-		projects.filter((project) => {
-			return project !== null;
-		}),
-	watch: [() => props.lang]
-})
+const {data: related, execute}: { data: Project[] } = await useAsyncData(
+	() => `related-${route.path}-${props.lang}`,
+	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(route.path, {before: 3, after: 3}),
+	{
+		immediate: false,
+		transform: (projects) => projects.filter((project) => project !== null),
+	}
+)
 
 onBeforeMount(() => {
 	setTimeout(() => {
@@ -64,7 +56,7 @@ onBeforeMount(() => {
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<nuxt-img :alt="content.title" :src="`/images${path}.webp`" preload sizes="xs:640 md:100vw"/>
+					<nuxt-img :alt="content.title" :src="`/images${route.path}.webp`" preload sizes="xs:640 md:100vw"/>
 					<h1>{{ content.title }}</h1>
 					<template v-if="content['type']">
 						<span class="project-type">{{ content.type }}</span>
