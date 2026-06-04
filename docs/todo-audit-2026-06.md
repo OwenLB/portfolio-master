@@ -21,6 +21,8 @@
 > - **Build Netlify cassé (`EISDIR`)** — le plugin legacy `@netlify/plugin-sitemap` (installé via l'**UI Netlify**, pas dans le repo) tournait en `onPostBuild` et tentait d'ouvrir `dist/sitemap.xml` comme un fichier, alors que `@nuxtjs/sitemap` le prérend en **dossier** (`sitemap.xml/index.html`). Contourné en déclarant le plugin dans `netlify.toml` avec un `filePath` jetable (la config toml prime sur l'UI → il écrit ailleurs). Commit `89bedf2`. *Dette : retirer le plugin dans l'UI + supprimer le bloc `[[plugins]]` (voir Hygiène).*
 > - **CI `npm ci` cassé** — `package-lock.json` désynchronisé après l'ajout des deps i18n/sitemap → resynchronisé (commit `38e2c2c`).
 > - **Toggle langue « 1 fois sur 3 »** — `/` (FR) et `/en` sont rendus par le **même `index.vue`**, donc Vue réutilisait l'instance au lieu de la remonter ; combiné à des clés `useAsyncData` **statiques** (`'home'`, `'legal'`…) partageant le cache entre locales, le swap de contenu ne dépendait que d'un `watch` au timing non-déterministe. Corrigé : `<NuxtPage :key="lang">` (remount au changement de locale) + clés `useAsyncData` **scopées par locale** (home/legal/footer). Commit `e20f721`. *Leçon : sous i18n par URL, toute query locale-dépendante doit avoir une clé scopée par locale (déjà le cas dans `[slug].vue`).*
+>
+> **✅ Lot 4 — finitions a11y + correctifs sûrs réalisée le 2026-06-05** (4 commits, build validé) : landmarks `banner`/`contentinfo` + `aria-label` bouton langue, `figcaption` non dupliqué, descriptions SEO légales, **obfuscation contact home** (email + tél base64 décodés côté client, footer `.only`), `setTimeout` → `IntersectionObserver`. Détail + décisions (email reste yahoo, etc.) en bas.
 
 ---
 
@@ -32,8 +34,8 @@
 - [x] **P2 (S)** — **JSON-LD `Person`** confirmé dans le HTML prérendu (`grep "@type":"Person"` sur `/index.html`). — `app.vue:43-58`
 - [x] **P2 (S)** — **Sitemap** auto via `@nuxtjs/sitemap` : index `sitemap_index.xml` → `fr-FR.xml` + `en-US.xml`, alternates hreflang gérés par l'intégration i18n. Ancien `public/sitemap.xml` statique supprimé.
 - [ ] **P2 (S)** — Vérifier le **`Content-Type` de `/sitemap.xml`** : prérendu en `sitemap.xml/index.html`, Netlify peut le servir en `text/html` au lieu d'`application/xml`. Si c'est le cas, forcer le type via header `netlify.toml`. — `netlify.toml`
-- [ ] **P3 (S)** — Réécrire les **descriptions SEO légales** clichées/hors-sujet. — `content/fr/legal.md:3`, `content/en/legal.md:3`
-- [ ] **P3 (S)** — Supprimer la **double vérification Google** (fichier HTML + meta `app.vue:25`). — `app.vue:24-27`
+- [x] **P3 (S)** — **Descriptions SEO légales** réécrites (FR + EN) : décrivent la page (éditeur, hébergeur, contact) au lieu d'une bio générique. — `content/fr/legal.md:3`, `content/en/legal.md:3`
+- [x] **P3 (S)** — **Vérification Google** : aucun fichier HTML de vérif dans `public/`, il ne reste que la meta `app.vue` → **pas de double**. Meta conservée (la retirer risquerait de dé-vérifier Search Console). *Rien à faire.*
 
 ## 🌍 Internationalisation (i18n)
 
@@ -47,10 +49,10 @@
 - [x] **P1 (S)** — **Contraste** : accent clair foncé à `#1a64d6` (≈5.2:1, AA). — `assets/scss/style.scss`
 - [x] **P1 (S)** — **Focus visible** : règle globale `:focus-visible { outline }` + `outline:none` retirés. — `app.vue`, `Header.vue`, `Footer.vue`, `link/Text.vue`, `link/Project.vue`, `CurrentTrack.vue`, `link/Experience.vue`
 - [x] **P2 (S)** — **Reduced-motion** non respecté par Matrix rain, marquee Spotify, égaliseur → gater. — `components/app/Matrix.vue:64-127`, `components/spotify/CurrentTrack.vue:87,164`
-- [ ] **P2 (S)** — Pas de `<nav>` ni `role="banner/main/contentinfo"` : ajouter, OU retirer la revendication ARIA fausse de `content/*/projects/portfolio-dev.md:36`.
-- [ ] **P2 (S)** — Bouton **langue** sans libellé descriptif → `aria-label`. — `components/app/Header.vue:47`
-- [ ] **P3 (S)** — `Experience.vue` : zone de dépliage `<div @click>` souris-only. — `components/link/Experience.vue:32,89`
-- [ ] **P3 (S)** — `ProseImg.vue` : `figcaption` duplique l'`aria-label`. — `components/content/ProseImg.vue:25-29`
+- [x] **P2 (S)** — Landmarks ajoutés : `role="banner"` (`Header`) + `role="contentinfo"` (`Footer`) ; `<main id="main-content">` existait déjà. La revendication ARIA de la case study est donc backée.
+- [x] **P2 (S)** — **Bouton langue** : `aria-label` ajouté (« Changer de langue » / « Change language »). — `components/app/Header.vue`
+- [x] **P3 (S)** — `Experience.vue` : le dépliage est déjà **accessible clavier** via le `<button :aria-expanded>` existant ; le `<div @click>` n'est qu'un raccourci souris redondant (pas de blocage). *Pas de changement.*
+- [x] **P3 (S)** — `ProseImg.vue` : `figcaption` passé en `aria-hidden` (le média porte déjà le nom accessible) → plus de double annonce. — `components/content/ProseImg.vue`
 
 ## ⚡ Performance
 
@@ -78,7 +80,7 @@
 - [x] **P2 (S)** — Bug `response.status > 400` → `>= 400`. — `server/api/spotify.ts:38`, `netlify/edge-functions/spotify.ts:40`
 - [x] **P2 (S)** — Crash si `track.item` null (pub/podcast) → guard. — mêmes fichiers
 - [x] **P2 (S)** — **Code mort** : `const cover` jamais utilisé. — `pages/projects/[slug].vue:20-22`
-- [ ] **P2 (S)** — `setTimeout(execute, 1000)` artificiel → `onMounted`/scroll. — `pages/projects/[slug].vue:50-54`
+- [x] **P2 (S)** — `setTimeout(execute, 1000)` remplacé par un `IntersectionObserver` (charge les projets liés à l'approche du viewport, `rootMargin: 200px`). — `pages/projects/[slug].vue`
 - [x] **P2 (S)** — Collision clé `useAsyncData('legal')` résolue : `Footer.vue` utilise désormais `'legal-link'`.
 - [ ] **P3 (S)** — px en dur vs `space()`. — `components/link/Experience.vue`
 - [x] **P2 (M)** — **CI ajoutée** (`.github/workflows/ci.yml` : `npm ci` + `npm run generate` sur push/PR). Tests de fumée : optionnels, plus tard.
@@ -87,7 +89,7 @@
 ## 🔒 Sécurité & vie privée
 
 - [x] **P1 (S)** — **Adresse postale + téléphone retirés** du legal (gardé nom, ville, email), FR + EN. — `content/fr/legal.md`, `content/en/legal.md`
-- [ ] **P2 (S)** — `mailto:`/`tel:` en clair = spam → obfusquer/form anti-spam. — `content/*/home.md:17,19`
+- [x] **P2 (S)** — **`mailto:`/`tel:` obfusqués** (home) : email + téléphone stockés en base64 dans le contenu, href assemblé côté client (`LinkText`), placeholder `#` au prerender → absents du HTML *et* des payloads. Footer restreint à `.only(['_path','title'])` pour ne plus embarquer le corps legal (donc l'email) dans chaque payload. *Résidu assumé : l'email reste sur la page `/legal` (contact légal) et dans le cache `@nuxt/content` (`/api/_content/*.json`, chemins obscurs).* — `content/*/home.md`, `components/link/Text.vue`, `components/app/Footer.vue`
 - [x] **P2 (M)** — **En-têtes de sécurité** ajoutés (`netlify.toml` : X-Frame-Options, X-Content-Type-Options, Referrer-Policy, HSTS, Permissions-Policy + **CSP Report-Only**).
 - [x] ✅ À conserver — pas de secret exposé, `rel="noopener noreferrer"`, Umami sans cookie.
 
@@ -112,7 +114,7 @@
 - [x] **P3 (S)** — Ne plus committer `.idea/` (ajouter au `.gitignore`).
 - [x] **P3 (S)** — `.gitignore` ignore `*.png*` mais 2 PNG committés → cohérenciser.
 - [x] **P3 (S)** — Typo « Addresse » (ligne supprimée avec l'adresse). — `content/fr/legal.md`
-- [ ] **P3 (S)** — Email contact `@yahoo.fr` alors que `owenlebec.fr` dispo → `owen@owenlebec.fr`. — `content/*/home.md:17`, `legal.md`
+- [x] **P3 (S)** — Email `@yahoo.fr` → `owen@owenlebec.fr` : **non retenu** (décision : le mail reste yahoo). *Won't-fix.*
 - [ ] **P2 (S)** 🔧 *(action UI Netlify, hors repo)* — Retirer le plugin legacy `@netlify/plugin-sitemap` dans l'UI Netlify, **puis** supprimer le bloc `[[plugins]]` de `netlify.toml` (contournement temporaire de Lot 3B). — `netlify.toml`
 - [ ] **P3 (S)** — Régénérer `public/diagrams/portfolio-dev/i18n.svg` depuis `i18n.mmd` (mermaid CLI) : le `.mmd` décrit le nouveau flux URL, mais le `.svg` affiché dans la case study montre encore l'ancien flux cookie. — `public/diagrams/portfolio-dev/`
 
@@ -128,13 +130,13 @@
 - **Lot 3B étape 1 — migration SSR + prerender** ✅ *build validé le 2026-06-04* (CI + Netlify) : `ssr: true`, prerender `crawlLinks`, lottie client-only, réconciliation cookies langue/thème, `ignore: ['/.netlify']`. *Runtime à valider sur le preview ; docs (CLAUDE.md/case study) à actualiser ensuite.*
 - **Lot 3B étape 2 — migration i18n par URL** ✅ *réalisée le 2026-06-04, stabilisée le 2026-06-05* : `@nuxtjs/i18n` (`prefix_except_default`, `/en/…` + hreflang + canonical), `@nuxtjs/sitemap` (index par locale), favicon SVG (220 Ko → 2,6 Ko), liens internes localisés. **3 correctifs post-déploiement** (cf. encadré ⚠️ en haut) : collision plugin sitemap Netlify (`89bedf2`), lockfile CI (`38e2c2c`), toggle langue déterministe (`e20f721`). *Runtime validé sur le preview.*
 
+- **Lot 4 — finitions a11y + petits correctifs sûrs** ✅ *réalisée le 2026-06-05* (4 commits thématiques, build validé) : landmarks `banner`/`contentinfo` + `aria-label` bouton langue, `figcaption` non dupliqué (`ProseImg`), descriptions SEO légales réécrites, **obfuscation contact home** (email + tél en base64 décodés côté client) + footer restreint à `.only` (plus de fuite de l'email legal dans chaque payload), `setTimeout` → `IntersectionObserver` (`[slug].vue`). *Décisions : email reste `@yahoo` (won't-fix), vérif Google = pas de double (meta conservée), `Experience` déjà clavier-OK, px→`space()` reporté (cosmétique).*
+
 ### Prochains lots (proposés — non démarrés)
 
-- **Lot 4 — finitions a11y + petits correctifs sûrs** (faible risque, sans dépendance, surtout `S`) :
-  - a11y : `aria-label` sur le bouton langue (`Header.vue` — d'autant plus pertinent qu'il navigue maintenant) ; `<nav>` + rôles `banner/main/contentinfo` **ou** retrait de la revendication ARIA fausse de la case study ; dépliage clavier de `Experience.vue` ; `figcaption` qui ne duplique plus l'`aria-label` (`ProseImg.vue`).
-  - SEO/contenu courts : descriptions SEO légales réécrites ; retrait de la double vérification Google ; email `@yahoo.fr` → `owen@owenlebec.fr` ; obfuscation `mailto:`/`tel:`.
-  - code : `setTimeout(execute, 1000)` → `onMounted`/scroll (`[slug].vue`) ; px en dur → `space()` (`Experience.vue`).
-  - finitions ops Lot 3B (dont une action UI Netlify de ta part) : retrait du plugin sitemap legacy + nettoyage `netlify.toml`, vérif `Content-Type` du sitemap, régénération de `i18n.svg`.
 - **Lot 5 — performance runtime** (plus impactant, mais touche l'animation signature → à faire avec preview) : Matrix (une seule instance + pause `IntersectionObserver`/`visibilitychange` + `mousemove` throttlé + désactivation mobile) ; `@lottiefiles/lottie-player` chargé à la demande (404 only) ; lazy-load des ~200 Ko de SVG inlinés de Finixa.
+- **Reste épars (P3)** : px en dur → `space()` (`Experience.vue`) ; ouvrir chaque projet par une phrase résultat/impact ; vérifier les démos live.
+
+- **Finitions ops Lot 3B** (action UI Netlify de ta part + suivi) : retrait du plugin sitemap legacy + nettoyage du bloc `[[plugins]]` de `netlify.toml`, vérif `Content-Type` du sitemap, régénération de `i18n.svg`.
 
 - **En attente de toi** (décisions) : cadrage séniorité, vignettes projet above-the-fold + CTA contact 1er écran + accroche sous headline (restructurent la grille home → avec preview local).
