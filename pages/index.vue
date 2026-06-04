@@ -40,8 +40,14 @@ const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
+const seoTitle = computed(() => props.lang === Lang.Fr ? 'Owen Le Bec — Ingénieur logiciel full stack' : 'Owen Le Bec — Full Stack Software Engineer')
+
 useSeoMeta({
-	description: content.value.description,
+	description: computed(() => content.value?.description),
+	ogTitle: seoTitle,
+	ogDescription: computed(() => content.value?.description),
+	twitterTitle: seoTitle,
+	twitterDescription: computed(() => content.value?.description),
 })
 
 
@@ -67,7 +73,6 @@ onMounted(() => {
 
 <template>
 	<div id="home" class="page">
-		<AppGridPulse/>
 		<AppEffect/>
 		<AppHeader/>
 

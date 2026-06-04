@@ -29,6 +29,13 @@ const {data: content}: { data: Project } = await useAsyncData(
 useSeoMeta({
 	title: computed(() => content.value?.title),
 	description: computed(() => content.value?.description),
+	ogTitle: computed(() => content.value?.title),
+	ogDescription: computed(() => content.value?.description),
+	ogImage: computed(() => `https://owenlebec.fr/images${route.path}.webp`),
+	twitterCard: 'summary_large_image',
+	twitterTitle: computed(() => content.value?.title),
+	twitterDescription: computed(() => content.value?.description),
+	twitterImage: computed(() => `https://owenlebec.fr/images${route.path}.webp`),
 })
 
 const {data: related, execute}: { data: Project[] } = await useAsyncData(
