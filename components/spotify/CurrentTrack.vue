@@ -203,6 +203,5 @@ watch(spotify, () => {
 
 .spotify__link:where(:hover, :focus, :focus-visible) {
 	border: 1px solid var(--primary);
-	outline: none;
 }
 </style>

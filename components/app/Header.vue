@@ -95,7 +95,6 @@ header {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 			}
 		}
@@ -164,7 +163,6 @@ header {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 
 				// default = light mode → moon (action: go dark)

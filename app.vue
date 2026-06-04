@@ -103,6 +103,12 @@ useHead({
 	box-sizing: border-box;
 }
 
+:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
 html {
 	font-size: 100%;
 	font-family: 'Strawford', sans-serif;
@@ -178,7 +184,6 @@ h2 {
 
 		&:where(:hover, :focus, :focus-visible) {
 			text-decoration-color: var(--primary);
-			outline: none;
 		}
 	}
 }

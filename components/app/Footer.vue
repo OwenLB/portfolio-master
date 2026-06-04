@@ -61,7 +61,6 @@ footer {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 			}
 		}
@@ -75,7 +74,6 @@ footer {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 			}
 		}

@@ -90,8 +90,6 @@ if (props.index) {
 	}
 
 	&:where(:focus, :focus-visible) {
-		outline: none;
-
 		.project-link__title {
 			span {
 				color: var(--primary);

@@ -65,7 +65,6 @@ const link = computed(() => props.external ? 'href' : 'to')
 
 	&:where(:hover, :focus, :focus-visible) {
 		border: 1px solid var(--primary);
-		outline: none;
 
 		.text-link__icon_container {
 			transform: translate(space(12), space(-12));
