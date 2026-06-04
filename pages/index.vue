@@ -67,6 +67,7 @@ onMounted(() => {
 
 <template>
 	<div id="home" class="page">
+		<AppGridPulse/>
 		<AppEffect/>
 		<AppHeader/>
 
@@ -76,17 +77,13 @@ onMounted(() => {
 					<h1>{{ content.headline_start }}<strong>{{ content.headline_bold }}</strong></h1>
 				</div>
 				<div class="cell responsive topographic">
-					<div class="topographic__svg">
-						<ClientOnly><AppTopographic/></ClientOnly>
-					</div>
+					<ClientOnly><AppMatrix/></ClientOnly>
 				</div>
 			</AppSection>
 
 			<AppSection id="home__hero_bottom">
 				<div class="cell cell--double-column cell--desktop topographic">
-					<div class="topographic__svg">
-						<ClientOnly><AppTopographic/></ClientOnly>
-					</div>
+					<ClientOnly><AppMatrix/></ClientOnly>
 				</div>
 				<div class="cell spotify">
 					<h2>{{ content.listen }}</h2>
@@ -197,19 +194,9 @@ onMounted(() => {
 
 			&.topographic {
 				padding: 0;
-				background: rgba(var(--accent-rgb), 0.6);
-
-				.topographic__svg {
-					overflow: hidden;
-					height: 100%;
-					width: 100%;
-					display: flex;
-					justify-content: flex-end;
-
-					svg {
-						height: 200%;
-					}
-				}
+				position: relative;
+				overflow: hidden;
+				background: var(--background);
 			}
 		}
 	}
@@ -218,19 +205,9 @@ onMounted(() => {
 		.cell {
 			&.topographic {
 				padding: 0;
-				background: rgba(var(--accent-rgb), 0.6);
-
-				.topographic__svg {
-					overflow: hidden;
-					height: 100%;
-					width: 100%;
-					display: flex;
-					align-items: flex-end;
-
-					svg {
-						height: 200%;
-					}
-				}
+				position: relative;
+				overflow: hidden;
+				background: var(--background);
 			}
 
 			&.spotify {

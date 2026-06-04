@@ -226,7 +226,7 @@ h2 {
 @media (prefers-reduced-motion: no-preference) {
 	.page-enter-active,
 	.page-leave-active {
-		transition: 1s inset 0.4s cubic-bezier(0.83, 0, 0.17, 1);
+		transition: 0.45s inset 0.08s cubic-bezier(0.83, 0, 0.17, 1);
 	}
 
 	.page-enter-from,
