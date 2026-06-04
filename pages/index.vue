@@ -10,13 +10,6 @@ const props = defineProps<{
 	lang: Lang
 }>()
 
-useHead({
-	link: [{
-		rel: 'canonical',
-		href: 'https://owenlebec.fr/'
-	}]
-})
-
 const {data: content}: { data: Home } = await useAsyncData('home', () => queryContent().where({
 	_path: '/home',
 	_locale: props.lang

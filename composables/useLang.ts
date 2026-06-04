@@ -1,14 +1,7 @@
-import {useCookie, useState, watch} from '#imports';
-import {Lang} from '~/types/lang';
-
+// Language state is now owned by @nuxtjs/i18n (URL-driven, cookie-persisted).
+// useLang() returns the active locale ref ('fr' | 'en') so existing call sites
+// keep working — the Lang enum values map 1:1 onto the i18n locale codes.
 export default () => {
-	const lang = useCookie('lang', {default: () => (Lang.Fr as Lang)});
-	const state = useState('lang', () => lang.value);
-
-	watch(state, () => {
-			lang.value = state.value
-		}, {deep: true}
-	);
-
-	return state
+	const {locale} = useI18n()
+	return locale
 }

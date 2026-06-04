@@ -4,22 +4,22 @@ import {Lang} from "~/types/lang";
 
 const route = useRoute()
 
-useHead({
-	link: [{
-		rel: 'canonical',
-		href: computed(() => 'https://owenlebec.fr' + route.path)
-	}]
-})
-
 definePageMeta({middleware: 'project'})
 
 const props = defineProps<{
 	lang: Lang
 }>()
 
+// @nuxt/content paths carry no locale prefix (/projects/finixa), so derive the
+// content path + image path from the slug rather than route.path — the latter
+// gains a /en prefix in the English locale and would miss both the document and
+// the image. route.path is still used for canonical/JSON-LD (the localized URL).
+const contentPath = computed(() => `/projects/${route.params.slug}`)
+const imageUrl = computed(() => `https://owenlebec.fr/images/projects/${route.params.slug}.webp`)
+
 const {data: content}: { data: Project } = await useAsyncData(
-	() => `project-${route.path}-${props.lang}`,
-	() => queryContent().where({_path: route.path, _locale: props.lang}).findOne()
+	() => `project-${contentPath.value}-${props.lang}`,
+	() => queryContent().where({_path: contentPath.value, _locale: props.lang}).findOne()
 )
 
 useSeoMeta({
@@ -27,11 +27,11 @@ useSeoMeta({
 	description: computed(() => content.value?.description),
 	ogTitle: computed(() => content.value?.title),
 	ogDescription: computed(() => content.value?.description),
-	ogImage: computed(() => `https://owenlebec.fr/images${route.path}.webp`),
+	ogImage: imageUrl,
 	twitterCard: 'summary_large_image',
 	twitterTitle: computed(() => content.value?.title),
 	twitterDescription: computed(() => content.value?.description),
-	twitterImage: computed(() => `https://owenlebec.fr/images${route.path}.webp`),
+	twitterImage: imageUrl,
 })
 
 useHead(() => ({
@@ -43,7 +43,7 @@ useHead(() => ({
 			name: content.value.title,
 			abstract: content.value.description,
 			url: 'https://owenlebec.fr' + route.path,
-			image: `https://owenlebec.fr/images${route.path}.webp`,
+			image: imageUrl.value,
 			author: {'@type': 'Person', name: 'Owen Le Bec', url: 'https://owenlebec.fr'},
 			keywords: content.value.stack,
 			...(content.value.git ? {codeRepository: content.value.git[1]} : {}),
@@ -52,8 +52,8 @@ useHead(() => ({
 }))
 
 const {data: related, execute}: { data: Project[] } = await useAsyncData(
-	() => `related-${route.path}-${props.lang}`,
-	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(route.path, {before: 3, after: 3}),
+	() => `related-${contentPath.value}-${props.lang}`,
+	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(contentPath.value, {before: 3, after: 3}),
 	{
 		immediate: false,
 		transform: (projects) => projects.filter((project) => project !== null),
@@ -76,7 +76,7 @@ onBeforeMount(() => {
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<nuxt-img :alt="content.title" :src="`/images${route.path}.webp`" preload sizes="xs:640 md:100vw"/>
+					<nuxt-img :alt="content.title" :src="`/images/projects/${route.params.slug}.webp`" preload sizes="xs:640 md:100vw"/>
 					<h1>{{ content.title }}</h1>
 					<template v-if="content['type']">
 						<span class="project-type">{{ content.type }}</span>

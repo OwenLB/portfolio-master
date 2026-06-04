@@ -6,6 +6,7 @@ const props = defineProps<{
 	path: string,
 }>()
 
+const localePath = useLocalePath()
 const cover = computed(() => `url("/images${props.path}.webp") no-repeat center / cover`)
 const delay = ref<boolean | string>(false)
 
@@ -15,7 +16,7 @@ if (props.index) {
 </script>
 
 <template>
-	<NuxtLink :style="{transitionDelay: delay}" :to="props.path" class="project-link">
+	<NuxtLink :style="{transitionDelay: delay}" :to="localePath(props.path)" class="project-link">
 		<div class="project-link__overlay"></div>
 		<div class="project-link__title">
 			<span class="project-link__title_default">{{ props.label }}</span>

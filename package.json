@@ -18,6 +18,8 @@
     "unstorage": "^1.17.5"
   },
   "dependencies": {
-    "@lottiefiles/lottie-player": "^1.7.1"
+    "@lottiefiles/lottie-player": "^1.7.1",
+    "@nuxtjs/i18n": "^10.4.0",
+    "@nuxtjs/sitemap": "^8.0.15"
   }
 }

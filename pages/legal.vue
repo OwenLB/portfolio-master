@@ -1,18 +1,11 @@
 <script lang="ts" setup>
 import {Legal} from "~/types/pages/legal";
 
-const route = useRoute()
 const lang = useLang()
 
-useHead({
-	link: [{
-		rel: 'canonical',
-		href: 'https://owenlebec.fr' + route.path
-	}]
-})
-
+// Content path has no locale prefix — always /legal, even on /en/legal.
 const {data: content}: { data: Legal } = await useAsyncData('legal', () => queryContent().where({
-	_path: route.path,
+	_path: '/legal',
 	_locale: lang.value
 }).findOne(), {watch: [() => lang.value]})
 

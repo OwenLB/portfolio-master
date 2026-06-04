@@ -2,8 +2,9 @@
 import {Lang} from "~/types/lang";
 
 const lang = useLang()
+const localePath = useLocalePath()
 
-const {data: legalLink} = await useAsyncData('legal', () => queryContent('/').where({
+const {data: legalLink} = await useAsyncData('legal-link', () => queryContent('/').where({
 	_path: '/legal',
 	_locale: lang.value
 }).findOne(), {watch: [() => lang.value]})
@@ -14,13 +15,13 @@ const {data: legalLink} = await useAsyncData('legal', () => queryContent('/').wh
 		<div class="cell">
 		</div>
 		<div class="cell name">
-			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" to="/">
+			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" :to="localePath('/')">
 				<AppIcon icon="logo"/>
 				<span>Owen Le Bec</span>
 			</NuxtLink>
 		</div>
 		<div class="cell links">
-			<NuxtLink v-if="legalLink" :to="legalLink._path">{{ legalLink.title }}</NuxtLink>
+			<NuxtLink v-if="legalLink" :to="localePath(legalLink._path)">{{ legalLink.title }}</NuxtLink>
 		</div>
 		<div class="cell date cell--desktop">
 			{{ new Date().getFullYear() }}

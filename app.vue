@@ -4,13 +4,20 @@ import {Lang} from "~/types/lang";
 const theme = useTheme()
 const lang = useLang()
 
+// hreflang alternates + canonical + og:locale, derived from i18n.baseUrl.
+const i18nHead = useLocaleHead()
+useHead(() => ({
+	htmlAttrs: {lang: i18nHead.value.htmlAttrs!.lang, dir: i18nHead.value.htmlAttrs!.dir},
+	link: i18nHead.value.link,
+	meta: i18nHead.value.meta,
+}))
+
 useHead({
 	titleTemplate(chunk) {
 		const title = lang.value === Lang.Fr ? 'Owen Le Bec — Ingénieur logiciel full stack' : 'Owen Le Bec — Full Stack Software Engineer'
 		return chunk ? `${chunk} - ${title}` : title
 	},
 	htmlAttrs: {
-		lang: () => lang.value,
 		'data-theme': () => theme.value
 	},
 	link: [
