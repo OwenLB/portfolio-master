@@ -141,7 +141,7 @@ header {
 						width: space(3);
 						height: space(3);
 						border-radius: 50%;
-						background: var(--primary-gradient);
+						background: var(--primary);
 						@include transition(transform);
 					}
 				}
