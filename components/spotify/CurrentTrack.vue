@@ -28,10 +28,14 @@ const assignTitleSpanRef = (el: HTMLElement | null) => {
 }
 
 onMounted(() => {
-	if (spotifyAnimation.title && spotifyAnimation.span.element) {
-		if (spotifyAnimation.span.element.scrollWidth > spotifyAnimation.title.offsetWidth) {
-			spotifyAnimation.span.element.classList.add('animated')
-		}
+	const title = spotifyAnimation.title
+	const span  = spotifyAnimation.span.element
+	if (!title || !span) return
+
+	const overflow = span.scrollWidth - title.offsetWidth
+	if (overflow > 0) {
+		span.style.setProperty('--scroll-distance', `${overflow}px`)
+		span.classList.add('animated')
 	}
 })
 </script>
@@ -91,7 +95,7 @@ onMounted(() => {
 				transform: translateX(0);
 			}
 			65%, 75% {
-				transform: translateX(-390px);
+				transform: translateX(calc(-1 * var(--scroll-distance)));
 			}
 			90%, 100% {
 				transform: translateX(0);
