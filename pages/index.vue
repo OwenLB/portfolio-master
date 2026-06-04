@@ -56,7 +56,7 @@ onMounted(() => {
 			}
 		})
 	}, {
-		threshold: 0.6
+		threshold: 0.15
 	})
 
 	if (projectsContainer.value) {
@@ -248,8 +248,8 @@ onMounted(() => {
 		@media (prefers-reduced-motion: no-preference) {
 			a {
 				opacity: 0;
-				transform: translateY(space(40));
-				transition: opacity 1s cubic-bezier(0.83, 0, 0.17, 1), transform 1s cubic-bezier(0.83, 0, 0.17, 1);
+				transform: translateY(space(16));
+				transition: opacity 0.5s cubic-bezier(0.83, 0, 0.17, 1), transform 0.5s cubic-bezier(0.83, 0, 0.17, 1);
 			}
 
 			&.visible a {
