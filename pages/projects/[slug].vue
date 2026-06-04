@@ -56,7 +56,7 @@ onBeforeMount(() => {
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<nuxt-img :alt="content.title" :src="`/images${path}.webp`" preload sizes="xs:640 md:100vw"/>
+					<nuxt-img :alt="content.title" :src="`/images${route.path}.webp`" preload sizes="xs:640 md:100vw"/>
 					<h1>{{ content.title }}</h1>
 					<template v-if="content['type']">
 						<span class="project-type">{{ content.type }}</span>
