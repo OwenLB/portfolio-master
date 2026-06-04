@@ -3,49 +3,27 @@
 import {Spotify} from "~/types/spotify";
 import {Lang} from "~/types/lang";
 
-interface SpotifyAnimation {
-	title: HTMLElement | null
-	span: {
-		element: HTMLElement | null
-	}
-}
-const spotifyAnimation: SpotifyAnimation = ({
-	title: null,
-	span: {
-		element: null,
-	}
-})
-
 const lang = useLang()
 const { data: spotify } = useFetch<Spotify>('/api/spotify', { server: false, lazy: true })
 
-const assignTitleRef = (el: HTMLElement | null) => {
-	spotifyAnimation.title = el
-}
+const titleEl = ref<HTMLElement | null>(null)
+const spanEl  = ref<HTMLElement | null>(null)
 
-const assignTitleSpanRef = (el: HTMLElement | null) => {
-	spotifyAnimation.span.element = el
-}
-
-function checkScroll() {
-	const title = spotifyAnimation.title
-	const span  = spotifyAnimation.span.element
+watch(spotify, () => {
+	const title = titleEl.value
+	const span  = spanEl.value
 	if (!title || !span) return
 
 	span.classList.remove('animated')
 	span.style.removeProperty('--scroll-distance')
 
-	nextTick(() => {
-		const iconOffset = 44 + 16
-		const overflow = span.scrollWidth - title.offsetWidth + iconOffset
-		if (overflow > 0) {
-			span.style.setProperty('--scroll-distance', `${overflow}px`)
-			span.classList.add('animated')
-		}
-	})
-}
-
-watch(() => spotify.value, checkScroll)
+	const iconOffset = 44 + 16
+	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
+	if (overflow > 0) {
+		span.style.setProperty('--scroll-distance', `${overflow}px`)
+		span.classList.add('animated')
+	}
+}, { flush: 'post' })
 </script>
 
 <template>
@@ -54,8 +32,8 @@ watch(() => spotify.value, checkScroll)
 			   :target="spotify?.isConnected ? '_blank' : undefined"
 			   :rel="spotify?.isConnected ? 'noopener noreferrer' : undefined"
 			   class="spotify__pill">
-		<div :ref="assignTitleRef" class="spotify__pill_title">
-			<span :ref="assignTitleSpanRef">{{
+		<div ref="titleEl" class="spotify__pill_title">
+			<span ref="spanEl">{{
 					spotify?.isConnected ? `${spotify.title} - ${spotify.artist}` : lang === Lang.Fr ? 'Déconnecté' : 'Disconnected'
 				}}</span>
 		</div>
