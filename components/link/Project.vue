@@ -10,7 +10,7 @@ const cover = computed(() => `url("/images${props.path}.webp") no-repeat center 
 const delay = ref<boolean | string>(false)
 
 if (props.index) {
-	delay.value = parseInt(props.index as string) * 400 + 'ms'
+	delay.value = parseInt(props.index as string) * 120 + 'ms'
 }
 </script>
 
