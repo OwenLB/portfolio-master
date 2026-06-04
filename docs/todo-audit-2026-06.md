@@ -15,7 +15,12 @@
 >
 > **🟢 Lot 3B — étape 1 (migration SSR + prerender)** : build validé (CI + Netlify) sur `7548b40` ; **runtime à valider sur le deploy preview**. i18n par URL / sitemap / favicon = session locale (`npm install`).
 >
-> **✅ Lot 3B — étape 2 réalisée le 2026-06-04** (session locale) : i18n par URL (`@nuxtjs/i18n`, `prefix_except_default`, `/en/…` + `hreflang` + canonical par locale), sitemap auto par locale (`@nuxtjs/sitemap`), favicon SVG (220 Ko → 2,6 Ko). **Build + prerender validés** (FR + EN, sitemap index par locale) ; **runtime à valider sur le deploy preview**.
+> **✅ Lot 3B — étape 2 réalisée le 2026-06-04** (session locale) : i18n par URL (`@nuxtjs/i18n`, `prefix_except_default`, `/en/…` + `hreflang` + canonical par locale), sitemap auto par locale (`@nuxtjs/sitemap`), favicon SVG (220 Ko → 2,6 Ko). **Build + prerender validés** (FR + EN, sitemap index par locale) ; runtime validé sur le deploy preview après les correctifs ci-dessous.
+>
+> **⚠️ Lot 3B — étape 2 : ce qui a coincé au déploiement** (corrigé le 2026-06-05) :
+> - **Build Netlify cassé (`EISDIR`)** — le plugin legacy `@netlify/plugin-sitemap` (installé via l'**UI Netlify**, pas dans le repo) tournait en `onPostBuild` et tentait d'ouvrir `dist/sitemap.xml` comme un fichier, alors que `@nuxtjs/sitemap` le prérend en **dossier** (`sitemap.xml/index.html`). Contourné en déclarant le plugin dans `netlify.toml` avec un `filePath` jetable (la config toml prime sur l'UI → il écrit ailleurs). Commit `89bedf2`. *Dette : retirer le plugin dans l'UI + supprimer le bloc `[[plugins]]` (voir Hygiène).*
+> - **CI `npm ci` cassé** — `package-lock.json` désynchronisé après l'ajout des deps i18n/sitemap → resynchronisé (commit `38e2c2c`).
+> - **Toggle langue « 1 fois sur 3 »** — `/` (FR) et `/en` sont rendus par le **même `index.vue`**, donc Vue réutilisait l'instance au lieu de la remonter ; combiné à des clés `useAsyncData` **statiques** (`'home'`, `'legal'`…) partageant le cache entre locales, le swap de contenu ne dépendait que d'un `watch` au timing non-déterministe. Corrigé : `<NuxtPage :key="lang">` (remount au changement de locale) + clés `useAsyncData` **scopées par locale** (home/legal/footer). Commit `e20f721`. *Leçon : sous i18n par URL, toute query locale-dépendante doit avoir une clé scopée par locale (déjà le cas dans `[slug].vue`).*
 
 ---
 
@@ -26,6 +31,7 @@
 - [x] **P2 (S)** — **JSON-LD `CreativeWork`** ajouté par projet (indexé une fois le SSR en place). — `pages/projects/[slug].vue`
 - [x] **P2 (S)** — **JSON-LD `Person`** confirmé dans le HTML prérendu (`grep "@type":"Person"` sur `/index.html`). — `app.vue:43-58`
 - [x] **P2 (S)** — **Sitemap** auto via `@nuxtjs/sitemap` : index `sitemap_index.xml` → `fr-FR.xml` + `en-US.xml`, alternates hreflang gérés par l'intégration i18n. Ancien `public/sitemap.xml` statique supprimé.
+- [ ] **P2 (S)** — Vérifier le **`Content-Type` de `/sitemap.xml`** : prérendu en `sitemap.xml/index.html`, Netlify peut le servir en `text/html` au lieu d'`application/xml`. Si c'est le cas, forcer le type via header `netlify.toml`. — `netlify.toml`
 - [ ] **P3 (S)** — Réécrire les **descriptions SEO légales** clichées/hors-sujet. — `content/fr/legal.md:3`, `content/en/legal.md:3`
 - [ ] **P3 (S)** — Supprimer la **double vérification Google** (fichier HTML + meta `app.vue:25`). — `app.vue:24-27`
 
@@ -107,6 +113,8 @@
 - [x] **P3 (S)** — `.gitignore` ignore `*.png*` mais 2 PNG committés → cohérenciser.
 - [x] **P3 (S)** — Typo « Addresse » (ligne supprimée avec l'adresse). — `content/fr/legal.md`
 - [ ] **P3 (S)** — Email contact `@yahoo.fr` alors que `owenlebec.fr` dispo → `owen@owenlebec.fr`. — `content/*/home.md:17`, `legal.md`
+- [ ] **P2 (S)** 🔧 *(action UI Netlify, hors repo)* — Retirer le plugin legacy `@netlify/plugin-sitemap` dans l'UI Netlify, **puis** supprimer le bloc `[[plugins]]` de `netlify.toml` (contournement temporaire de Lot 3B). — `netlify.toml`
+- [ ] **P3 (S)** — Régénérer `public/diagrams/portfolio-dev/i18n.svg` depuis `i18n.mmd` (mermaid CLI) : le `.mmd` décrit le nouveau flux URL, mais le `.svg` affiché dans la case study montre encore l'ancien flux cookie. — `public/diagrams/portfolio-dev/`
 
 ---
 
@@ -118,5 +126,15 @@
 - **Lot 2 — a11y visuelle & UX** ✅ *fait le 2026-06-04* : contraste accent, focus visible, FOUC thème, stagger, arc thémé.
 - **Lot 3A — sûr, sans dépendance** ✅ *fait le 2026-06-04* : CI, en-têtes sécurité (CSP Report-Only), JSON-LD CreativeWork, dédup Spotify + URL web, icônes stack tactiles, retrait `about_button`.
 - **Lot 3B étape 1 — migration SSR + prerender** ✅ *build validé le 2026-06-04* (CI + Netlify) : `ssr: true`, prerender `crawlLinks`, lottie client-only, réconciliation cookies langue/thème, `ignore: ['/.netlify']`. *Runtime à valider sur le preview ; docs (CLAUDE.md/case study) à actualiser ensuite.*
-- **Lot 3B étape 2 — migration i18n par URL** ✅ *réalisée le 2026-06-04* (session locale, build + prerender validés) : `@nuxtjs/i18n` (`prefix_except_default`, `/en/…` + hreflang + canonical), `@nuxtjs/sitemap` (index par locale), favicon SVG (220 Ko → 2,6 Ko), liens internes localisés, collision `useAsyncData('legal')` corrigée. *Runtime à valider sur le deploy preview.*
-- **En attente de toi** : cadrage séniorité, vignettes projet above-the-fold (preview local).
+- **Lot 3B étape 2 — migration i18n par URL** ✅ *réalisée le 2026-06-04, stabilisée le 2026-06-05* : `@nuxtjs/i18n` (`prefix_except_default`, `/en/…` + hreflang + canonical), `@nuxtjs/sitemap` (index par locale), favicon SVG (220 Ko → 2,6 Ko), liens internes localisés. **3 correctifs post-déploiement** (cf. encadré ⚠️ en haut) : collision plugin sitemap Netlify (`89bedf2`), lockfile CI (`38e2c2c`), toggle langue déterministe (`e20f721`). *Runtime validé sur le preview.*
+
+### Prochains lots (proposés — non démarrés)
+
+- **Lot 4 — finitions a11y + petits correctifs sûrs** (faible risque, sans dépendance, surtout `S`) :
+  - a11y : `aria-label` sur le bouton langue (`Header.vue` — d'autant plus pertinent qu'il navigue maintenant) ; `<nav>` + rôles `banner/main/contentinfo` **ou** retrait de la revendication ARIA fausse de la case study ; dépliage clavier de `Experience.vue` ; `figcaption` qui ne duplique plus l'`aria-label` (`ProseImg.vue`).
+  - SEO/contenu courts : descriptions SEO légales réécrites ; retrait de la double vérification Google ; email `@yahoo.fr` → `owen@owenlebec.fr` ; obfuscation `mailto:`/`tel:`.
+  - code : `setTimeout(execute, 1000)` → `onMounted`/scroll (`[slug].vue`) ; px en dur → `space()` (`Experience.vue`).
+  - finitions ops Lot 3B (dont une action UI Netlify de ta part) : retrait du plugin sitemap legacy + nettoyage `netlify.toml`, vérif `Content-Type` du sitemap, régénération de `i18n.svg`.
+- **Lot 5 — performance runtime** (plus impactant, mais touche l'animation signature → à faire avec preview) : Matrix (une seule instance + pause `IntersectionObserver`/`visibilitychange` + `mousemove` throttlé + désactivation mobile) ; `@lottiefiles/lottie-player` chargé à la demande (404 only) ; lazy-load des ~200 Ko de SVG inlinés de Finixa.
+
+- **En attente de toi** (décisions) : cadrage séniorité, vignettes projet above-the-fold + CTA contact 1er écran + accroche sous headline (restructurent la grille home → avec preview local).
