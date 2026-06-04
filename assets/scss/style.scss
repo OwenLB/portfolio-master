@@ -56,7 +56,7 @@ $dark-accent-rgb: 21, 36, 61;
 
 :root {
   --primary: #{$primary};
-  --primary-gradient: linear-gradient(135deg, #0e2248, #1a4aa0 60%, #3a8cff);
+  --primary-gradient: linear-gradient(135deg, #{$dark-background}, #{$dark-accent} 60%, #{$primary});
   --text: #{$dark};
   --text-accent: #{color.adjust($dark, $lightness: +16%)};
   --background: #{$light};
@@ -67,7 +67,7 @@ $dark-accent-rgb: 21, 36, 61;
 
 html[data-theme="dark"] {
   --primary: #{$dark-primary};
-  --primary-gradient: linear-gradient(135deg, #0a2a6e, #1c5ae0 60%, #70b0ff);
+  --primary-gradient: linear-gradient(135deg, #{$dark-accent}, #{$primary} 60%, #{$dark-primary});
   --text: #{$light};
   --text-accent: #{color.adjust($light, $lightness: -16%)};
   --background: #{$dark-background};
