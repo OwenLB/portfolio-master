@@ -75,36 +75,7 @@ onMounted(() => {
 					<div class="headline-content">
 						<h1>{{ content.headline_start }}<strong>{{ content.headline_bold }}</strong></h1>
 						<p class="tagline">{{ content.tagline }}</p>
-						<div class="cta-lab">
-							<div class="cta-lab__row">
-								<span class="cta-lab__label">1 · bordé + flèche</span>
-								<a class="cta cta--outline" href="#contact">
-									{{ content.cta_contact }}
-									<span class="cta__icon"><span class="cta__icon_container">
-										<AppIcon aria-hidden="true" icon="arrow"/>
-										<AppIcon aria-hidden="true" icon="arrow"/>
-									</span></span>
-								</a>
-							</div>
-							<div class="cta-lab__row">
-								<span class="cta-lab__label">2 · bordé, sans flèche</span>
-								<a class="cta cta--outline cta--noarrow" href="#contact">{{ content.cta_contact }}</a>
-							</div>
-							<div class="cta-lab__row">
-								<span class="cta-lab__label">3 · plein + flèche</span>
-								<a class="cta cta--fill" href="#contact">
-									{{ content.cta_contact }}
-									<span class="cta__icon"><span class="cta__icon_container">
-										<AppIcon aria-hidden="true" icon="arrow"/>
-										<AppIcon aria-hidden="true" icon="arrow"/>
-									</span></span>
-								</a>
-							</div>
-							<div class="cta-lab__row">
-								<span class="cta-lab__label">4 · plein, sans flèche</span>
-								<a class="cta cta--fill cta--noarrow" href="#contact">{{ content.cta_contact }}</a>
-							</div>
-						</div>
+						<a class="cta" href="#contact">{{ content.cta_contact }}</a>
 					</div>
 				</div>
 				<div class="cell responsive matrix">
@@ -238,109 +209,27 @@ onMounted(() => {
 					max-width: 38ch;
 				}
 
-				// TEMP comparateur de CTA — 4 variantes à juger sur preview.
-				// À nettoyer : ne garder que la variante choisie + align-self flex-end.
-				.cta-lab {
-					display: flex;
-					flex-direction: column;
-					gap: space(4);
-					align-items: flex-start;
-
-					&__row {
-						display: flex;
-						flex-direction: column;
-						gap: space(1);
-						align-items: flex-start;
-					}
-
-					&__label {
-						font-family: 'Strawford', sans-serif;
-						font-size: 0.7rem;
-						letter-spacing: 0.04em;
-						text-transform: uppercase;
-						color: var(--text-accent);
-					}
-				}
-
+				// Primary contact CTA — pill plein, aligné à droite sous le headline.
+				// Pas de flèche ↗ : elle est réservée aux liens externes sur ce site,
+				// et #contact est une ancre interne. Au survol, inversion en contour.
 				.cta {
-					display: flex;
+					align-self: flex-end;
+					display: inline-flex;
 					align-items: center;
-					justify-content: space-between;
-					gap: space(6);
+					justify-content: center;
 					padding: 0 space(6);
 					height: 56px;
-					border: 1px solid var(--accent);
+					border: 1px solid var(--primary);
 					border-radius: 32px;
+					background-color: var(--primary);
+					color: var(--background);
 					font-family: 'Strawford', sans-serif;
 					font-size: 1rem;
-					@include transition(border, background-color, color);
+					@include transition(background-color, color);
 
-					&--noarrow {
-						justify-content: center;
-					}
-
-					&__icon {
-						height: space(6);
-						width: space(6);
-						overflow: hidden;
-						display: flex;
-						justify-content: flex-end;
-
-						&_container {
-							display: flex;
-							flex-direction: column;
-							gap: space(6);
-							@include transition(transform);
-
-							svg {
-								display: block;
-								flex-shrink: 0;
-								@include transition(color);
-
-								&:first-child {
-									margin-left: space(12);
-								}
-							}
-						}
-					}
-
-					&--outline {
-						color: var(--text);
-
-						.cta__icon svg:last-child {
-							color: var(--primary);
-						}
-
-						&:where(:hover, :focus, :focus-visible) {
-							border-color: var(--primary);
-
-							.cta__icon_container {
-								transform: translate(space(12), space(-12));
-							}
-						}
-					}
-
-					&--fill {
-						background-color: var(--primary);
-						border-color: var(--primary);
-						color: var(--background);
-
-						.cta__icon svg {
-							color: var(--background);
-						}
-
-						&:where(:hover, :focus, :focus-visible) {
-							background-color: transparent;
-							color: var(--primary);
-
-							.cta__icon svg {
-								color: var(--primary);
-							}
-
-							.cta__icon_container {
-								transform: translate(space(12), space(-12));
-							}
-						}
+					&:where(:hover, :focus, :focus-visible) {
+						background-color: transparent;
+						color: var(--primary);
 					}
 				}
 			}
