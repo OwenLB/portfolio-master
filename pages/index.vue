@@ -114,17 +114,17 @@ onMounted(() => {
 
 			<AppSection id="about__experiences">
 				<div class="cell right-col cell--double-column content">
+					<div id="contact" class="contact">
+						<h2>{{ content.contact }}</h2>
+						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
+						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
+					</div>
 					<div class="me">
 						<div class="arc">
 							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp" width="420" height="420">
 						</div>
 						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
 						<LinkText :label="profileContent.photo" link="https://photo.owenlebec.fr" external/>
-					</div>
-					<div id="contact" class="contact">
-						<h2>{{ content.contact }}</h2>
-						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
-						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
 					</div>
 				</div>
 				<div class="cell cell--mobile"></div>
