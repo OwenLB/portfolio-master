@@ -1,6 +1,8 @@
 ---
 headline_start: "SOFTWARE ENGINEER"
 headline_bold: "FULL STACK"
+tagline: "5 years of experience — Vue/JS front, Java back, in production at Thales."
+cta_contact: "Get in touch"
 description: "Full stack developer, Vue/JS front end and Java back end — 5 years of experience. Focused on a great experience at every level: UX/UI, back end and developer experience."
 listen: "MY CURRENT MUSIC"
 about: "ABOUT"

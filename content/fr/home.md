@@ -1,6 +1,8 @@
 ---
 headline_start: "INGÉNIEUR LOGICIEL"
 headline_bold: "FULL STACK"
+tagline: "5 ans d'expérience — front Vue/JS, back Java, en production chez Thales."
+cta_contact: "Me contacter"
 description: "Développeur full stack, front Vue/JS et back Java — 5 ans d'expérience. Obsédé par une bonne expérience à tous les niveaux : UX/UI, back end et confort de développement."
 listen: "MA MUSIQUE DU MOMENT"
 about: "À PROPOS"

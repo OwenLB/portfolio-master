@@ -26,7 +26,7 @@
 >
 > **✅ Lot 5 — performance runtime réalisée le 2026-06-05** (1 commit, build validé) : boucle Matrix en pause hors-écran (`IntersectionObserver`) + onglet caché (`visibilitychange`), `mousemove` actif seulement pendant l'anim (+`passive`), cap ~30 fps mobile ; lottie confirmé déjà lazy (chunk async chargé au 404). Desktop inchangé. *Reporté : lazy-load des SVG Finixa (risque CLS).*
 >
-> **✅ Lot 6 — contenu, narration & finitions sûres réalisée le 2026-06-05** (4 commits, build validé) : voix « À propos » renforcée (axe *bonne expérience* UX/UI + back + DX, poste full stack/front, retrait « ouvert géographiquement », séniorité « 5 ans » au lieu de « depuis 2021 ») ; ouverture par une phrase d'impact en tête de chaque étude de cas (FR + EN) ; px en dur → `space()` dans `Experience.vue` (pixels identiques) ; `i18n.svg` régénéré sur le flux URL (l'ancien montrait encore le flux cookie). **Exclus à ta demande** : item 1 (Content-Type sitemap), item 7 (SVG Finixa), item 9 (plugin Netlify). **Reportés avec l'above-the-fold (item 8) car même risque de grille hero à valider sur preview** : accroche sous le headline (E) + CTA contact dans le hero (F).
+> **✅ Lot 6 — contenu, narration & finitions sûres réalisée le 2026-06-05** (4 commits, build validé) : voix « À propos » renforcée (axe *bonne expérience* UX/UI + back + DX, poste full stack/front, retrait « ouvert géographiquement », séniorité « 5 ans » au lieu de « depuis 2021 ») ; ouverture par une phrase d'impact en tête de chaque étude de cas (FR + EN) ; px en dur → `space()` dans `Experience.vue` (pixels identiques) ; `i18n.svg` régénéré sur le flux URL (l'ancien montrait encore le flux cookie). **Exclus à ta demande** : item 1 (Content-Type sitemap), item 7 (SVG Finixa), item 9 (plugin Netlify). **E (accroche `tagline` sous le headline) + F (CTA « Me contacter » → ancre `#contact`) réalisés ensuite** (1 commit) : cellule headline restructurée (h1 + tagline + CTA dans un `.headline-content` absolu, le `.cell` étant déjà `position:relative`) ; rendu prérendu vérifié (tagline + CTA + `id="contact"` présents dans `index.html`). **⚠️ À valider visuellement sur `npm run dev`** : le contenu hero peut déborder la ligne fixe 300px (ajuster `margin-top`/tailles si besoin). Seul l'**above-the-fold (item 8)** reste reporté.
 
 ---
 
@@ -107,8 +107,8 @@
 ## 👋 Première impression & structure de page
 
 - [ ] **P1 (S)** ⏸️ — **Projets above-the-fold** : remonter 1-2 vignettes — *reporté (restructure la grille home → à faire avec preview local).* — `pages/index.vue`
-- [ ] **P2 (S)** — **Pas de CTA contact** dans le 1er écran. — `pages/index.vue:157-161`
-- [ ] **P3 (S)** — **Accroche factuelle** d'une ligne sous le headline. — `content/*/home.md`
+- [x] **P2 (S)** — **CTA contact dans le hero** : pill « Me contacter » / « Get in touch » dans la cellule headline → ancre `#contact` (anchor SSR, sans email exposé). — `pages/index.vue`, `content/*/home.md`
+- [x] **P3 (S)** — **Accroche sous le headline** : `tagline` « 5 ans d'expérience — front Vue/JS, back Java, en production chez Thales » dans la cellule headline. — `content/*/home.md`, `pages/index.vue`
 
 ## 🧹 Hygiène du repo & finitions
 

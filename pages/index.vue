@@ -72,7 +72,11 @@ onMounted(() => {
 		<main id="main-content">
 			<AppSection id="home__hero_top" desktop>
 				<div class="cell cell--double-column headline">
-					<h1>{{ content.headline_start }}<strong>{{ content.headline_bold }}</strong></h1>
+					<div class="headline-content">
+						<h1>{{ content.headline_start }}<strong>{{ content.headline_bold }}</strong></h1>
+						<p class="tagline">{{ content.tagline }}</p>
+						<a class="cta" href="#contact">{{ content.cta_contact }}</a>
+					</div>
 				</div>
 				<div class="cell responsive matrix">
 					<ClientOnly><AppMatrix/></ClientOnly>
@@ -147,7 +151,7 @@ onMounted(() => {
 						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
 						<LinkText :label="profileContent.photo" link="https://photo.owenlebec.fr" external/>
 					</div>
-					<div class="contact">
+					<div id="contact" class="contact">
 						<h2>{{ content.contact }}</h2>
 						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
 						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
@@ -171,12 +175,21 @@ onMounted(() => {
 				font-family: 'PP Formula Condensed', sans-serif;
 				justify-content: center;
 
-				h1 {
+				// Absolute (the .cell is position:relative) so the oversized
+				// headline + tagline + CTA float top-left and may overflow the
+				// fixed-height row without pushing the grid around.
+				.headline-content {
 					position: absolute;
+					margin-top: space(6);
+					display: flex;
+					flex-direction: column;
+					gap: space(4);
+				}
+
+				h1 {
 					display: block;
 					font-size: 3rem;
 					font-weight: 300;
-					margin-top: space(6);
 
 					em {
 						font-style: italic;
@@ -186,6 +199,34 @@ onMounted(() => {
 						display: block;
 						font-weight: bold;
 						color: var(--primary);
+					}
+				}
+
+				.tagline {
+					font-family: 'Strawford', sans-serif;
+					font-size: 0.9rem;
+					line-height: 1.4;
+					color: var(--text-accent);
+					max-width: 38ch;
+				}
+
+				// Primary CTA — same pill as .text-link but accented to stand out.
+				.cta {
+					align-self: flex-start;
+					display: inline-flex;
+					align-items: center;
+					padding: 0 space(6);
+					height: 48px;
+					border: 1px solid var(--primary);
+					border-radius: 32px;
+					font-family: 'Strawford', sans-serif;
+					font-size: 1rem;
+					color: var(--primary);
+					@include transition(background-color, color);
+
+					&:where(:hover, :focus, :focus-visible) {
+						background-color: var(--primary);
+						color: var(--background);
 					}
 				}
 			}
