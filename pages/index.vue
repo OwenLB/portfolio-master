@@ -167,7 +167,7 @@ onMounted(() => {
 
 <style lang="scss">
 #home {
-	grid-template-rows: space(20) 300px repeat(7, auto) space(20);
+	grid-template-rows: space(20) minmax(300px, auto) repeat(7, auto) space(20);
 
 	&__hero_top {
 		.cell {
@@ -175,12 +175,11 @@ onMounted(() => {
 				font-family: 'PP Formula Condensed', sans-serif;
 				justify-content: center;
 
-				// Absolute (the .cell is position:relative) so the oversized
-				// headline + tagline + CTA float top-left and may overflow the
-				// fixed-height row without pushing the grid around.
+				// Normal flow + vertically centered in the cell. The hero_top
+				// grid row is minmax(300px, auto) so it grows to fit the headline
+				// + tagline + CTA instead of clipping them (the old absolute
+				// layout let the CTA overflow under the next row's cell).
 				.headline-content {
-					position: absolute;
-					margin-top: space(6);
 					display: flex;
 					flex-direction: column;
 					gap: space(4);
@@ -361,7 +360,7 @@ onMounted(() => {
 
 @media screen and (min-width: $md) {
 	#home {
-		grid-template-rows: space(20) 300px 300px auto auto auto space(20);
+		grid-template-rows: space(20) minmax(300px, auto) 300px auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
 		&__projects .cell.job,
