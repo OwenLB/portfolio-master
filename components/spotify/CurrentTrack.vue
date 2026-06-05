@@ -17,6 +17,10 @@ watch(spotify, () => {
 	span.classList.remove('animated')
 	span.style.removeProperty('--scroll-distance')
 
+	// Nothing to scroll when disconnected: the "Déconnecté"/"Disconnected"
+	// label is static, so skip the marquee even if it technically overflows.
+	if (!spotify.value?.isConnected) return
+
 	const SPEED = 40 // px/s
 	const iconOffset = 26
 	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
