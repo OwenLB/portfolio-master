@@ -1,11 +1,11 @@
 ---
 headline_start: "SOFTWARE ENGINEER"
 headline_bold: "FULL STACK"
-description: "Full stack software engineer since 2021. JS front end, Java back end. Open to new opportunities, available for relocation."
+description: "Full stack developer, Vue/JS front end and Java back end — 5 years of experience. Focused on a great experience at every level: UX/UI, back end and developer experience."
 listen: "MY CURRENT MUSIC"
 about: "ABOUT"
 greetings_text: "Hello 👋"
-about_text: "Full stack software engineer since 2021. JS front end, Java back end. Looking for my next step, open to relocation. I do photography on the side."
+about_text: "Full stack developer, equally at home on the front and the back. What drives me: caring about the experience at every level — the UX/UI, the back end, and the comfort of the devs who pick up the code. 5 years of experience (Vue/JS front, Java back). Looking for a full stack or front-end role. I do photography on the side."
 social: "SOCIAL"
 position: "POSITION"
 position_title: "Full Stack Developer at"
