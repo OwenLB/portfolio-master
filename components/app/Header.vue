@@ -9,34 +9,31 @@ enum Toggle {
 
 const theme = useTheme()
 const lang = useLang()
-const switchState = ref(lang.value !== Lang.Fr)
+const localePath = useLocalePath()
+const switchLocalePath = useSwitchLocalePath()
+// Knob position follows the active locale (set by the URL after navigation).
+const switchState = computed(() => lang.value !== Lang.Fr)
 
-const toggle = async (event: Event, type: Toggle) => {
+const toggle = (event: Event, type: Toggle) => {
 	const {currentTarget} = event
-	const html = document.querySelector('html')
+	;(currentTarget as HTMLInputElement).blur()
 
 	if (type === Toggle.Theme) {
 		theme.value = theme.value === Theme.Dark ? Theme.Light : Theme.Dark
-		;(currentTarget as HTMLInputElement).blur()
 	} else if (type === Toggle.Lang) {
-		html?.classList.add('page-leave-to')
-		setTimeout(async () => {
-			lang.value = lang.value === Lang.Fr ? Lang.En : Lang.Fr
-			switchState.value = !switchState.value
-			;(currentTarget as HTMLInputElement).blur()
-			await nextTick()
-			html?.classList.remove('page-leave-to')
-		}, 650)
+		// Switching language is now a real navigation to the localized URL
+		// (/ ⇄ /en); the page transition plays the curtain animation for us.
+		navigateTo(switchLocalePath(lang.value === Lang.Fr ? Lang.En : Lang.Fr))
 	}
 }
 </script>
 
 <template>
-	<header>
+	<header role="banner">
 		<div class="cell">
 		</div>
 		<div class="cell name">
-			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" to="/">
+			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" :to="localePath('/')">
 				<AppIcon icon="logo"/>
         <span>Owen Le Bec</span>
 			</NuxtLink>
@@ -44,7 +41,8 @@ const toggle = async (event: Event, type: Toggle) => {
 		<div class="cell cell--desktop">
 		</div>
 		<div class="cell control">
-			<button :aria-checked="switchState" class="control__lang" role="switch" type="button"
+			<button :aria-checked="switchState" :aria-label="lang === Lang.Fr ? 'Changer de langue' : 'Change language'"
+					class="control__lang" role="switch" type="button"
 					@click.stop="toggle($event,Toggle.Lang)">
 				<span :class="{current: lang === Lang.Fr}" class="control__lang_side">FR</span>
 				<span class="control__lang_switch">
@@ -95,7 +93,6 @@ header {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 			}
 		}
@@ -164,7 +161,6 @@ header {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 
 				// default = light mode → moon (action: go dark)

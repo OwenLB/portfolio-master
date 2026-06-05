@@ -45,6 +45,7 @@
 $white: #FFFFFF;
 $green: #1EFDB3;
 $primary: #237afd;
+$primary-on-light: #1a64d6; // light-theme accent — meets WCAG AA (~5.2:1) on $light
 $dark-primary: #569dff;
 $dark: #09223B;
 $dark-background: #061423;
@@ -55,12 +56,13 @@ $dark-accent: #15243D;
 $dark-accent-rgb: 21, 36, 61;
 
 :root {
-  --primary: #{$primary};
+  --primary: #{$primary-on-light};
   --text: #{$dark};
   --text-accent: #{color.adjust($dark, $lightness: +16%)};
   --background: #{$light};
   --accent: #{$light-accent};
   --accent-rgb: #{$light-accent-rgb};
+  --arc: #89d6ff;
 }
 
 
@@ -71,6 +73,7 @@ html[data-theme="dark"] {
   --background: #{$dark-background};
   --accent: #{$dark-accent};
   --accent-rgb: #{$dark-accent-rgb};
+  --arc: #16395c;
 }
 
 // Breakpoints

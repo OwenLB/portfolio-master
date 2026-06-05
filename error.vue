@@ -1,25 +1,31 @@
 <script lang="ts" setup>
-import "@lottiefiles/lottie-player";
+// Load the lottie-player web component on the client only — it registers a
+// custom element via browser APIs that are absent during SSR/prerender.
+onMounted(() => {
+	import("@lottiefiles/lottie-player")
+})
 </script>
 
 <template>
 	<div id="error" class="page">
 		<AppEffect/>
 		<AppHeader/>
-		<main>
+		<main id="main-content">
 			<AppSection id="error__empty_before">
 				<div class="cell cell--triple-column animation">
 				</div>
 			</AppSection>
 			<AppSection id="error_animation">
 				<div class="cell cell--triple-column animation">
-					<lottie-player
-						autoplay
-						mode="normal"
-						src="/404.json"
-						style="width: 100%; max-width: 1200px"
-					>
-					</lottie-player>
+					<ClientOnly>
+						<lottie-player
+							autoplay
+							mode="normal"
+							src="/404.json"
+							style="width: 100%; max-width: 1200px"
+						>
+						</lottie-player>
+					</ClientOnly>
 				</div>
 			</AppSection>
 			<AppSection id="error__empty_after">

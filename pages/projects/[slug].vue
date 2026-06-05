@@ -4,26 +4,22 @@ import {Lang} from "~/types/lang";
 
 const route = useRoute()
 
-useHead({
-	link: [{
-		rel: 'canonical',
-		href: computed(() => 'https://owenlebec.fr' + route.path)
-	}]
-})
-
 definePageMeta({middleware: 'project'})
 
 const props = defineProps<{
 	lang: Lang
 }>()
 
-const cover = computed(() => {
-	return `url("/images${route.path}.webp") no-repeat center / cover`
-})
+// @nuxt/content paths carry no locale prefix (/projects/finixa), so derive the
+// content path + image path from the slug rather than route.path — the latter
+// gains a /en prefix in the English locale and would miss both the document and
+// the image. route.path is still used for canonical/JSON-LD (the localized URL).
+const contentPath = computed(() => `/projects/${route.params.slug}`)
+const imageUrl = computed(() => `https://owenlebec.fr/images/projects/${route.params.slug}.webp`)
 
 const {data: content}: { data: Project } = await useAsyncData(
-	() => `project-${route.path}-${props.lang}`,
-	() => queryContent().where({_path: route.path, _locale: props.lang}).findOne()
+	() => `project-${contentPath.value}-${props.lang}`,
+	() => queryContent().where({_path: contentPath.value, _locale: props.lang}).findOne()
 )
 
 useSeoMeta({
@@ -31,26 +27,55 @@ useSeoMeta({
 	description: computed(() => content.value?.description),
 	ogTitle: computed(() => content.value?.title),
 	ogDescription: computed(() => content.value?.description),
-	ogImage: computed(() => `https://owenlebec.fr/images${route.path}.webp`),
+	ogImage: imageUrl,
 	twitterCard: 'summary_large_image',
 	twitterTitle: computed(() => content.value?.title),
 	twitterDescription: computed(() => content.value?.description),
-	twitterImage: computed(() => `https://owenlebec.fr/images${route.path}.webp`),
+	twitterImage: imageUrl,
 })
 
+useHead(() => ({
+	script: content.value ? [{
+		type: 'application/ld+json',
+		innerHTML: JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'CreativeWork',
+			name: content.value.title,
+			abstract: content.value.description,
+			url: 'https://owenlebec.fr' + route.path,
+			image: imageUrl.value,
+			author: {'@type': 'Person', name: 'Owen Le Bec', url: 'https://owenlebec.fr'},
+			keywords: content.value.stack,
+			...(content.value.git ? {codeRepository: content.value.git[1]} : {}),
+		}),
+	}] : [],
+}))
+
 const {data: related, execute}: { data: Project[] } = await useAsyncData(
-	() => `related-${route.path}-${props.lang}`,
-	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(route.path, {before: 3, after: 3}),
+	() => `related-${contentPath.value}-${props.lang}`,
+	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(contentPath.value, {before: 3, after: 3}),
 	{
 		immediate: false,
 		transform: (projects) => projects.filter((project) => project !== null),
 	}
 )
 
-onBeforeMount(() => {
-	setTimeout(() => {
+// Lazy-load the "related projects" query when its section scrolls into view,
+// instead of after an arbitrary 1s delay.
+const relatedRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+	if (!relatedRef.value) {
 		execute()
-	}, 1000)
+		return
+	}
+	const observer = new IntersectionObserver((entries, obs) => {
+		if (entries.some((entry) => entry.isIntersecting)) {
+			execute()
+			obs.disconnect()
+		}
+	}, {rootMargin: '200px'})
+	observer.observe(relatedRef.value)
 })
 </script>
 
@@ -59,11 +84,11 @@ onBeforeMount(() => {
 		<AppEffect/>
 		<AppHeader/>
 
-		<main>
+		<main id="main-content">
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<nuxt-img :alt="content.title" :src="`/images${route.path}.webp`" preload sizes="xs:640 md:100vw"/>
+					<nuxt-img :alt="content.title" :src="`/images/projects/${route.params.slug}.webp`" preload sizes="xs:640 md:100vw"/>
 					<h1>{{ content.title }}</h1>
 					<template v-if="content['type']">
 						<span class="project-type">{{ content.type }}</span>
@@ -78,6 +103,7 @@ onBeforeMount(() => {
 					<h2>DETAILS</h2>
 					<p>{{ content.description }}</p>
 					<LinkText v-if="content.git" :label="content.git[0]" :link="content.git[1]" external/>
+					<span v-else-if="content.git_soon" class="repo-soon">{{ props.lang === Lang.Fr ? 'Répertoire Git — bientôt public' : 'Git repository — coming soon' }}</span>
 					<LinkText v-if="content.web" :label="content.web[0]" :link="content.web[1]" external/>
 				</div>
 				<div class="cell stack">
@@ -97,7 +123,7 @@ onBeforeMount(() => {
 			</AppSection>
 
 			<AppSection id="project__related">
-				<div class="cell cell--triple-column content">
+				<div ref="relatedRef" class="cell cell--triple-column content">
 					<h2>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
 					<div class="projects">
 						<LinkProject v-for="project in related" :key="project._path" :label="project.title"
@@ -169,6 +195,24 @@ onBeforeMount(() => {
 		.details {
 			p {
 				flex-grow: 1;
+			}
+
+			// Muted, non-clickable counterpart to the .text-link pill, shown
+			// when the public repo isn't up yet (git_soon) instead of a dead link.
+			.repo-soon {
+				display: flex;
+				align-items: center;
+				padding: 0 space(6);
+				height: 56px;
+				border: 1px dashed var(--accent);
+				border-radius: 32px;
+				font-size: 1rem;
+				color: var(--text-accent);
+				cursor: default;
+
+				@media screen and (min-width: $md) {
+					font-size: 1.125rem;
+				}
 			}
 		}
 

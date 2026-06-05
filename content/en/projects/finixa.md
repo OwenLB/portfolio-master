@@ -3,7 +3,7 @@ order: 1
 title: 'Finixa'
 type: "Personal Project"
 description: "Mobile-first personal finance web app — expense tracking, envelope budgeting, and recurring transactions."
-git: [ "Git Repository", "https://github.com/OwenLB/Finixa" ]
+git_soon: true
 web: [ "Visit app", "https://finixa.net/" ]
 stack: [
   "Nuxt 4",
@@ -17,6 +17,8 @@ stack: [
   "Deno (Edge Functions)"
 ]
 ---
+
+**Logging an expense in under five seconds from your phone** — the one constraint that drove every decision in Finixa, from the PostgreSQL schema down to the input gesture.
 
 ## Context
 

@@ -1,9 +1,11 @@
 import {Project} from "~/types/project";
 
 export default defineNuxtRouteMiddleware(async (to) => {
-	const lang = useLang()
+	// Projects exist in both locales (parallel fr/en folders), so a locale-free
+	// existence check is enough — and it keeps the middleware out of the i18n
+	// locale lifecycle (the slug param is identical across /projects and /en/projects).
 	try {
-		await queryContent<Project>('/projects/' + to.params.slug).where({_locale: lang.value}).findOne()
+		await queryContent<Project>('/projects/' + to.params.slug).findOne()
 	} catch (error: any) {
 		// Only abort when the slug genuinely doesn't exist for this locale.
 		// Let any other error (network, content module failure) bubble up so it

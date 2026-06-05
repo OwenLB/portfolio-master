@@ -3,7 +3,7 @@ order: 1
 title: 'Finixa'
 type: "Projet Personnel"
 description: "Application web mobile-first de gestion de finances personnelles — suivi de dépenses, budgets par enveloppe et transactions récurrentes."
-git: [ "Répertoire Git", "https://github.com/OwenLB/Finixa" ]
+git_soon: true
 web: [ "Voir l'app", "https://finixa.net/" ]
 stack: [
   "Nuxt 4",
@@ -17,6 +17,8 @@ stack: [
   "Deno (Edge Functions)"
 ]
 ---
+
+**Ajouter une dépense en moins de cinq secondes depuis son téléphone** : c'est la contrainte qui a guidé chaque décision de Finixa, du schéma PostgreSQL jusqu'au geste de saisie.
 
 ## Contexte
 

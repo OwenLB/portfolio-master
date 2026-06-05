@@ -3,7 +3,7 @@ order: 4
 title: 'Portfolio Photo'
 type: "Projet Personnel"
 description: "Portfolio photographique full-stack avec galerie justifiée, lightbox custom et back-office d'administration — pour remplacer Adobe Lightroom Web."
-git: [ "Répertoire Git", "https://github.com/OwenLB/portfolio-photo" ]
+git_soon: true
 web: [ "Voir le site", "https://photo.owenlebec.fr" ]
 stack: [
   "Astro 4",
@@ -15,6 +15,8 @@ stack: [
   "Netlify"
 ]
 ---
+
+**Remplacer un abonnement Adobe Lightroom par mon propre outil** : un portfolio photo et son back-office d'administration, du stockage objet à la galerie publique, entièrement maison.
 
 ## Contexte
 

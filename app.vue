@@ -4,20 +4,27 @@ import {Lang} from "~/types/lang";
 const theme = useTheme()
 const lang = useLang()
 
+// hreflang alternates + canonical + og:locale, derived from i18n.baseUrl.
+const i18nHead = useLocaleHead()
+useHead(() => ({
+	htmlAttrs: {lang: i18nHead.value.htmlAttrs!.lang, dir: i18nHead.value.htmlAttrs!.dir},
+	link: i18nHead.value.link,
+	meta: i18nHead.value.meta,
+}))
+
 useHead({
 	titleTemplate(chunk) {
 		const title = lang.value === Lang.Fr ? 'Owen Le Bec — Ingénieur logiciel full stack' : 'Owen Le Bec — Full Stack Software Engineer'
 		return chunk ? `${chunk} - ${title}` : title
 	},
 	htmlAttrs: {
-		lang: () => lang.value,
 		'data-theme': () => theme.value
 	},
 	link: [
 		{
 			rel: 'icon',
-			href: '/favicon.ico',
-			type: 'image/x-icon',
+			href: '/favicon.svg',
+			type: 'image/svg+xml',
 		}
 	],
 	meta: [
@@ -62,7 +69,7 @@ useHead({
 	<a class="skip-to-main" href="#main-content">
 		{{ lang === Lang.Fr ? 'Aller au contenu principal' : 'Skip to main content' }}
 	</a>
-	<NuxtPage :lang="lang"/>
+	<NuxtPage :key="lang" :lang="lang"/>
 </template>
 
 <style lang="scss">
@@ -101,6 +108,12 @@ useHead({
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+
+:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+	border-radius: 2px;
 }
 
 html {
@@ -178,7 +191,6 @@ h2 {
 
 		&:where(:hover, :focus, :focus-visible) {
 			text-decoration-color: var(--primary);
-			outline: none;
 		}
 	}
 }

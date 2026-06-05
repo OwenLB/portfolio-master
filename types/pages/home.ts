@@ -16,7 +16,7 @@ export interface Home extends MarkdownParsedContent {
 	experience: string
 	contact: string
 	contact_mail: string
-	contact_mail_link: string
+	contact_mail_b64: string
 	contact_phone: string
-	contact_phone_link: string
+	contact_phone_b64: string
 }

@@ -37,7 +37,7 @@ export default async () => {
 		},
 	});
 
-	if (response.status === 204 || response.status > 400) {
+	if (response.status === 204 || response.status >= 400) {
 		return Response.json({
 			isConnected: false
 		} as Pick<Spotify, 'isConnected'>);
@@ -45,10 +45,16 @@ export default async () => {
 
 	const track = await response.json();
 
+	if (!track?.item) {
+		return Response.json({
+			isConnected: false
+		} as Pick<Spotify, 'isConnected'>);
+	}
+
 	return Response.json({
 		title: track.item.name,
 		artist: track.item.artists.map((a: { name: string }) => a.name).join(", "),
-		url: track.item.uri,
+		url: track.item.external_urls?.spotify ?? track.item.uri,
 		isPlaying: track.is_playing,
 		isConnected: true
 	} as Spotify);

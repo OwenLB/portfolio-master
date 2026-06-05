@@ -1,21 +1,20 @@
 ---
 headline_start: "INGÉNIEUR LOGICIEL"
 headline_bold: "FULL STACK"
-description: "Ingénieur logiciel full stack. Front JS, back Java. En recherche de nouvelles opportunités, ouvert géographiquement."
+tagline: "5 ans d'expérience, du front au back — aujourd'hui ingénieur chez Thales."
+description: "Développeur full stack, du front au back — 5 ans d'expérience (Vue, React, Blazor, Java/Spring). Obsédé par une bonne expérience à tous les niveaux : UX/UI, back end et confort de développement."
 listen: "MA MUSIQUE DU MOMENT"
 about: "À PROPOS"
 greetings_text: "Bonjour 👋"
-about_text: "Ingénieur logiciel full stack. Front JS, back Java. En recherche de la prochaine étape, ouvert géographiquement. Je fais de la photo à côté."
-about_button: "En savoir plus"
+about_text: "Développeur full stack, à l'aise côté front comme côté back. Ce qui me motive : soigner l'expérience à tous les niveaux — l'UX/UI, le back end, et le confort des devs qui reprennent le code. 5 ans d'expérience sur des stacks variées : Vue, React et Blazor côté front, Java/Spring côté back. Je cherche un poste full stack ou front. Je fais de la photo à côté."
 social: "SOCIAL"
-position: "POSTE"
-position_title: "Développeur full stack chez"
-thales_link: "https://www.thalesgroup.com/fr"
 experience: "EXPÉRIENCES"
 contact: "CONTACT"
 contact_mail: "Envoyer un mail"
-contact_mail_link: "mailto:lebec.owen@yahoo.fr"
+# base64 of the full href, decoded client-side so the raw mailto:/tel: never
+# ships in the prerendered HTML or payload (anti-scraping). See LinkText.vue.
+contact_mail_b64: "bWFpbHRvOmxlYmVjLm93ZW5AeWFob28uZnI="
 contact_phone: "Appeler"
-contact_phone_link: "tel:+33652063822"
+contact_phone_b64: "dGVsOiszMzY1MjA2MzgyMg=="
 mission: "Développement d'applications web internes"
 ---

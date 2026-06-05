@@ -3,7 +3,7 @@ order: 2
 title: 'Scan Auto'
 type: "Projet Personnel"
 description: "SaaS d'analyse de véhicules d'occasion par IA — pipeline Claude multi-étapes avec streaming SSE, auth Supabase, BYOK et extension Chrome."
-git: [ "GitHub", "https://github.com/OwenLB/ScanAuto" ]
+git_soon: true
 web: [ "scanauto.netlify.app", "https://scanauto.netlify.app" ]
 stack: [
   "React",
@@ -15,6 +15,8 @@ stack: [
   "Chrome Extension MV3"
 ]
 ---
+
+**Savoir en moins de 60 secondes si une annonce de voiture d'occasion est honnête ou piégée** — un outil né de ma propre galère d'acheteur, qui transforme une URL leboncoin en rapport d'analyse complet.
 
 ## Contexte
 

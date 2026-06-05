@@ -17,6 +17,10 @@ watch(spotify, () => {
 	span.classList.remove('animated')
 	span.style.removeProperty('--scroll-distance')
 
+	// Nothing to scroll when disconnected: the "Déconnecté"/"Disconnected"
+	// label is static, so skip the marquee even if it technically overflows.
+	if (!spotify.value?.isConnected) return
+
 	const SPEED = 40 // px/s
 	const iconOffset = 26
 	const overflow = span.scrollWidth - title.offsetWidth + iconOffset
@@ -84,7 +88,9 @@ watch(spotify, () => {
 			white-space: nowrap;
 
 			&.animated {
-				animation: var(--scroll-duration) translate 2s linear infinite;
+				@media (prefers-reduced-motion: no-preference) {
+					animation: var(--scroll-duration) translate 2s linear infinite;
+				}
 			}
 		}
 
@@ -162,10 +168,12 @@ watch(spotify, () => {
 		}
 
 		&--animated .spotify__pill_icon-bar {
-			animation-name: pulse;
-			animation-duration: 1s;
-			animation-iteration-count: infinite;
-			animation-timing-function: linear;
+			@media (prefers-reduced-motion: no-preference) {
+				animation-name: pulse;
+				animation-duration: 1s;
+				animation-iteration-count: infinite;
+				animation-timing-function: linear;
+			}
 		}
 
 		@keyframes pulse {
@@ -199,6 +207,5 @@ watch(spotify, () => {
 
 .spotify__link:where(:hover, :focus, :focus-visible) {
 	border: 1px solid var(--primary);
-	outline: none;
 }
 </style>

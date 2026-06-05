@@ -2,25 +2,29 @@
 import {Lang} from "~/types/lang";
 
 const lang = useLang()
+const localePath = useLocalePath()
 
-const {data: legalLink} = await useAsyncData('legal', () => queryContent('/').where({
+// Only fetch what the footer renders (path + title). Pulling the full doc would
+// embed the whole legal body — including the mailto: contact — into every page's
+// payload (privacy leak + dead weight).
+const {data: legalLink} = await useAsyncData(`legal-link-${lang.value}`, () => queryContent('/').where({
 	_path: '/legal',
 	_locale: lang.value
-}).findOne(), {watch: [() => lang.value]})
+}).only(['_path', 'title']).findOne(), {watch: [() => lang.value]})
 </script>
 
 <template>
-	<footer>
+	<footer role="contentinfo">
 		<div class="cell">
 		</div>
 		<div class="cell name">
-			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" to="/">
+			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" :to="localePath('/')">
 				<AppIcon icon="logo"/>
 				<span>Owen Le Bec</span>
 			</NuxtLink>
 		</div>
 		<div class="cell links">
-			<NuxtLink v-if="legalLink" :to="legalLink._path">{{ legalLink.title }}</NuxtLink>
+			<NuxtLink v-if="legalLink" :to="localePath(legalLink._path)">{{ legalLink.title }}</NuxtLink>
 		</div>
 		<div class="cell date cell--desktop">
 			{{ new Date().getFullYear() }}
@@ -61,7 +65,6 @@ footer {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 			}
 		}
@@ -75,7 +78,6 @@ footer {
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
-					outline: none;
 				}
 			}
 		}

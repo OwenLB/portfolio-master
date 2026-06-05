@@ -1,15 +1,36 @@
 <script lang="ts" setup>
 const props = defineProps<{
 	label: string
-	link: string
+	link?: string
 	external?: boolean
+	// base64 of a full mailto:/tel: href. When set, the real href is assembled
+	// client-side on mount so the address never appears in the prerendered HTML
+	// or payload (anti-scraping). Until then the link points at "#".
+	obfuscated?: string
 }>()
 
 const link = computed(() => props.external ? 'href' : 'to')
+
+const obfHref = ref('#')
+onMounted(() => {
+	if (props.obfuscated) {
+		obfHref.value = atob(props.obfuscated)
+	}
+})
 </script>
 
 <template>
-	<NuxtLink :[link]="props.link" :target="props.external? '_blank': '_self'"
+	<a v-if="props.obfuscated" :href="obfHref" target="_blank" rel="noopener noreferrer"
+	   class="text-link" @click="obfHref === '#' && $event.preventDefault()">
+		{{ props.label }}
+		<div class="text-link__icon">
+			<div class="text-link__icon_container">
+				<AppIcon aria-hidden="true" icon="arrow"/>
+				<AppIcon aria-hidden="true" icon="arrow"/>
+			</div>
+		</div>
+	</a>
+	<NuxtLink v-else :[link]="props.link" :target="props.external? '_blank': '_self'"
 			  :rel="props.external ? 'noopener noreferrer' : undefined"
 			  class="text-link">
 		{{ props.label }}
@@ -65,7 +86,6 @@ const link = computed(() => props.external ? 'href' : 'to')
 
 	&:where(:hover, :focus, :focus-visible) {
 		border: 1px solid var(--primary);
-		outline: none;
 
 		.text-link__icon_container {
 			transform: translate(space(12), space(-12));

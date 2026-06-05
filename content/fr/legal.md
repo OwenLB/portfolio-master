@@ -1,19 +1,15 @@
 ---
 title: "Mentions légales"
-description: "Bonjour je m'appelle Owen, je suis un développeur full stack, qui adore explorer de nouvelles technologies web."
+description: "Mentions légales du portfolio d'Owen Le Bec : éditeur du site, hébergeur et coordonnées de contact."
 ---
 
 ## Informations
 
 **Nom :** Le Bec Owen
 
-**Addresse :** 7 rue de Saint-Brieuc
-
 **Ville :** Brest 29200
 
 **Email :** [lebec.owen@yahoo.fr](mailto:lebec.owen@yahoo.fr)
-
-**Téléphone :** [+33 6 52 06 38 22](tel:+33652063822)
 
 ## Hébergeur
 

@@ -1,21 +1,20 @@
 ---
 headline_start: "SOFTWARE ENGINEER"
 headline_bold: "FULL STACK"
-description: "Full stack software engineer. JS front end, Java back end. Open to new opportunities, available for relocation."
+tagline: "5 years of experience, from front to back — currently a software engineer at Thales."
+description: "Full stack developer, from front to back — 5 years of experience (Vue, React, Blazor, Java/Spring). Focused on a great experience at every level: UX/UI, back end and developer experience."
 listen: "MY CURRENT MUSIC"
 about: "ABOUT"
 greetings_text: "Hello 👋"
-about_text: "Full stack software engineer. JS front end, Java back end. Looking for my next step, open to relocation. I do photography on the side."
-about_button: "Learn more"
+about_text: "Full stack developer, equally at home on the front and the back. What drives me: caring about the experience at every level — the UX/UI, the back end, and the comfort of the devs who pick up the code. 5 years of experience across varied stacks: Vue, React and Blazor on the front, Java/Spring on the back. Looking for a full stack or front-end role. I do photography on the side."
 social: "SOCIAL"
-position: "POSITION"
-position_title: "Full Stack Developer at"
-thales_link: "https://www.thalesgroup.com/en"
 experience: "EXPERIENCE"
 contact: "CONTACT"
 contact_mail: "Send an email"
-contact_mail_link: "mailto:lebec.owen@yahoo.fr"
+# base64 of the full href, decoded client-side so the raw mailto:/tel: never
+# ships in the prerendered HTML or payload (anti-scraping). See LinkText.vue.
+contact_mail_b64: "bWFpbHRvOmxlYmVjLm93ZW5AeWFob28uZnI="
 contact_phone: "Call"
-contact_phone_link: "tel:+33652063822"
+contact_phone_b64: "dGVsOiszMzY1MjA2MzgyMg=="
 mission: "Development of internal web applications"
 ---
