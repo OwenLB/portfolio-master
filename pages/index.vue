@@ -112,24 +112,6 @@ onMounted(() => {
 				</div>
 			</AppSection>
 
-			<AppSection id="home__projects">
-				<div class="cell job">
-					<h2>{{ content.position }}</h2>
-					<div class="job__title">
-						<h3>{{ content.position_title }}</h3>
-						<LinkText external label="Thales" :link="content.thales_link"/>
-					</div>
-				</div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--double-column">
-					<h2>{{ content.experience }}</h2>
-					<div class="experiences-content">
-						<LinkExperience v-for="experience in experiencesData.items" :experience="experience"/>
-					</div>
-				</div>
-			</AppSection>
-
 			<AppSection id="about__experiences">
 				<div class="cell cell--double-column content">
 					<h2>{{ profileContent.projects }}</h2>
@@ -155,6 +137,24 @@ onMounted(() => {
 						<h2>{{ content.contact }}</h2>
 						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
 						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
+					</div>
+				</div>
+			</AppSection>
+
+			<AppSection id="home__projects">
+				<div class="cell job">
+					<h2>{{ content.position }}</h2>
+					<div class="job__title">
+						<h3>{{ content.position_title }}</h3>
+						<LinkText external label="Thales" :link="content.thales_link"/>
+					</div>
+				</div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--double-column">
+					<h2>{{ content.experience }}</h2>
+					<div class="experiences-content">
+						<LinkExperience v-for="experience in experiencesData.items" :experience="experience"/>
 					</div>
 				</div>
 			</AppSection>

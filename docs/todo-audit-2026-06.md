@@ -106,7 +106,7 @@
 
 ## 👋 Première impression & structure de page
 
-- [ ] **P1 (S)** ⏸️ — **Projets above-the-fold** : remonter 1-2 vignettes — *reporté (restructure la grille home → à faire avec preview local).* — `pages/index.vue`
+- [x] **P1 (S)** — **Projets remontés** : l'idée de vignettes dans le hero **abandonnée** (jugée bancale) ; résolu autrement en **inversant les sections** → ordre `À propos · Social → Projets (+ photo/CV/contact) → Poste + Expériences → footer`. — `pages/index.vue`
 - [x] **P2 (S)** — **CTA contact dans le hero** : pill « Me contacter » / « Get in touch » dans la cellule headline → ancre `#contact` (anchor SSR, sans email exposé). — `pages/index.vue`, `content/*/home.md`
 - [x] **P3 (S)** — **Accroche sous le headline** : `tagline` « 5 ans d'expérience — front Vue/JS, back Java, en production chez Thales » dans la cellule headline. — `content/*/home.md`, `pages/index.vue`
 
