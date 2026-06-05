@@ -37,7 +37,7 @@
 - [x] **P2 (S)** — **JSON-LD `CreativeWork`** ajouté par projet (indexé une fois le SSR en place). — `pages/projects/[slug].vue`
 - [x] **P2 (S)** — **JSON-LD `Person`** confirmé dans le HTML prérendu (`grep "@type":"Person"` sur `/index.html`). — `app.vue:43-58`
 - [x] **P2 (S)** — **Sitemap** auto via `@nuxtjs/sitemap` : index `sitemap_index.xml` → `fr-FR.xml` + `en-US.xml`, alternates hreflang gérés par l'intégration i18n. Ancien `public/sitemap.xml` statique supprimé.
-- [ ] **P2 (S)** — Vérifier le **`Content-Type` de `/sitemap.xml`** : prérendu en `sitemap.xml/index.html`, Netlify peut le servir en `text/html` au lieu d'`application/xml`. Si c'est le cas, forcer le type via header `netlify.toml`. — `netlify.toml`
+- [x] **P2 (S)** — **`Content-Type` de `/sitemap.xml`** : investigué en prod (2026-06-05). **Prémisse fausse** : `/sitemap.xml` n'est pas le sitemap mais une **redirection HTML** (meta-refresh, générée par `@nuxtjs/sitemap` sous i18n, transformée en HTML statique par le prerender Nitro) vers le **vrai** index `/sitemap_index.xml` — celui-ci est déjà servi en `application/xml`. Forcer `application/xml` sur la redirection l'a cassée (commit `7a02037` → erreur de parsing `</meta>`), donc **annulé** (commit `d1997e4`). Vraie correction : `robots.txt` pointe désormais sur `/sitemap_index.xml` (au lieu de `/sitemap.xml`) → plus de redirection meta-refresh (que Googlebot ne suit pas pour les sitemaps). *À faire côté Search Console : soumettre `/sitemap_index.xml`.* — `netlify.toml`, `public/robots.txt`
 - [x] **P3 (S)** — **Descriptions SEO légales** réécrites (FR + EN) : décrivent la page (éditeur, hébergeur, contact) au lieu d'une bio générique. — `content/fr/legal.md:3`, `content/en/legal.md:3`
 - [x] **P3 (S)** — **Vérification Google** : aucun fichier HTML de vérif dans `public/`, il ne reste que la meta `app.vue` → **pas de double**. Meta conservée (la retirer risquerait de dé-vérifier Search Console). *Rien à faire.*
 
@@ -119,7 +119,7 @@
 - [x] **P3 (S)** — `.gitignore` ignore `*.png*` mais 2 PNG committés → cohérenciser.
 - [x] **P3 (S)** — Typo « Addresse » (ligne supprimée avec l'adresse). — `content/fr/legal.md`
 - [x] **P3 (S)** — Email `@yahoo.fr` → `owen@owenlebec.fr` : **non retenu** (décision : le mail reste yahoo). *Won't-fix.*
-- [ ] **P2 (S)** 🔧 *(action UI Netlify, hors repo)* — Retirer le plugin legacy `@netlify/plugin-sitemap` dans l'UI Netlify, **puis** supprimer le bloc `[[plugins]]` de `netlify.toml` (contournement temporaire de Lot 3B). — `netlify.toml`
+- [x] **P2 (S)** 🔧 — Plugin legacy `@netlify/plugin-sitemap` désinstallé dans l'UI Netlify, **puis** bloc `[[plugins]]` retiré de `netlify.toml` (commit `b61bb22`). Dette Lot 3B soldée. — `netlify.toml`
 - [x] **P3 (S)** — `i18n.svg` régénéré depuis `i18n.mmd` (mermaid CLI, mmdc défaut → `id="my-svg"` comme les diagrammes voisins) : affiche désormais le flux URL (Vue Router / `switchLocalePath` / `hreflang`) au lieu de l'ancien flux cookie. — `public/diagrams/portfolio-dev/i18n.svg`
 
 ---
