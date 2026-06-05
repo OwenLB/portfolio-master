@@ -143,19 +143,10 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="home__projects">
-				<div class="cell cell--double-column">
+				<div class="cell cell--triple-column">
 					<h2>{{ content.experience }}</h2>
 					<div class="experiences-content">
 						<LinkExperience v-for="experience in experiencesData.items" :experience="experience"/>
-					</div>
-				</div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell job">
-					<h2>{{ content.position }}</h2>
-					<div class="job__title">
-						<h3>{{ content.position_title }}</h3>
-						<LinkText external label="Thales" :link="content.thales_link"/>
 					</div>
 				</div>
 			</AppSection>
@@ -324,25 +315,6 @@ onMounted(() => {
 		}
 	}
 
-	&__projects {
-		.job {
-			grid-column: span 2;
-			justify-content: flex-start;
-			min-height: calc(200px + #{space(16)} + 1.5rem);
-
-			&__title {
-				display: flex;
-				flex-direction: column;
-				gap: space(4);
-
-				h3 {
-					font-size: 1rem;
-					font-weight: 400;
-				}
-			}
-		}
-	}
-
 }
 
 @media screen and (min-width: $md) {
@@ -350,7 +322,6 @@ onMounted(() => {
 		grid-template-rows: space(20) minmax(300px, auto) 300px auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
-		&__projects .cell.job,
 		&__about .cell.contact {
 			grid-column: initial;
 		}
