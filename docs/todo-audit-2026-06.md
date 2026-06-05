@@ -74,7 +74,7 @@
 - [ ] **P2 (S)** — Bloc « À propos » home = 2 phrases génériques → renforcer la voix. — `pages/index.vue:99-106`
 - [x] **P2 (S)** — **Séniorité** énoncée (« depuis 2021 », alternance comprise) dans la description + le bloc « À propos ». *Mise en avant près du headline → au passage structurel.* — `content/*/home.md`
 - [ ] **P3 (S)** — Ouvrir chaque projet par une phrase **résultat/impact**. — `content/*/projects/*.md`
-- [ ] **P3 (S)** — **Vérifier les démos live** (`finixa.net`, `scanauto.netlify.app`, `photo.owenlebec.fr`).
+- [x] **P3 (S)** — **Démos live vérifiées** (2026-06-05) : `finixa.net`, `scanauto.netlify.app`, `photo.owenlebec.fr` répondent toutes (vraies apps). **Mais** 3 des 4 liens « Répertoire Git » pointaient vers des repos **privés** (404 visiteur : Finixa, ScanAuto, portfolio-photo) → remplacés par une pastille « bientôt public » (`git_soon`), en attendant des dépôts publics propres. Seul `portfolio-master` (public) garde son lien.
 
 ## 🧱 Qualité du code & architecture
 
