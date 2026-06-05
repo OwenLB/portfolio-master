@@ -367,13 +367,26 @@ onMounted(() => {
 		grid-template-rows: space(20) minmax(300px, auto) 300px auto auto auto space(20);
 
 		&__hero_bottom .cell.spotify,
-		&__projects .cell.job,
 		&__about .cell.socials {
 			grid-column: initial;
 		}
 
-		#about__experiences .cell.right-col {
+		// Sections Projets + Expériences : colonnes inversées (la colonne
+		// d'info passe à gauche, le contenu principal à droite).
+		&__projects .cell.job {
 			grid-column: 4;
+		}
+
+		&__projects .cell.cell--double-column {
+			grid-column: 2 / span 2;
+		}
+
+		#about__experiences .cell.right-col {
+			grid-column: 2;
+		}
+
+		#about__experiences .cell.cell--double-column:not(.right-col) {
+			grid-column: 3 / span 2;
 		}
 
 		&__hero_top {
