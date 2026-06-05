@@ -167,13 +167,13 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       flex-wrap: wrap;
 
       @media screen and (max-width: $md) {
-        margin: 8px 0;
+        margin: space(2) 0;
       }
 
       div {
         display: flex;
         align-items: center;
-        padding: 0 12px;
+        padding: 0 space(3);
         height: 36px;
         border: 1px solid var(--accent);
         border-radius: 32px;
@@ -192,7 +192,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         @media (hover: none) {
           img {
             height: 20px;
-            margin-right: 8px;
+            margin-right: space(2);
             opacity: 1;
             transform: none;
           }
@@ -200,11 +200,11 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
 
         &:where(:hover, :focus, :focus-visible) {
           border: 1px solid var(--primary);
-          padding-right: 20px;
+          padding-right: space(5);
 
           img {
             height: 20px;
-            margin-right: 8px;
+            margin-right: space(2);
             opacity: 1;
             transform: translateX(0) scale(1);
             animation: bounceIn 0.4s ease-out;
