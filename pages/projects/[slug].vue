@@ -103,6 +103,7 @@ onMounted(() => {
 					<h2>DETAILS</h2>
 					<p>{{ content.description }}</p>
 					<LinkText v-if="content.git" :label="content.git[0]" :link="content.git[1]" external/>
+					<span v-else-if="content.git_soon" class="repo-soon">{{ props.lang === Lang.Fr ? 'Répertoire Git — bientôt public' : 'Git repository — coming soon' }}</span>
 					<LinkText v-if="content.web" :label="content.web[0]" :link="content.web[1]" external/>
 				</div>
 				<div class="cell stack">
@@ -194,6 +195,24 @@ onMounted(() => {
 		.details {
 			p {
 				flex-grow: 1;
+			}
+
+			// Muted, non-clickable counterpart to the .text-link pill, shown
+			// when the public repo isn't up yet (git_soon) instead of a dead link.
+			.repo-soon {
+				display: flex;
+				align-items: center;
+				padding: 0 space(6);
+				height: 56px;
+				border: 1px dashed var(--accent);
+				border-radius: 32px;
+				font-size: 1rem;
+				color: var(--text-accent);
+				cursor: default;
+
+				@media screen and (min-width: $md) {
+					font-size: 1.125rem;
+				}
 			}
 		}
 

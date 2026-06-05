@@ -3,7 +3,7 @@ order: 2
 title: 'ScanAuto'
 type: "Personal Project"
 description: "AI-powered used-vehicle analysis SaaS — multi-step Claude pipeline with SSE streaming, Supabase auth, BYOK encryption, and a Chrome extension."
-git: [ "GitHub", "https://github.com/OwenLB/ScanAuto" ]
+git_soon: true
 web: [ "scanauto.netlify.app", "https://scanauto.netlify.app" ]
 stack: [
   "React",
