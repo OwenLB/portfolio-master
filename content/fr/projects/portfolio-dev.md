@@ -18,6 +18,8 @@ stack: [
 ]
 ---
 
+**Le site que vous lisez en ce moment** : bilingue par URL, prérendu statique, et pensé autant pour le SEO que pour l'accessibilité.
+
 ## Contexte
 
 Portfolio personnel qui regroupe projets, expériences et informations de contact. Le site est bilingue par URL (FR à `/`, EN sous `/en/…`), embarque une intégration Spotify temps réel pour afficher le morceau en cours d'écoute, et est déployé sur Netlify en SSR + prérendu statique (chaque page des deux langues est générée à la build, avec `hreflang` et canonical). La route API Spotify tourne via une Netlify Edge Function (Deno).

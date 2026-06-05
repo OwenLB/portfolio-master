@@ -16,6 +16,8 @@ stack: [
 ]
 ---
 
+**Savoir en moins de 60 secondes si une annonce de voiture d'occasion est honnête ou piégée** — un outil né de ma propre galère d'acheteur, qui transforme une URL leboncoin en rapport d'analyse complet.
+
 ## Contexte
 
 ScanAuto est une application SaaS full-stack qui génère un rapport d'analyse complet sur une annonce de véhicule d'occasion (voiture ou moto). L'utilisateur colle une URL leboncoin ou un texte brut et reçoit en moins de 60 secondes : un score global, une analyse de fiabilité moteur, une projection de coûts sur 5 ans et une stratégie de négociation argumentée. Le projet est né d'un besoin personnel avant tout : en cherchant ma propre voiture d'occasion, j'ai réalisé que les acheteurs particuliers n'ont aucun outil pour évaluer rapidement si une annonce est honnête ou piégée.

@@ -18,6 +18,8 @@ stack: [
 ]
 ---
 
+**The very site you're reading right now** — bilingual by URL, statically prerendered, and built for SEO and accessibility alike.
+
 ## Context
 
 Personal portfolio covering projects, work experience, and contact information. The site is bilingual by URL (FR at `/`, EN under `/en/…`), embeds a live Spotify integration to display the currently playing track, and is deployed on Netlify with SSR + static prerendering (every page of both languages is generated at build time, with `hreflang` and canonical tags). The Spotify API route runs as a Netlify Edge Function (Deno).

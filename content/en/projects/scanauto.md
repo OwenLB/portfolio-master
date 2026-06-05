@@ -16,6 +16,8 @@ stack: [
 ]
 ---
 
+**Knowing in under 60 seconds whether a used-car listing is honest or a trap** — a tool born from my own buyer's frustration, turning a leboncoin URL into a full analysis report.
+
 ## Context
 
 ScanAuto is a full-stack SaaS application that generates comprehensive analysis reports for used-vehicle listings (cars and motorcycles). The user pastes a leboncoin URL or raw text and receives within 60 seconds: a global score, engine reliability analysis, 5-year cost projection, and a data-backed negotiation strategy. The project started as a personal need: while searching for my own used car, I realised private buyers have no tooling to quickly assess whether a listing is honest or a trap.

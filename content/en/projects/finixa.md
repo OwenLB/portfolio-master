@@ -18,6 +18,8 @@ stack: [
 ]
 ---
 
+**Logging an expense in under five seconds from your phone** — the one constraint that drove every decision in Finixa, from the PostgreSQL schema down to the input gesture.
+
 ## Context
 
 Finixa is a personal finance SaaS MVP built around one hard UX constraint: **add an expense as fast as possible from a mobile device**. It covers expense and income tracking, per-category and per-subcategory budgeting, envelope budgeting (50/30/20), virtual recurring transactions, and monthly statistics backed by PostgreSQL RPCs. The app is packaged for iOS/Android via Capacitor in addition to the web deployment.

@@ -16,6 +16,8 @@ stack: [
 ]
 ---
 
+**Remplacer un abonnement Adobe Lightroom par mon propre outil** : un portfolio photo et son back-office d'administration, du stockage objet à la galerie publique, entièrement maison.
+
 ## Contexte
 
 J'utilisais Adobe Lightroom pour publier mes photos en ligne, mais l'abonnement Creative Cloud représente un coût mensuel disproportionné pour un usage essentiellement statique. J'ai donc développé mon propre portfolio photographique from scratch, avec un back-office d'administration intégré pour gérer albums et photos directement depuis le navigateur. Le projet couvre toute la chaîne : stockage objet, redimensionnement à la volée, galerie publique et interface d'administration.

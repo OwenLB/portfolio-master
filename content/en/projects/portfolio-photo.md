@@ -16,6 +16,8 @@ stack: [
 ]
 ---
 
+**Replacing an Adobe Lightroom subscription with my own tool** — a photography portfolio and its admin back-office, from object storage to public gallery, built entirely from scratch.
+
 ## Context
 
 I was using Adobe Lightroom to publish my photos online, but the Creative Cloud subscription costs significantly more than what the feature actually provides — essentially a static image gallery. I built my own photography portfolio from scratch, with an integrated admin dashboard to manage albums and photos directly from the browser. The project covers the entire chain: object storage, on-demand resizing, public gallery, and admin interface.

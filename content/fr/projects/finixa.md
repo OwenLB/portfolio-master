@@ -18,6 +18,8 @@ stack: [
 ]
 ---
 
+**Ajouter une dépense en moins de cinq secondes depuis son téléphone** : c'est la contrainte qui a guidé chaque décision de Finixa, du schéma PostgreSQL jusqu'au geste de saisie.
+
 ## Contexte
 
 Finixa est un MVP de SaaS de finances personnelles centré sur une contrainte UX précise : **ajouter une dépense le plus vite possible depuis un mobile**. Le projet couvre le suivi de dépenses et revenus, la gestion de budgets par catégorie et sous-catégorie, le budget par enveloppe (50/30/20), les transactions récurrentes virtuelles, et des statistiques mensuelles avec RPCs PostgreSQL. L'app est packagée pour iOS/Android via Capacitor en plus du déploiement web.
