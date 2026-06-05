@@ -75,7 +75,6 @@ onMounted(() => {
 					<div class="headline-content">
 						<h1>{{ content.headline_start }}<strong>{{ content.headline_bold }}</strong></h1>
 						<p class="tagline">{{ content.tagline }}</p>
-						<a class="cta" href="#contact">{{ content.cta_contact }}</a>
 					</div>
 				</div>
 				<div class="cell responsive matrix">
@@ -103,21 +102,23 @@ onMounted(() => {
 				</div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
-				<div class="cell socials">
-					<h2>{{ content.social }}</h2>
-					<div class="socials-links">
-						<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
-								  :link="social.link" external/>
+				<div class="cell contact">
+					<h2>{{ content.contact }}</h2>
+					<div class="contact-links">
+						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
+						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
 					</div>
 				</div>
 			</AppSection>
 
 			<AppSection id="about__experiences">
 				<div class="cell right-col cell--double-column content">
-					<div id="contact" class="contact">
-						<h2>{{ content.contact }}</h2>
-						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
-						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
+					<div class="socials">
+						<h2>{{ content.social }}</h2>
+						<div class="socials-links">
+							<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
+									  :link="social.link" external/>
+						</div>
 					</div>
 					<div class="me">
 						<div class="arc">
@@ -208,30 +209,6 @@ onMounted(() => {
 					color: var(--text-accent);
 					max-width: 38ch;
 				}
-
-				// Primary contact CTA — pill plein, aligné à droite sous le headline.
-				// Pas de flèche ↗ : elle est réservée aux liens externes sur ce site,
-				// et #contact est une ancre interne. Au survol, inversion en contour.
-				.cta {
-					align-self: flex-end;
-					display: inline-flex;
-					align-items: center;
-					justify-content: center;
-					padding: 0 space(6);
-					height: 56px;
-					border: 1px solid var(--primary);
-					border-radius: 32px;
-					background-color: var(--primary);
-					color: var(--background);
-					font-family: 'Strawford', sans-serif;
-					font-size: 1rem;
-					@include transition(background-color, color);
-
-					&:where(:hover, :focus, :focus-visible) {
-						background-color: transparent;
-						color: var(--primary);
-					}
-				}
 			}
 
 			&.matrix {
@@ -269,11 +246,11 @@ onMounted(() => {
 			justify-content: space-between;
 		}
 
-		.socials {
+		.contact {
 			grid-column: span 2;
 			justify-content: space-between;
 
-			.socials-links {
+			.contact-links {
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
@@ -334,10 +311,16 @@ onMounted(() => {
 			gap: space(4);
 		}
 
-		.contact {
+		.socials {
 			display: flex;
 			flex-direction: column;
 			gap: space(4);
+
+			.socials-links {
+				display: flex;
+				flex-direction: column;
+				gap: space(4);
+			}
 		}
 	}
 
@@ -368,7 +351,7 @@ onMounted(() => {
 
 		&__hero_bottom .cell.spotify,
 		&__projects .cell.job,
-		&__about .cell.socials {
+		&__about .cell.contact {
 			grid-column: initial;
 		}
 
