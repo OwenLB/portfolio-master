@@ -93,15 +93,6 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="home__about">
-				<div class="cell cell--double-column about">
-					<div>
-						<h2>{{ content.about }}</h2> <br/>
-						<p>{{ content.greetings_text }}</p>
-						<p>{{ content.about_text }}</p>
-					</div>
-				</div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--mobile"></div>
 				<div class="cell contact">
 					<h2>{{ content.contact }}</h2>
 					<div class="contact-links">
@@ -109,9 +100,30 @@ onMounted(() => {
 						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
 					</div>
 				</div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--double-column about">
+					<div>
+						<h2>{{ content.about }}</h2> <br/>
+						<p>{{ content.greetings_text }}</p>
+						<p>{{ content.about_text }}</p>
+					</div>
+				</div>
 			</AppSection>
 
 			<AppSection id="about__experiences">
+				<div class="cell cell--double-column content">
+					<h2>{{ profileContent.projects }}</h2>
+					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
+						<LinkProject v-for="(project, index) in projects" :key="project._path"
+									 :index="index"
+									 :label="(project.title as string)"
+									 :path="(project._path as string)"
+									 :type="project.type"/>
+					</div>
+				</div>
+				<div class="cell cell--mobile"></div>
+				<div class="cell cell--mobile"></div>
 				<div class="cell right-col cell--double-column content">
 					<div class="socials">
 						<h2>{{ content.social }}</h2>
@@ -126,18 +138,6 @@ onMounted(() => {
 						</div>
 						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
 						<LinkText :label="profileContent.photo" link="https://photo.owenlebec.fr" external/>
-					</div>
-				</div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--mobile"></div>
-				<div class="cell cell--double-column content">
-					<h2>{{ profileContent.projects }}</h2>
-					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
-						<LinkProject v-for="(project, index) in projects" :key="project._path"
-									 :index="index"
-									 :label="(project.title as string)"
-									 :path="(project._path as string)"
-									 :type="project.type"/>
 					</div>
 				</div>
 			</AppSection>
@@ -326,11 +326,10 @@ onMounted(() => {
 			grid-column: initial;
 		}
 
-		// Colonnes inversées dans Projets / Expériences : l'ordre DOM est inversé
-		// (template) pour mettre l'info à gauche et le contenu à droite ; il reste
-		// juste à épingler la colonne d'info (photo/contact) en colonne 2.
+		// Section Projets : vignettes à gauche (col 2-3, auto), colonne
+		// Social + photo/CV épinglée à droite (col 4).
 		#about__experiences .cell.right-col {
-			grid-column: 2;
+			grid-column: 4;
 		}
 
 		&__hero_top {
