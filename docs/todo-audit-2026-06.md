@@ -25,6 +25,8 @@
 > **✅ Lot 4 — finitions a11y + correctifs sûrs réalisée le 2026-06-05** (4 commits, build validé) : landmarks `banner`/`contentinfo` + `aria-label` bouton langue, `figcaption` non dupliqué, descriptions SEO légales, **obfuscation contact home** (email + tél base64 décodés côté client, footer `.only`), `setTimeout` → `IntersectionObserver`. Détail + décisions (email reste yahoo, etc.) en bas.
 >
 > **✅ Lot 5 — performance runtime réalisée le 2026-06-05** (1 commit, build validé) : boucle Matrix en pause hors-écran (`IntersectionObserver`) + onglet caché (`visibilitychange`), `mousemove` actif seulement pendant l'anim (+`passive`), cap ~30 fps mobile ; lottie confirmé déjà lazy (chunk async chargé au 404). Desktop inchangé. *Reporté : lazy-load des SVG Finixa (risque CLS).*
+>
+> **✅ Lot 6 — contenu, narration & finitions sûres réalisée le 2026-06-05** (4 commits, build validé) : voix « À propos » renforcée (axe *bonne expérience* UX/UI + back + DX, poste full stack/front, retrait « ouvert géographiquement », séniorité « 5 ans » au lieu de « depuis 2021 ») ; ouverture par une phrase d'impact en tête de chaque étude de cas (FR + EN) ; px en dur → `space()` dans `Experience.vue` (pixels identiques) ; `i18n.svg` régénéré sur le flux URL (l'ancien montrait encore le flux cookie). **Exclus à ta demande** : item 1 (Content-Type sitemap), item 7 (SVG Finixa), item 9 (plugin Netlify). **Reportés avec l'above-the-fold (item 8) car même risque de grille hero à valider sur preview** : accroche sous le headline (E) + CTA contact dans le hero (F).
 
 ---
 
@@ -71,9 +73,9 @@
 
 - [x] **P1 (M)** — Page « À propos / parcours » : **décidée non retenue** (jugée filler ; parcours déjà porté par la timeline d'expériences + les études de cas projet).
 - [x] **P1 (S)** — `about_button` (contenu mort) **supprimé** (FR + EN).
-- [ ] **P2 (S)** — Bloc « À propos » home = 2 phrases génériques → renforcer la voix. — `pages/index.vue:99-106`
+- [x] **P2 (S)** — Bloc « À propos » home réécrit (voix perso : axe *bonne expérience* UX/UI + back + DX, poste full stack/front). — `content/*/home.md`
 - [x] **P2 (S)** — **Séniorité** énoncée (« depuis 2021 », alternance comprise) dans la description + le bloc « À propos ». *Mise en avant près du headline → au passage structurel.* — `content/*/home.md`
-- [ ] **P3 (S)** — Ouvrir chaque projet par une phrase **résultat/impact**. — `content/*/projects/*.md`
+- [x] **P3 (S)** — Chaque étude de cas s'ouvre par une phrase **impact** (qualitative, faute de chiffres), FR + EN. — `content/*/projects/*.md`
 - [x] **P3 (S)** — **Démos live vérifiées** (2026-06-05) : `finixa.net`, `scanauto.netlify.app`, `photo.owenlebec.fr` répondent toutes (vraies apps). **Mais** 3 des 4 liens « Répertoire Git » pointaient vers des repos **privés** (404 visiteur : Finixa, ScanAuto, portfolio-photo) → remplacés par une pastille « bientôt public » (`git_soon`), en attendant des dépôts publics propres. Seul `portfolio-master` (public) garde son lien.
 
 ## 🧱 Qualité du code & architecture
@@ -84,7 +86,7 @@
 - [x] **P2 (S)** — **Code mort** : `const cover` jamais utilisé. — `pages/projects/[slug].vue:20-22`
 - [x] **P2 (S)** — `setTimeout(execute, 1000)` remplacé par un `IntersectionObserver` (charge les projets liés à l'approche du viewport, `rootMargin: 200px`). — `pages/projects/[slug].vue`
 - [x] **P2 (S)** — Collision clé `useAsyncData('legal')` résolue : `Footer.vue` utilise désormais `'legal-link'`.
-- [ ] **P3 (S)** — px en dur vs `space()`. — `components/link/Experience.vue`
+- [x] **P3 (S)** — px de spacing → `space()` (8/12/20px → space(2/3/5), pixels identiques ; sizing/radius/animations laissés). — `components/link/Experience.vue`
 - [x] **P2 (M)** — **CI ajoutée** (`.github/workflows/ci.yml` : `npm ci` + `npm run generate` sur push/PR). Tests de fumée : optionnels, plus tard.
 - [x] **P3 (S)** — Docs (README, CLAUDE.md, case study FR/EN) corrigées : Spotify = edge function Deno.
 
@@ -118,7 +120,7 @@
 - [x] **P3 (S)** — Typo « Addresse » (ligne supprimée avec l'adresse). — `content/fr/legal.md`
 - [x] **P3 (S)** — Email `@yahoo.fr` → `owen@owenlebec.fr` : **non retenu** (décision : le mail reste yahoo). *Won't-fix.*
 - [ ] **P2 (S)** 🔧 *(action UI Netlify, hors repo)* — Retirer le plugin legacy `@netlify/plugin-sitemap` dans l'UI Netlify, **puis** supprimer le bloc `[[plugins]]` de `netlify.toml` (contournement temporaire de Lot 3B). — `netlify.toml`
-- [ ] **P3 (S)** — Régénérer `public/diagrams/portfolio-dev/i18n.svg` depuis `i18n.mmd` (mermaid CLI) : le `.mmd` décrit le nouveau flux URL, mais le `.svg` affiché dans la case study montre encore l'ancien flux cookie. — `public/diagrams/portfolio-dev/`
+- [x] **P3 (S)** — `i18n.svg` régénéré depuis `i18n.mmd` (mermaid CLI, mmdc défaut → `id="my-svg"` comme les diagrammes voisins) : affiche désormais le flux URL (Vue Router / `switchLocalePath` / `hreflang`) au lieu de l'ancien flux cookie. — `public/diagrams/portfolio-dev/i18n.svg`
 
 ---
 
