@@ -17,12 +17,8 @@
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
     Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://analytics.umami.is; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://analytics.umami.is; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
 
-# @nuxtjs/sitemap prerenders the sitemap index as a directory
-# (`sitemap.xml/index.html`), so Netlify serves /sitemap.xml as text/html.
-# Force the correct MIME type so crawlers parse it as XML. The per-locale
-# sub-sitemaps (/__sitemap__/*.xml) are real files already served as
-# application/xml, so they need no override.
-[[headers]]
-  for = "/sitemap.xml"
-  [headers.values]
-    Content-Type = "application/xml; charset=utf-8"
+# Note: do NOT force a Content-Type on /sitemap.xml. With i18n, @nuxtjs/sitemap
+# makes /sitemap.xml an HTML meta-refresh redirect to the real index
+# (/sitemap_index.xml). Forcing application/xml on it makes browsers/crawlers
+# parse the redirect HTML as XML and fail. robots.txt points crawlers straight
+# at /sitemap_index.xml, which is already served as application/xml.
