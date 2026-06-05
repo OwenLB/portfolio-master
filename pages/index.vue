@@ -33,7 +33,7 @@ const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
-const seoTitle = computed(() => props.lang === Lang.Fr ? 'Owen Le Bec — Ingénieur logiciel full stack' : 'Owen Le Bec — Full Stack Software Engineer')
+const seoTitle = computed(() => props.lang === Lang.Fr ? 'Owen LE BEC — Ingénieur logiciel Full Stack' : 'Owen LE BEC — Full Stack Software Engineer')
 
 useSeoMeta({
 	description: computed(() => content.value?.description),
@@ -134,7 +134,7 @@ onMounted(() => {
 					</div>
 					<div class="me">
 						<div class="arc">
-							<img alt="Owen Le Bec" class="arc-image" src="/images/owen.webp" width="420" height="420">
+							<img alt="Owen LE BEC" class="arc-image" src="/images/owen.webp" width="420" height="420">
 						</div>
 						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
 						<LinkText :label="profileContent.photo" link="https://photo.owenlebec.fr" external/>

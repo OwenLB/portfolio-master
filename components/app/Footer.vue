@@ -20,7 +20,7 @@ const {data: legalLink} = await useAsyncData(`legal-link-${lang.value}`, () => q
 		<div class="cell name">
 			<NuxtLink :aria-label="lang === Lang.Fr ? 'Retour à la page d\'accueil' : 'Back to homepage'" :to="localePath('/')">
 				<AppIcon icon="logo"/>
-				<span>Owen Le Bec</span>
+				<span>Owen LE BEC</span>
 			</NuxtLink>
 		</div>
 		<div class="cell links">

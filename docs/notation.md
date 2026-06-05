@@ -1,4 +1,4 @@
-# Notation Portfolio — Owen Le Bec
+# Notation Portfolio — Owen LE BEC
 
 > Notation effectuée le 20/05/2026. Barème sur 100 points.
 

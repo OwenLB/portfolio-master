@@ -1,11 +1,11 @@
 ---
 title: "Legal notices"
-description: "Legal notices for Owen Le Bec's portfolio: site publisher, hosting provider and contact details."
+description: "Legal notices for Owen LE BEC's portfolio: site publisher, hosting provider and contact details."
 ---
 
 ## Informations
 
-**Name :** Le Bec Owen
+**Name :** LE BEC Owen
 
 **City :** Brest 29200
 

@@ -44,7 +44,7 @@ useHead(() => ({
 			abstract: content.value.description,
 			url: 'https://owenlebec.fr' + route.path,
 			image: imageUrl.value,
-			author: {'@type': 'Person', name: 'Owen Le Bec', url: 'https://owenlebec.fr'},
+			author: {'@type': 'Person', name: 'Owen LE BEC', url: 'https://owenlebec.fr'},
 			keywords: content.value.stack,
 			...(content.value.git ? {codeRepository: content.value.git[1]} : {}),
 		}),

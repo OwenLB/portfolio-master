@@ -1,11 +1,11 @@
 ---
 title: "Mentions légales"
-description: "Mentions légales du portfolio d'Owen Le Bec : éditeur du site, hébergeur et coordonnées de contact."
+description: "Mentions légales du portfolio d'Owen LE BEC : éditeur du site, hébergeur et coordonnées de contact."
 ---
 
 ## Informations
 
-**Nom :** Le Bec Owen
+**Nom :** LE BEC Owen
 
 **Ville :** Brest 29200
 

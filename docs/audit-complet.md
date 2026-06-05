@@ -1,4 +1,4 @@
-# Audit Portfolio — Owen Le Bec
+# Audit Portfolio — Owen LE BEC
 
 > Audit effectué le 20/05/2026. Perspectives combinées : tech lead, UX copywriter, recruteur expérimenté.
 

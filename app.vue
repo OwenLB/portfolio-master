@@ -14,7 +14,7 @@ useHead(() => ({
 
 useHead({
 	titleTemplate(chunk) {
-		const title = lang.value === Lang.Fr ? 'Owen Le Bec — Ingénieur logiciel full stack' : 'Owen Le Bec — Full Stack Software Engineer'
+		const title = lang.value === Lang.Fr ? 'Owen LE BEC — Ingénieur logiciel Full Stack' : 'Owen LE BEC — Full Stack Software Engineer'
 		return chunk ? `${chunk} - ${title}` : title
 	},
 	htmlAttrs: {
@@ -32,12 +32,12 @@ useHead({
 			name: 'google-site-verification',
 			content: '9enTEnn4TDcfVaSIV1jMyTsCIZJhQEYHnzRlQhtEWDY'
 		},
-		{ property: 'og:site_name', content: 'Owen Le Bec' },
+		{ property: 'og:site_name', content: 'Owen LE BEC' },
 		{ property: 'og:type', content: 'website' },
 		{ property: 'og:image', content: 'https://owenlebec.fr/images/owen.webp' },
 		{ property: 'og:image:width', content: '420' },
 		{ property: 'og:image:height', content: '420' },
-		{ property: 'og:image:alt', content: 'Owen Le Bec' },
+		{ property: 'og:image:alt', content: 'Owen LE BEC' },
 		{ name: 'twitter:card', content: 'summary' },
 		{ name: 'twitter:image', content: 'https://owenlebec.fr/images/owen.webp' },
 	],
@@ -52,7 +52,7 @@ useHead({
 			innerHTML: JSON.stringify({
 				'@context': 'https://schema.org',
 				'@type': 'Person',
-				name: 'Owen Le Bec',
+				name: 'Owen LE BEC',
 				jobTitle: 'Full Stack Software Engineer',
 				url: 'https://owenlebec.fr',
 				image: 'https://owenlebec.fr/images/owen.webp',
