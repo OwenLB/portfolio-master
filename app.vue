@@ -61,6 +61,42 @@ useHead({
 					'https://www.linkedin.com/in/OwenLB/'
 				]
 			})
+		},
+		{
+			type: 'application/ld+json',
+			innerHTML: JSON.stringify({
+				'@context': 'https://schema.org',
+				'@type': 'WebSite',
+				name: 'Owen LE BEC',
+				url: 'https://owenlebec.fr'
+			})
+		},
+		{
+			type: 'application/ld+json',
+			innerHTML: JSON.stringify({
+				'@context': 'https://schema.org',
+				'@type': 'ItemList',
+				itemListElement: [
+					{
+						'@type': 'SiteNavigationElement',
+						position: 1,
+						name: 'Accueil',
+						url: 'https://owenlebec.fr/'
+					},
+					{
+						'@type': 'SiteNavigationElement',
+						position: 2,
+						name: 'Projets',
+						url: 'https://owenlebec.fr/#about__experiences'
+					},
+					{
+						'@type': 'SiteNavigationElement',
+						position: 3,
+						name: 'À propos',
+						url: 'https://owenlebec.fr/about'
+					}
+				]
+			})
 		}
 	]
 })</script>
