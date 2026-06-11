@@ -100,15 +100,15 @@ onMounted(() => {
 				<div class="cell cell--mobile">
 				</div>
 				<div class="cell cell--double-column details">
-					<h2>DETAILS</h2>
-					<p>{{ content.description }}</p>
-					<LinkText v-if="content.git" :label="content.git[0]" :link="content.git[1]" external/>
-					<span v-else-if="content.git_soon" class="repo-soon">{{ props.lang === Lang.Fr ? 'Répertoire Git — bientôt public' : 'Git repository — coming soon' }}</span>
-					<LinkText v-if="content.web" :label="content.web[0]" :link="content.web[1]" external/>
+					<h2 v-reveal>DETAILS</h2>
+					<p v-reveal="100">{{ content.description }}</p>
+					<LinkText v-if="content.git" v-reveal="180" :label="content.git[0]" :link="content.git[1]" external/>
+					<span v-else-if="content.git_soon" v-reveal="180" class="repo-soon">{{ props.lang === Lang.Fr ? 'Répertoire Git — bientôt public' : 'Git repository — coming soon' }}</span>
+					<LinkText v-if="content.web" v-reveal="260" :label="content.web[0]" :link="content.web[1]" external/>
 				</div>
 				<div class="cell stack">
-					<h2>STACK</h2>
-					<ul>
+					<h2 v-reveal>STACK</h2>
+					<ul v-reveal="120">
 						<li v-for="tech in content.stack">
 							{{ tech }}
 						</li>
@@ -124,9 +124,11 @@ onMounted(() => {
 
 			<AppSection id="project__related">
 				<div ref="relatedRef" class="cell cell--triple-column content">
-					<h2>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
+					<h2 v-reveal>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
 					<div class="projects">
-						<LinkProject v-for="project in related" :key="project._path" :label="project.title"
+						<LinkProject v-for="(project, index) in related" :key="project._path"
+									 v-reveal="index * 120"
+									 :label="project.title"
 									 :path="project._path" :type="project.type"/>
 					</div>
 				</div>

@@ -42,26 +42,6 @@ useSeoMeta({
 	twitterTitle: seoTitle,
 	twitterDescription: computed(() => content.value?.description),
 })
-
-
-const projectsContainer = ref<HTMLElement | null>(null)
-const projectsVisibility = ref(false)
-
-onMounted(() => {
-	const observer = new IntersectionObserver((entries) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				projectsVisibility.value = true
-			}
-		})
-	}, {
-		threshold: 0.15
-	})
-
-	if (projectsContainer.value) {
-		observer.observe(projectsContainer.value as HTMLElement)
-	}
-})
 </script>
 
 <template>
@@ -101,8 +81,8 @@ onMounted(() => {
 
 			<AppSection id="home__about">
 				<div class="cell contact">
-					<h2>{{ content.contact }}</h2>
-					<div class="contact-links">
+					<h2 v-reveal>{{ content.contact }}</h2>
+					<div v-reveal="120" class="contact-links">
 						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
 						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
 					</div>
@@ -110,7 +90,7 @@ onMounted(() => {
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--double-column about">
-					<div>
+					<div v-reveal>
 						<h2>{{ content.about }}</h2> <br/>
 						<p>{{ content.greetings_text }}</p>
 						<p>{{ content.about_text }}</p>
@@ -120,10 +100,10 @@ onMounted(() => {
 
 			<AppSection id="about__experiences">
 				<div class="cell cell--double-column content">
-					<h2>{{ profileContent.projects }}</h2>
-					<div ref="projectsContainer" :class="{visible: projectsVisibility}" class="projects">
+					<h2 v-reveal>{{ profileContent.projects }}</h2>
+					<div class="projects">
 						<LinkProject v-for="(project, index) in projects" :key="project._path"
-									 :index="index"
+									 v-reveal="index * 120"
 									 :label="(project.title as string)"
 									 :path="(project._path as string)"
 									 :type="project.type"/>
@@ -132,14 +112,14 @@ onMounted(() => {
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--mobile"></div>
 				<div class="cell right-col cell--double-column content">
-					<div class="socials">
+					<div v-reveal class="socials">
 						<h2>{{ content.social }}</h2>
 						<div class="socials-links">
 							<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
 									  :link="social.link" external/>
 						</div>
 					</div>
-					<div class="me">
+					<div v-reveal="120" class="me">
 						<div class="arc">
 							<img alt="Owen LE BEC" class="arc-image" src="/images/owen.webp" width="420" height="420">
 						</div>
@@ -151,9 +131,11 @@ onMounted(() => {
 
 			<AppSection id="home__projects">
 				<div class="cell cell--triple-column">
-					<h2>{{ content.experience }}</h2>
+					<h2 v-reveal>{{ content.experience }}</h2>
 					<div class="experiences-content">
-						<LinkExperience v-for="experience in experiencesData.items" :experience="experience"/>
+						<LinkExperience v-for="experience in experiencesData.items" :key="experience.position"
+										v-reveal
+										:experience="experience"/>
 					</div>
 				</div>
 			</AppSection>
@@ -333,23 +315,6 @@ onMounted(() => {
 		display: flex;
 		flex-direction: column;
 		gap: var(--main-space);
-
-		@media (prefers-reduced-motion: no-preference) {
-			a {
-				opacity: 0;
-				// translate3d + backface-visibility keep the link on a stable GPU
-				// layer so it isn't re-rasterized when the transition ends — avoids
-				// the one-frame white flash on mobile (layer demotion).
-				transform: translate3d(0, space(16), 0);
-				backface-visibility: hidden;
-				transition: opacity 0.5s var(--ease-expo), transform 0.5s var(--ease-expo);
-			}
-
-			&.visible a {
-				opacity: 1;
-				transform: translate3d(0, 0, 0);
-			}
-		}
 	}
 
 	.arc {

@@ -263,6 +263,21 @@ h2 {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+	// v-reveal (plugins/reveal.ts) — the .reveal class is only ever added
+	// client-side and never under prefers-reduced-motion.
+	.reveal {
+		opacity: 0;
+		transform: translate3d(0, space(8), 0);
+		backface-visibility: hidden;
+		transition: opacity 0.7s var(--ease-out) var(--reveal-delay, 0s),
+		transform 0.7s var(--ease-out) var(--reveal-delay, 0s);
+
+		&--visible {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+
 	.page-enter-active,
 	.page-leave-active {
 		transition: var(--dur-base) inset 0.08s var(--ease-expo);
