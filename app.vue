@@ -1,5 +1,10 @@
 <script lang="ts" setup>
 import {Lang} from "~/types/lang";
+// Hashed URLs of the above-the-fold fonts (hero display + body), preloaded so
+// the browser doesn't wait for style + layout to discover them (LCP is the h1).
+import ppfcLightUrl from "~/assets/fonts/PPFormulaCondensed-Light.woff2?url";
+import ppfcBoldUrl from "~/assets/fonts/PPFormulaCondensed-Bold.woff2?url";
+import strawfordRegularUrl from "~/assets/fonts/Strawford-Regular.woff2?url";
 
 const theme = useTheme()
 const lang = useLang()
@@ -25,7 +30,14 @@ useHead({
 			rel: 'icon',
 			href: '/favicon.svg',
 			type: 'image/svg+xml',
-		}
+		},
+		...[ppfcLightUrl, ppfcBoldUrl, strawfordRegularUrl].map((href) => ({
+			rel: 'preload' as const,
+			as: 'font' as const,
+			type: 'font/woff2',
+			href,
+			crossorigin: '' as const,
+		})),
 	],
 	meta: [
 		{
