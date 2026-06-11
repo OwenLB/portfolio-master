@@ -281,18 +281,22 @@ function onLeave() {
 	}
 }
 
+// Floats above-right of the pointer (its bottom-left corner near the cursor),
+// so neither the hovered row nor its title animation is ever covered. The
+// scale grows out of that corner, i.e. from the cursor.
 .project-link__preview_inner {
 	width: min(340px, 32vw);
 	aspect-ratio: 16 / 10;
 	border-radius: 6px;
 	box-shadow: 0 24px 64px -24px rgba(6, 20, 35, 0.6);
 	opacity: 0;
-	transform: translate(-50%, -50%) scale(0.85);
+	transform: translate(space(6), calc(-100% - #{space(4)})) scale(0.85);
+	transform-origin: bottom left;
 	transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out);
 
 	&.is-active {
 		opacity: 1;
-		transform: translate(-50%, -50%) scale(1);
+		transform: translate(space(6), calc(-100% - #{space(4)})) scale(1);
 	}
 }
 </style>
