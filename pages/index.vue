@@ -53,9 +53,9 @@ useSeoMeta({
 			<AppSection id="home__hero_top" desktop>
 				<div class="cell cell--double-column headline">
 					<div class="headline-content">
-						<h1>
-							<span class="line"><span class="line__inner">{{ content.headline_start }}</span></span>
-							<strong class="line"><span class="line__inner">{{ content.headline_bold }}</span></strong>
+						<h1 :aria-label="`${content.headline_start} ${content.headline_bold}`">
+							<span aria-hidden="true" class="line"><span v-decode="350" class="line__inner">{{ content.headline_start }}</span></span>
+							<strong aria-hidden="true" class="line"><span v-decode="500" class="line__inner">{{ content.headline_bold }}</span></strong>
 						</h1>
 						<p class="tagline">{{ content.tagline }}</p>
 					</div>
@@ -74,14 +74,14 @@ useSeoMeta({
 					<ClientOnly><AppMatrix/></ClientOnly>
 				</div>
 				<div class="cell spotify">
-					<h2>{{ content.listen }}</h2>
+					<h2 v-decode>{{ content.listen }}</h2>
 					<SpotifyCurrentTrack/>
 				</div>
 			</AppSection>
 
 			<AppSection id="home__about">
 				<div class="cell contact">
-					<h2 v-reveal>{{ content.contact }}</h2>
+					<h2 v-decode v-reveal>{{ content.contact }}</h2>
 					<div v-reveal="120" class="contact-links">
 						<LinkText :label="content.contact_mail" :obfuscated="content.contact_mail_b64"/>
 						<LinkText :label="content.contact_phone" :obfuscated="content.contact_phone_b64"/>
@@ -91,7 +91,7 @@ useSeoMeta({
 				<div class="cell cell--mobile"></div>
 				<div class="cell cell--double-column about">
 					<div v-reveal>
-						<h2>{{ content.about }}</h2> <br/>
+						<h2 v-decode>{{ content.about }}</h2> <br/>
 						<p>{{ content.greetings_text }}</p>
 						<p>{{ content.about_text }}</p>
 					</div>
@@ -100,10 +100,11 @@ useSeoMeta({
 
 			<AppSection id="about__experiences">
 				<div class="cell cell--double-column content">
-					<h2 v-reveal>{{ profileContent.projects }}</h2>
+					<h2 v-decode v-reveal>{{ profileContent.projects }}</h2>
 					<div class="projects">
 						<LinkProject v-for="(project, index) in projects" :key="project._path"
 									 v-reveal="index * 120"
+									 :index="index"
 									 :label="(project.title as string)"
 									 :path="(project._path as string)"
 									 :type="project.type"
@@ -114,7 +115,7 @@ useSeoMeta({
 				<div class="cell cell--mobile"></div>
 				<div class="cell right-col cell--double-column content">
 					<div v-reveal class="socials">
-						<h2>{{ content.social }}</h2>
+						<h2 v-decode>{{ content.social }}</h2>
 						<div class="socials-links">
 							<LinkText v-for="social in socials.body" :key="social.label" :label="social.label"
 									  :link="social.link" external/>
@@ -132,7 +133,7 @@ useSeoMeta({
 
 			<AppSection id="home__projects">
 				<div class="cell cell--triple-column">
-					<h2 v-reveal>{{ content.experience }}</h2>
+					<h2 v-decode v-reveal>{{ content.experience }}</h2>
 					<div class="experiences-content">
 						<LinkExperience v-for="experience in experiencesData.items" :key="experience.position"
 										v-reveal
@@ -316,6 +317,11 @@ useSeoMeta({
 		display: flex;
 		flex-direction: column;
 		gap: var(--main-space);
+
+		// Desktop rows draw their own 1px rules — no gap between them.
+		@media screen and (min-width: $md) {
+			gap: 0;
+		}
 	}
 
 	.arc {
