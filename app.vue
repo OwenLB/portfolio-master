@@ -89,11 +89,6 @@ useHead({
 	}
 }
 
-:root {
-	--main-space: #{space(6)};
-	--theme-t: 0.3s ease-in-out;
-}
-
 ::-moz-selection {
 	color: $dark;
 	background: var(--primary);
@@ -118,7 +113,7 @@ useHead({
 
 html {
 	font-size: 100%;
-	font-family: 'Strawford', sans-serif;
+	font-family: var(--font-body);
 	color: var(--text);
 	background: var(--background);
 	transition: background-color var(--theme-t), color var(--theme-t);
@@ -174,9 +169,9 @@ ul {
 }
 
 h2 {
-	font-family: 'PP Formula Condensed', sans-serif;
+	font-family: var(--font-display);
 	font-weight: bold;
-	font-size: 1.125rem;
+	font-size: var(--text-title);
 	letter-spacing: 1px;
 	color: var(--primary);
 	line-height: 1;
@@ -222,15 +217,11 @@ h2 {
 		inset: -1px calc(100% + 1px) -1px -1px;
 		background: $primary;
 		z-index: 2;
-		transition: all 0.6s cubic-bezier(0.83, 0, 0.17, 1);
+		transition: all 0.6s var(--ease-expo);
 	}
 }
 
 @media screen and (min-width: $md) {
-	:root {
-		--main-space: #{space(10)};
-	}
-
 	.page {
 		grid-template-columns: minmax(space(10), calc((100% - 1200px) / 2))  repeat(3, minmax(auto, 400px)) minmax(space(10), calc((100% - 1200px) / 2));
 	}
@@ -243,10 +234,6 @@ h2 {
 		&--mobile {
 			display: none;
 		}
-	}
-
-	h2 {
-		font-size: 1.5rem;
 	}
 }
 
@@ -261,7 +248,7 @@ h2 {
 @media (prefers-reduced-motion: no-preference) {
 	.page-enter-active,
 	.page-leave-active {
-		transition: 0.45s inset 0.08s cubic-bezier(0.83, 0, 0.17, 1);
+		transition: var(--dur-base) inset 0.08s var(--ease-expo);
 	}
 
 	.page-enter-from,

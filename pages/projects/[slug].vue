@@ -147,7 +147,7 @@ onMounted(() => {
 		.cell--triple-column {
 			position: relative;
 			background: var(--background);
-			font-family: 'PP Formula Condensed', sans-serif;
+			font-family: var(--font-display);
 			justify-content: center;
 
 			.overlay {
@@ -168,7 +168,7 @@ onMounted(() => {
 			h1 {
 				z-index: 1;
 				display: block;
-				font-size: 3rem;
+				font-size: var(--text-hero);
 				font-weight: bold;
 				color: $light;
 			}
@@ -184,7 +184,7 @@ onMounted(() => {
 				border-radius: space(10);
 				backdrop-filter: blur(space(2));
 				font-size: 0.875rem;
-				font-family: 'Strawford', sans-serif;
+				font-family: var(--font-body);
 			}
 		}
 
@@ -355,10 +355,6 @@ html[data-theme="dark"] #project__description .content .svg-wrapper svg {
 
 		&__hero {
 			.cell--triple-column {
-				h1 {
-					font-size: 6rem;
-				}
-
 				.project-type {
 					font-size: 1.125rem;
 				}

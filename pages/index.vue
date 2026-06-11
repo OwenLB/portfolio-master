@@ -164,7 +164,7 @@ onMounted(() => {
 	&__hero_top {
 		.cell {
 			&.headline {
-				font-family: 'PP Formula Condensed', sans-serif;
+				font-family: var(--font-display);
 				justify-content: center;
 
 				// Normal flow + vertically centered in the cell. The hero_top
@@ -179,7 +179,7 @@ onMounted(() => {
 
 				h1 {
 					display: block;
-					font-size: 3rem;
+					font-size: var(--text-hero);
 					font-weight: 300;
 
 					em {
@@ -194,7 +194,7 @@ onMounted(() => {
 				}
 
 				.tagline {
-					font-family: 'Strawford', sans-serif;
+					font-family: var(--font-body);
 					font-size: 0.9rem;
 					line-height: 1.4;
 					color: var(--text-accent);
@@ -263,7 +263,7 @@ onMounted(() => {
 				// the one-frame white flash on mobile (layer demotion).
 				transform: translate3d(0, space(16), 0);
 				backface-visibility: hidden;
-				transition: opacity 0.5s cubic-bezier(0.83, 0, 0.17, 1), transform 0.5s cubic-bezier(0.83, 0, 0.17, 1);
+				transition: opacity 0.5s var(--ease-expo), transform 0.5s var(--ease-expo);
 			}
 
 			&.visible a {
@@ -332,15 +332,6 @@ onMounted(() => {
 			grid-column: 4;
 		}
 
-		&__hero_top {
-			.cell {
-				&.headline {
-					h1 {
-						font-size: 6rem;
-					}
-				}
-			}
-		}
 	}
 }
 

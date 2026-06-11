@@ -19,6 +19,8 @@ export default defineNuxtConfig({
 		spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 		spotifyRefreshToken: process.env.SPOTIFY_REFRESH_TOKEN
 	},
+	// Global CSS (font-faces, design tokens as custom properties) — loaded once.
+	css: ['~/assets/scss/base.scss'],
 	vite: {
 		css: {
 			preprocessorOptions: {

@@ -46,18 +46,21 @@ if (props.index) {
 	}
 
 	&__title {
-		max-height: 2.75rem;
+		// One line-box high — the hover effect slides the two stacked labels
+		// by -100%, so the window must match the span's line height exactly.
+		max-height: calc(var(--text-card) * 1.35);
 		overflow: hidden;
 		z-index: 1;
 		display: flex;
 		flex-direction: column;
 
 		span {
-			font-family: "PP Formula Condensed", sans-serif;
-			font-size: 2rem;
+			font-family: var(--font-display);
+			font-size: var(--text-card);
 			color: $light;
 			text-transform: uppercase;
-			transition: transform 0.4s cubic-bezier(0.83, 0, 0.17, 1), color 0.2s ease-in-out;
+			line-height: 1.35;
+			transition: transform 0.4s var(--ease-expo), color var(--dur-fast) ease-in-out;
 		}
 
 		&_default {
@@ -104,18 +107,9 @@ if (props.index) {
 		height: 200px;
 		padding: space(13) var(--main-space) var(--main-space);
 
-		&__title {
-			max-height: 4rem;
-
-			span {
-				font-size: 3rem;
-			}
-		}
-
 		&__type {
 			display: initial;
 		}
-
 	}
 }
 </style>
