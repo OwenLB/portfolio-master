@@ -10,7 +10,8 @@ export default function () {
 		raf = 0
 		if (!pending) return
 		visible.value = true
-		transform.value = `translate(${pending.pageX - 160}px, ${pending.pageY - 160}px)`
+		// Center the 560px (space(140)) grid-spotlight on the pointer.
+		transform.value = `translate(${pending.pageX - 280}px, ${pending.pageY - 280}px)`
 		pending = null
 	}
 
