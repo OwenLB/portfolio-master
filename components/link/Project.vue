@@ -13,7 +13,12 @@ const props = defineProps<{
 }>()
 
 const localePath = useLocalePath()
-const cover = computed(() => `url("/images${props.path}.webp") no-repeat center / cover`)
+const theme = useTheme()
+const coverSrc = computed(() => {
+	const suffix = theme.value === 'dark' ? '-dark' : ''
+	return `/images${props.path}${suffix}.webp`
+})
+const cover = computed(() => `url("${coverSrc.value}") no-repeat center / cover`)
 const slug = computed(() => props.path.split('/').pop())
 const vtCover = computed(() => props.shared ? `project-cover-${slug.value}` : 'none')
 const vtTitle = computed(() => props.shared ? `project-title-${slug.value}` : 'none')
