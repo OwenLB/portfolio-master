@@ -7,7 +7,7 @@ const lang = useLang()
 const {data: content}: { data: Legal } = await useAsyncData(`legal-${lang.value}`, () => queryContent().where({
 	_path: '/legal',
 	_locale: lang.value
-}).findOne(), {watch: [() => lang.value]})
+}).findOne())
 
 useSeoMeta({
 	title: computed(() => content.value?.title),

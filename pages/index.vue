@@ -13,21 +13,21 @@ const props = defineProps<{
 const {data: content}: { data: Home } = await useAsyncData(`home-${props.lang}`, () => queryContent().where({
 	_path: '/home',
 	_locale: props.lang
-}).findOne(), {watch: [() => props.lang]})
+}).findOne())
 
 const {data: profileContent}: { data: About } = await useAsyncData(`profile-content-${props.lang}`, () => queryContent().where({
 	_path: '/profile',
 	_locale: props.lang
-}).findOne(), {watch: [() => props.lang]})
+}).findOne())
 
 const {data: experiencesData}: { data: Experiences } = await useAsyncData(`experiences-${props.lang}`, () => queryContent().where({
 	_path: '/experiences',
 	_locale: props.lang
-}).findOne(), {watch: [() => props.lang]})
+}).findOne())
 
 const {data: projects}: {
 	data: Project[]
-} = await useAsyncData(`projects-${props.lang}`, () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).sort({order: 1}).find(), {watch: [() => props.lang]})
+} = await useAsyncData(`projects-${props.lang}`, () => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).sort({order: 1}).find())
 
 const {data: socials}: {
 	data: Socials

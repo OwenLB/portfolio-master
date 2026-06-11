@@ -10,7 +10,7 @@ const localePath = useLocalePath()
 const {data: legalLink} = await useAsyncData(`legal-link-${lang.value}`, () => queryContent('/').where({
 	_path: '/legal',
 	_locale: lang.value
-}).only(['_path', 'title']).findOne(), {watch: [() => lang.value]})
+}).only(['_path', 'title']).findOne())
 </script>
 
 <template>

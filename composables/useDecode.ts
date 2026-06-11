@@ -12,6 +12,12 @@ export function decodeText(el: HTMLElement, opts: { duration?: number } = {}) {
 	let raf = 0
 	let last = 0
 
+	// Random glyphs run wider than the real text: without this the element can
+	// reflow onto extra lines mid-animation (the masks clip overflow instead).
+	const prevWhiteSpace = el.style.whiteSpace
+	el.style.whiteSpace = 'nowrap'
+	const restore = () => el.style.whiteSpace = prevWhiteSpace
+
 	const step = (now: number) => {
 		const p = Math.min((now - start) / duration, 1)
 		// Re-scramble at ~25fps — the choppiness is the terminal feel.
@@ -25,12 +31,17 @@ export function decodeText(el: HTMLElement, opts: { duration?: number } = {}) {
 			}
 			el.textContent = out
 		}
-		if (p < 1) raf = requestAnimationFrame(step)
+		if (p < 1) {
+			raf = requestAnimationFrame(step)
+		} else {
+			restore()
+		}
 	}
 
 	raf = requestAnimationFrame(step)
 	return () => {
 		cancelAnimationFrame(raf)
 		el.textContent = original
+		restore()
 	}
 }
