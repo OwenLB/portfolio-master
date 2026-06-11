@@ -263,6 +263,16 @@ h2 {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+	// View Transitions (navigation + shared elements carte → page projet) —
+	// aligned on the site-wide motion language. Inert on browsers without
+	// support, where the Vue curtain transition below takes over.
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation-duration: 0.5s;
+		animation-timing-function: var(--ease-expo);
+	}
+
 	// v-reveal (plugins/reveal.ts) — the .reveal class is only ever added
 	// client-side and never under prefers-reduced-motion.
 	.reveal {

@@ -1,6 +1,12 @@
 export default defineNuxtConfig({
 	compatibilityDate: '2026-05-28',
 	ssr: true,
+	experimental: {
+		// Shared-element transition card → project page. Skipped automatically
+		// under prefers-reduced-motion; unsupported browsers keep the Vue
+		// curtain transition (see plugins/view-transition.client.ts).
+		viewTransition: true,
+	},
 	app: {
 		pageTransition: {name: 'page', mode: 'out-in', appear: true},
 		head: {

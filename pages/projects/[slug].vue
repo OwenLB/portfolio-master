@@ -17,6 +17,12 @@ const props = defineProps<{
 const contentPath = computed(() => `/projects/${route.params.slug}`)
 const imageUrl = computed(() => `https://owenlebec.fr/images/projects/${route.params.slug}.webp`)
 
+// Shared-element View Transition: the hero pairs with the home card carrying
+// the same names (see LinkProject's `shared` prop) — morphs on the way in
+// and back out.
+const vtCover = computed(() => `project-cover-${route.params.slug}`)
+const vtTitle = computed(() => `project-title-${route.params.slug}`)
+
 const {data: content}: { data: Project } = await useAsyncData(
 	() => `project-${contentPath.value}-${props.lang}`,
 	() => queryContent().where({_path: contentPath.value, _locale: props.lang}).findOne()
@@ -151,6 +157,7 @@ onMounted(() => {
 			background: var(--background);
 			font-family: var(--font-display);
 			justify-content: center;
+			view-transition-name: v-bind(vtCover);
 
 			.overlay {
 				position: absolute;
@@ -173,6 +180,7 @@ onMounted(() => {
 				font-size: var(--text-hero);
 				font-weight: bold;
 				color: $light;
+				view-transition-name: v-bind(vtTitle);
 			}
 
 			.project-type {

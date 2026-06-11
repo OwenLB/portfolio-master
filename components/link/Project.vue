@@ -3,10 +3,18 @@ const props = defineProps<{
 	label: string,
 	type?: string,
 	path: string,
+	// Marks this card as the shared element morphing into the project hero
+	// (View Transitions). Only the home list opts in: naming the "related
+	// projects" cards too would make every card fly across the page on each
+	// navigation. Names must be unique per page, hence the slug suffix.
+	shared?: boolean,
 }>()
 
 const localePath = useLocalePath()
 const cover = computed(() => `url("/images${props.path}.webp") no-repeat center / cover`)
+const slug = computed(() => props.path.split('/').pop())
+const vtCover = computed(() => props.shared ? `project-cover-${slug.value}` : 'none')
+const vtTitle = computed(() => props.shared ? `project-title-${slug.value}` : 'none')
 </script>
 
 <template>
@@ -32,6 +40,7 @@ const cover = computed(() => `url("/images${props.path}.webp") no-repeat center 
 	align-items: center;
 	padding: space(8) var(--main-space) var(--main-space);
 	background: v-bind(cover);
+	view-transition-name: v-bind(vtCover);
 
 	&__overlay {
 		position: absolute;
@@ -44,6 +53,7 @@ const cover = computed(() => `url("/images${props.path}.webp") no-repeat center 
 		// by -100%, so the window must match the span's line height exactly.
 		max-height: calc(var(--text-card) * 1.35);
 		overflow: hidden;
+		view-transition-name: v-bind(vtTitle);
 		z-index: 1;
 		display: flex;
 		flex-direction: column;

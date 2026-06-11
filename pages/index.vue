@@ -106,7 +106,8 @@ useSeoMeta({
 									 v-reveal="index * 120"
 									 :label="(project.title as string)"
 									 :path="(project._path as string)"
-									 :type="project.type"/>
+									 :type="project.type"
+									 shared/>
 					</div>
 				</div>
 				<div class="cell cell--mobile"></div>
