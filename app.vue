@@ -82,6 +82,7 @@ useHead({
 		{{ lang === Lang.Fr ? 'Aller au contenu principal' : 'Skip to main content' }}
 	</a>
 	<NuxtPage :key="lang" :lang="lang"/>
+	<AppCursor/>
 </template>
 
 <style lang="scss">
@@ -123,12 +124,31 @@ useHead({
 	border-radius: 2px;
 }
 
+// Theme switch via View Transition (AppHeader.switchTheme): colors flip
+// instantly inside the snapshots — the expanding clip-path circle on the new
+// snapshot is the only animation.
+html.theme-vt {
+	--theme-t: 0s;
+
+	&::view-transition-old(root),
+	&::view-transition-new(root) {
+		animation: none;
+		mix-blend-mode: normal;
+	}
+}
+
 html {
 	font-size: 100%;
 	font-family: var(--font-body);
 	color: var(--text);
 	background: var(--background);
 	transition: background-color var(--theme-t), color var(--theme-t);
+
+	// The replacement cursor (AppCursor) is running — hide the native one.
+	&.cursor-custom,
+	&.cursor-custom * {
+		cursor: none !important;
+	}
 }
 
 body {

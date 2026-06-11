@@ -19,12 +19,51 @@ const toggle = (event: Event, type: Toggle) => {
 	;(currentTarget as HTMLInputElement).blur()
 
 	if (type === Toggle.Theme) {
-		theme.value = theme.value === Theme.Dark ? Theme.Light : Theme.Dark
+		switchTheme(event as MouseEvent)
 	} else if (type === Toggle.Lang) {
 		// Switching language is now a real navigation to the localized URL
 		// (/ ⇄ /en); the page transition plays the curtain animation for us.
 		navigateTo(switchLocalePath(lang.value === Lang.Fr ? Lang.En : Lang.Fr))
 	}
+}
+
+// Theme switch as a circular reveal expanding from the toggle button
+// (View Transition + clip-path). Falls back to the plain crossfade
+// (--theme-t transitions) without API support or under reduced motion.
+const switchTheme = (event: MouseEvent) => {
+	const next = theme.value === Theme.Dark ? Theme.Light : Theme.Dark
+	const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+	if (!document.startViewTransition || reduced) {
+		theme.value = next
+		return
+	}
+
+	// Keyboard activation has no pointer coords (detail === 0) — expand from
+	// the button itself.
+	let {clientX: x, clientY: y} = event
+	if (event.detail === 0) {
+		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+		x = rect.left + rect.width / 2
+		y = rect.top + rect.height / 2
+	}
+
+	const root = document.documentElement
+	// .theme-vt zeroes --theme-t and the default crossfade so the circle is
+	// the only animation (see app.vue).
+	root.classList.add('theme-vt')
+	const transition = document.startViewTransition(async () => {
+		theme.value = next
+		await nextTick()
+	})
+	transition.ready.then(() => {
+		const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+		root.animate(
+			{clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]},
+			{duration: 550, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)'},
+		)
+	}).catch(() => {})
+	transition.finished.finally(() => root.classList.remove('theme-vt'))
 }
 </script>
 
