@@ -13,6 +13,7 @@ const {visible, transform} = useCursor()
 	position: absolute;
 	top: 0;
 	left: 0;
+	pointer-events: none;
 	width: space(80);
 	height: space(80);
 	border-radius: 50%;

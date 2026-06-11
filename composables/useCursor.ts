@@ -1,20 +1,32 @@
 export default function () {
-	const x = ref(0)
-	const y = ref(0)
 	const visible = ref(false)
-	const transform = computed(() => `translate(${x.value - 160}px, ${y.value - 160}px)`)
+	const transform = ref('')
+	let raf = 0
+	let pending: MouseEvent | null = null
+
+	// Batch reactivity to one update per frame — mousemove can fire much
+	// faster than the display refreshes.
+	function apply() {
+		raf = 0
+		if (!pending) return
+		visible.value = true
+		transform.value = `translate(${pending.pageX - 160}px, ${pending.pageY - 160}px)`
+		pending = null
+	}
 
 	function update(event: MouseEvent) {
-		visible.value = true
-		x.value = event.pageX
-		y.value = event.pageY
+		pending = event
+		if (!raf) raf = requestAnimationFrame(apply)
 	}
 
 	onMounted(() => {
-		window.addEventListener('mousemove', update)
+		// Decorative glow tied to the pointer — pointless on touch devices.
+		if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+		window.addEventListener('mousemove', update, {passive: true})
 	})
 	onUnmounted(() => {
 		window.removeEventListener('mousemove', update)
+		cancelAnimationFrame(raf)
 	})
 
 	return {visible, transform}

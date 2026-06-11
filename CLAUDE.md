@@ -53,12 +53,23 @@ File-based (`pages/`). `@nuxtjs/i18n` auto-generates a localized route per page 
 
 ### Styling
 
-Global SCSS in `assets/scss/style.scss`. Key conventions:
-- `space($n)` utility → `$n * 4px`
-- `transition()` mixin for consistent animation
-- CSS custom properties for theming (`--primary`, `--background`, `--accent`, `--text`)
-- Responsive breakpoint: `$md: 768px`
-- Fonts: PP Formula Condensed, Strawford (in `assets/fonts/`)
+Two SCSS entry points with a strict split:
+- `assets/scss/style.scss` — SCSS-only tokens (colors, `$md: 768px`, `transition()` mixin, `space($n)` → `$n * 4px`). Injected into **every** component style via Vite `additionalData`, so it must never emit CSS (rules here get duplicated once per component stylesheet).
+- `assets/scss/base.scss` — everything that emits CSS, loaded once via `nuxt.config` `css`: `@font-face` rules, `:root` custom properties and the dark-theme block.
+
+Design tokens (CSS custom properties in `base.scss`):
+- Theming: `--primary`, `--background`, `--accent`, `--text`, `--text-accent`
+- Motion: `--ease-expo` (signature easing), `--ease-out`, `--dur-fast/base/slow`, `--theme-t`
+- Type: `--font-display` / `--font-body` / `--font-mono`, fluid scale `--text-hero/title/card` (clamp-based — avoid fixed px font sizes with media queries)
+
+Fonts (`assets/fonts/`, all self-hosted subsetted woff2): PP Formula Condensed (display, titles), Strawford (body), JetBrains Mono (metadata accent: tags, dates, stack, code). The three above-the-fold files are preloaded in `app.vue`; each family has a metric-adjusted local fallback `@font-face` (`size-adjust`/`ascent-override`…) in `base.scss` to keep CLS ≈ 0 — recompute those values if a font file changes.
+
+### Motion system
+
+All animation respects `prefers-reduced-motion` (CSS via media query; JS checks `matchMedia`). Conventions:
+- `v-reveal` directive (`plugins/reveal.ts`) for scroll-triggered reveals — `v-reveal` or `v-reveal="120"` (stagger delay ms). Client-only classes, so prerendered HTML stays fully visible.
+- Page navigation uses the native View Transitions API when supported (`experimental.viewTransition`); the clicked home project card morphs into the project hero via per-slug `view-transition-name`s (`LinkProject` `shared` prop ↔ `pages/projects/[slug].vue`). Browsers without support fall back to the Vue "curtain" pageTransition (`.cell:before` in `app.vue`); `plugins/view-transition.client.ts` disables the curtain when the API is available.
+- Hero entrance is pure CSS (line masks + staggered delays in `pages/index.vue`), synced with the page curtain and the Matrix canvas wave.
 
 ### Images
 

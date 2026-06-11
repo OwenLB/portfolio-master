@@ -74,10 +74,15 @@ footer {
 
 			a {
 				font-size: 0.875rem;
-				@include transition(color);
+				text-decoration: underline;
+				text-underline-offset: 4px;
+				text-decoration-thickness: 1px;
+				text-decoration-color: transparent;
+				@include transition(color, text-decoration-color);
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
+					text-decoration-color: var(--primary);
 				}
 			}
 		}
