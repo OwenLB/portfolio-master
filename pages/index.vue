@@ -179,10 +179,14 @@ useSeoMeta({
 					}
 
 					// Each headline line sits in an overflow mask so it can be
-					// revealed by sliding up from below its own line box.
+					// revealed by sliding up from below its own line box. The top
+					// padding (cancelled by the margin) lets cap accents (É) paint
+					// inside the clip window instead of being cropped.
 					.line {
 						display: block;
 						overflow: hidden;
+						padding-top: 0.2em;
+						margin-top: -0.2em;
 					}
 
 					.line__inner {
@@ -195,10 +199,10 @@ useSeoMeta({
 					}
 				}
 
+				// In normal flow (below the headline) — absolute positioning made
+				// it overlap the headline on short cells.
 				.scroll-hint {
-					position: absolute;
-					bottom: var(--main-space);
-					left: var(--main-space);
+					margin-top: space(2);
 					display: flex;
 					align-items: center;
 					gap: space(3);

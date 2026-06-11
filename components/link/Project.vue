@@ -19,12 +19,20 @@ const vtCover = computed(() => props.shared ? `project-cover-${slug.value}` : 'n
 const vtTitle = computed(() => props.shared ? `project-title-${slug.value}` : 'none')
 const number = computed(() => props.index !== undefined ? String(props.index + 1).padStart(2, '0') : '')
 
-// Desktop hover: the project image floats next to the cursor (the row itself
-// is text-only there). The wrapper is a fixed 0×0 point moved per mousemove;
-// the CSS transition on its transform makes it chase the cursor with a lag.
+// Desktop hover: the project image floats under the cursor (the row itself is
+// text-only there). Teleported to <body>: inside the row it would inherit the
+// cells' stacking context and any ancestor transform would hijack its fixed
+// positioning. The wrapper is a 0×0 point moved per mousemove; the CSS
+// transition on its transform makes it chase the cursor with a small lag.
+// Cover + view-transition-name are inline styles (v-bind CSS vars don't reach
+// teleported nodes).
 const preview = ref<HTMLElement | null>(null)
 const hoverLabel = ref<HTMLElement | null>(null)
 const previewActive = ref(false)
+const previewStyle = computed(() => ({
+	background: cover.value,
+	viewTransitionName: previewActive.value ? vtCover.value : 'none',
+}))
 let fine = false
 let placed = false
 let cancelDecode: (() => void) | null = null
@@ -33,6 +41,8 @@ onMounted(() => {
 	fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 		&& !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 })
+
+onUnmounted(() => cancelDecode?.())
 
 function place(event: MouseEvent) {
 	preview.value?.style.setProperty('transform', `translate3d(${event.clientX}px, ${event.clientY}px, 0)`)
@@ -81,9 +91,14 @@ function onLeave() {
 		<span aria-hidden="true" class="project-link__arrow">
 			<AppIcon icon="arrow"/>
 		</span>
-		<div ref="preview" aria-hidden="true" class="project-link__preview">
-			<div :class="{'is-active': previewActive}" class="project-link__preview_inner"></div>
-		</div>
+		<ClientOnly>
+			<Teleport to="body">
+				<div ref="preview" aria-hidden="true" class="project-link__preview">
+					<div :class="{'is-active': previewActive}" :style="previewStyle"
+						 class="project-link__preview_inner"></div>
+				</div>
+			</Teleport>
+		</ClientOnly>
 	</NuxtLink>
 </template>
 
@@ -110,10 +125,17 @@ function onLeave() {
 		display: none;
 	}
 
+	// A one-line clip window holding the two stacked labels of the hover
+	// slide. Cap accents (É) overflow their line box: the top padding
+	// (cancelled by the margin) keeps the first label's accents visible, and
+	// the hover label sits 0.3em lower so its accents can't peek into the
+	// window — the slide compensates (see :hover below).
 	&__title {
-		// One line-box high — the hover effect slides the two stacked labels
-		// by -100%, so the window must match the span's line height exactly.
-		max-height: calc(var(--text-card) * 1.35);
+		font-size: var(--text-card);
+		line-height: 1.35;
+		padding-top: 0.2em;
+		margin-top: -0.2em;
+		max-height: calc(1.35em + 0.2em); // border-box: window = padding + one line
 		overflow: hidden;
 		z-index: 1;
 		display: flex;
@@ -122,10 +144,8 @@ function onLeave() {
 
 		span {
 			font-family: var(--font-display);
-			font-size: var(--text-card);
 			color: $light;
 			text-transform: uppercase;
-			line-height: 1.35;
 			transition: transform 0.4s var(--ease-expo), color var(--dur-fast) ease-in-out;
 		}
 
@@ -135,6 +155,7 @@ function onLeave() {
 
 		&_hover {
 			font-weight: 300;
+			margin-top: 0.3em;
 		}
 	}
 
@@ -156,14 +177,10 @@ function onLeave() {
 		display: none;
 	}
 
-	&__preview {
-		display: none;
-	}
-
 	&:where(:hover,:focus, :focus-visible) {
 		.project-link__title {
 			&_default, &_hover {
-				transform: translateY(-100%);
+				transform: translateY(calc(-100% - 0.3em));
 			}
 		}
 	}
@@ -234,36 +251,6 @@ function onLeave() {
 			transition: opacity var(--dur-fast) ease-in-out, transform 0.3s var(--ease-out);
 		}
 
-		// Floating image preview — a fixed 0×0 anchor moved to the cursor on
-		// every mousemove; the transform transition makes it trail behind.
-		&__preview {
-			display: block;
-			position: fixed;
-			top: 0;
-			left: 0;
-			z-index: 10;
-			pointer-events: none;
-			transition: transform 0.4s var(--ease-out);
-
-			&_inner {
-				width: min(340px, 32vw);
-				aspect-ratio: 16 / 10;
-				border-radius: 6px;
-				background: v-bind(cover);
-				box-shadow: 0 24px 64px -24px rgba(6, 20, 35, 0.6);
-				opacity: 0;
-				transform: translate(-50%, -115%) scale(0.85);
-				transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out);
-				view-transition-name: none;
-
-				&.is-active {
-					opacity: 1;
-					transform: translate(-50%, -115%) scale(1);
-					view-transition-name: v-bind(vtCover);
-				}
-			}
-		}
-
 		&:where(:hover, :focus, :focus-visible) {
 			.project-link__index {
 				color: var(--primary);
@@ -274,6 +261,38 @@ function onLeave() {
 				transform: translateX(0);
 			}
 		}
+	}
+}
+
+// Floating image preview — teleported to <body>, so styled at top level (it is
+// no longer a DOM descendant of .project-link). A fixed 0×0 anchor moved to
+// the cursor on every mousemove; the transform transition makes it trail.
+.project-link__preview {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	pointer-events: none;
+	transition: transform 0.25s var(--ease-out);
+
+	@media screen and (min-width: $md) {
+		display: block;
+	}
+}
+
+.project-link__preview_inner {
+	width: min(340px, 32vw);
+	aspect-ratio: 16 / 10;
+	border-radius: 6px;
+	box-shadow: 0 24px 64px -24px rgba(6, 20, 35, 0.6);
+	opacity: 0;
+	transform: translate(-50%, -50%) scale(0.85);
+	transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out);
+
+	&.is-active {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1);
 	}
 }
 </style>

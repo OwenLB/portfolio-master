@@ -304,7 +304,10 @@ h2 {
 
 		&--visible {
 			opacity: 1;
-			transform: translate3d(0, 0, 0);
+			// `none`, not translate3d(0,0,0): a residual transform would turn the
+			// element into the containing block of fixed descendants (the floating
+			// project preview) and clip them into their cell.
+			transform: none;
 		}
 	}
 
