@@ -322,9 +322,12 @@ useSeoMeta({
 		flex-direction: column;
 		gap: var(--main-space);
 
-		// Desktop rows draw their own 1px rules — no gap between them.
+		// Desktop rows draw their own 1px rules — no gap between them; the list
+		// stretches to the cell height (set by the taller right column) and the
+		// rows share it equally (vertical space-between).
 		@media screen and (min-width: $md) {
 			gap: 0;
+			flex: 1;
 		}
 	}
 

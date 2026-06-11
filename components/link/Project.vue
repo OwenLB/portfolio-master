@@ -203,6 +203,7 @@ function onLeave() {
 @media screen and (min-width: $md) {
 	.project-link {
 		height: auto;
+		flex: 1;
 		padding: space(6) 0;
 		background: none;
 		border-top: 1px solid var(--accent);
