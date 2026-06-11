@@ -177,7 +177,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         height: 36px;
         border: 1px solid var(--accent);
         border-radius: 32px;
-        font-size: 0.8rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
         @include transition(border, padding, width);
 
         img {
@@ -280,7 +281,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
   }
 
   &__dates {
-    font-size: 0.875rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
     color: var(--text-accent);
 
     hr {
@@ -335,8 +337,9 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     padding-top: space(3);
 
     .details-label {
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 400;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--primary);

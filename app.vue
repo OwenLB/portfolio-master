@@ -156,8 +156,13 @@ a {
 	text-decoration: none;
 }
 
+h1, h2, h3 {
+	text-wrap: balance;
+}
+
 p {
 	line-height: 1.75rem;
+	text-wrap: pretty;
 }
 
 ul {
@@ -184,7 +189,7 @@ h2 {
 	font-family: var(--font-display);
 	font-weight: bold;
 	font-size: var(--text-title);
-	letter-spacing: 1px;
+	letter-spacing: 0.045em;
 	color: var(--primary);
 	line-height: 1;
 

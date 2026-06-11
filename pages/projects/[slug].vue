@@ -183,8 +183,8 @@ onMounted(() => {
 				background: color.adjust($dark, $alpha: -0.5);
 				border-radius: space(10);
 				backdrop-filter: blur(space(2));
-				font-size: 0.875rem;
-				font-family: var(--font-body);
+				font-size: 0.8rem;
+				font-family: var(--font-mono);
 			}
 		}
 
@@ -218,6 +218,11 @@ onMounted(() => {
 
 		.stack {
 			justify-content: space-between;
+
+			ul li {
+				font-family: var(--font-mono);
+				font-size: 0.9375rem;
+			}
 		}
 	}
 
@@ -233,7 +238,7 @@ onMounted(() => {
 			}
 
 			code {
-				font-family: 'Courier New', monospace;
+				font-family: var(--font-mono);
 				font-size: 0.85em;
 				background: var(--accent);
 				color: var(--text);
@@ -356,7 +361,7 @@ html[data-theme="dark"] #project__description .content .svg-wrapper svg {
 		&__hero {
 			.cell--triple-column {
 				.project-type {
-					font-size: 1.125rem;
+					font-size: 0.9375rem;
 				}
 			}
 		}

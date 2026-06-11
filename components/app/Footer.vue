@@ -84,6 +84,9 @@ footer {
 
 		&.date {
 			justify-content: flex-end;
+			font-family: var(--font-mono);
+			font-size: 1rem;
+			font-weight: 400;
 		}
 	}
 }

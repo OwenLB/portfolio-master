@@ -194,11 +194,11 @@ onMounted(() => {
 				}
 
 				.tagline {
-					font-family: var(--font-body);
-					font-size: 0.9rem;
-					line-height: 1.4;
+					font-family: var(--font-mono);
+					font-size: 0.85rem;
+					line-height: 1.55;
 					color: var(--text-accent);
-					max-width: 38ch;
+					max-width: 42ch;
 				}
 			}
 

@@ -82,7 +82,8 @@ if (props.index) {
 		background: color.adjust($dark, $alpha: -0.5);
 		border-radius: space(10);
 		backdrop-filter: blur(space(2));
-		font-size: 0.875rem;
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
 	}
 
 	&:where(:hover,:focus, :focus-visible) {

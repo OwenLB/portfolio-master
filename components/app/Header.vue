@@ -109,7 +109,8 @@ header {
 				padding: space(2) 0;
 
 				&_side {
-					font-size: 1rem;
+					font-family: var(--font-mono);
+					font-size: 0.875rem;
 					opacity: 0.35;
 					transition: color 0.3s, opacity 0.3s;
 
@@ -230,7 +231,7 @@ header {
 
 			&.control {
 				.control__lang_side {
-					font-size: 1.125rem;
+					font-size: 1rem;
 				}
 			}
 		}
