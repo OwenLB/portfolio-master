@@ -74,7 +74,9 @@ let expRaf = 0
 
 const updateActiveExp = () => {
 	expRaf = 0
-	const line = window.innerHeight * 0.4
+	const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+	const tail = Math.min(1, Math.max(0, (window.scrollY - (maxScroll - window.innerHeight * 0.8)) / (window.innerHeight * 0.8)))
+	const line = window.innerHeight * (0.4 + tail * 0.52)
 	let best = 0
 	let bestDist = Infinity
 	unitEls.forEach((el, index) => {
@@ -85,11 +87,6 @@ const updateActiveExp = () => {
 			best = index
 		}
 	})
-	// Fully scrolled: the last (often short) unit can never get near the
-	// reference line — hand it the spotlight anyway.
-	if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
-		best = unitEls.length - 1
-	}
 	activeUnit.value = best
 	const unitRect = unitEls[best]?.getBoundingClientRect()
 	const layoutRect = layoutEl?.getBoundingClientRect()
@@ -209,9 +206,8 @@ useSeoMeta({
 						</div>
 					</div>
 					<div v-reveal="120" class="me">
-						<ClientOnly><AppBadge/></ClientOnly>
 						<div class="arc">
-							<img alt="Owen LE BEC" class="arc-image" src="/images/owen.webp" width="420" height="420">
+							<AppPortrait/>
 						</div>
 						<LinkText :label="profileContent.resume" :link="profileContent.resume_link" external/>
 						<LinkText :label="profileContent.photo" link="https://photo.owenlebec.fr" external/>
