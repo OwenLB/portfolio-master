@@ -4,9 +4,6 @@ import {Lang} from "~/types/lang";
 
 const props = defineProps<{
   experience: Experience
-  // Duration relative to the longest experience (0..1) — drawn as a small
-  // mono gauge under the dates. Omitted for entries without parsable dates.
-  ratio?: number
 }>()
 
 const lang = useLang()
@@ -72,9 +69,6 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         <span>{{ experience.to }}</span>
         <span>{{ experience.duration }}</span>
       </div>
-    </div>
-    <div v-if="props.ratio" aria-hidden="true" class="experience__gauge">
-      <span :style="{'--exp-ratio': props.ratio}"></span>
     </div>
     <div v-if="experience.content" class="experience__content">
       <span>{{ experience.content }}</span>
@@ -303,28 +297,6 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       width: space(2);
       background: var(--text);
     }
-  }
-
-  // Duration gauge — relative to the longest experience, fills on reveal
-  // (the v-reveal classes live on this root element).
-  &__gauge {
-    width: space(30);
-    height: 2px;
-    background: var(--accent);
-    overflow: hidden;
-
-    span {
-      display: block;
-      height: 100%;
-      background: var(--primary);
-      transform: scaleX(var(--exp-ratio, 0));
-      transform-origin: left;
-      transition: transform 1s var(--ease-out) 0.3s;
-    }
-  }
-
-  &.reveal:not(.reveal--visible) .experience__gauge span {
-    transform: scaleX(0);
   }
 
   &__dates {

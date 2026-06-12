@@ -33,42 +33,15 @@ const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
-// Timeline meta, parsed from the localized from/to strings ("Septembre 2023",
-// "Now"…): year shown by the giant rolling counter, months → duration gauges.
-const MONTHS: Record<string, number> = {
-	janvier: 0, january: 0, février: 1, february: 1, mars: 2, march: 2,
-	avril: 3, april: 3, mai: 4, may: 4, juin: 5, june: 5, juillet: 6, july: 6,
-	août: 7, august: 7, septembre: 8, september: 8, octobre: 9, october: 9,
-	novembre: 10, november: 10, décembre: 11, december: 11,
-}
-
-function parseMonth(value?: string): Date | null {
-	if (!value) return null
-	if (/aujourd|now|today/i.test(value)) return new Date()
-	const year = value.match(/\d{4}/)?.[0]
-	if (!year) return null
-	const month = Object.entries(MONTHS).find(([name]) => value.toLowerCase().includes(name))?.[1] ?? 0
-	return new Date(Number(year), month, 1)
-}
-
-const experiencesMeta = computed(() => {
-	const items = experiencesData.value?.items ?? []
-	const meta = items.map((item: { from?: string, to?: string }) => {
-		const from = parseMonth(item.from)
-		const to = parseMonth(item.to)
-		return {
-			year: item.from?.match(/\d{4}/)?.[0] ?? '',
-			months: from && to ? Math.max(1, (to.getFullYear() - from.getFullYear()) * 12 + to.getMonth() - from.getMonth()) : 0,
-		}
-	})
-	const max = Math.max(1, ...meta.map((m) => m.months))
-	return meta.map((m) => ({...m, ratio: m.months ? Math.max(0.08, m.months / max) : 0}))
-})
+// Year of each experience (from its localized start date) — drives the
+// giant rolling counter.
+const experienceYears = computed(() =>
+	((experiencesData.value?.items ?? []) as { from?: string }[]).map((item) => item.from?.match(/\d{4}/)?.[0] ?? ''))
 
 // Scrollytelling: the experience crossing the viewport's middle band drives
 // the spotlight (is-current) and the giant year counter.
 const activeExp = ref(0)
-const activeYear = computed(() => experiencesMeta.value[activeExp.value]?.year ?? '')
+const activeYear = computed(() => experienceYears.value[activeExp.value] ?? '')
 const yearDigits = computed(() => activeYear.value.padStart(4, '0').split('').map(Number))
 let expObserver: IntersectionObserver | null = null
 
@@ -194,8 +167,7 @@ useSeoMeta({
 							<LinkExperience v-for="(experience, index) in experiencesData.items" :key="experience.position"
 											v-reveal
 											:class="{'is-current': activeExp === index}"
-											:experience="experience"
-											:ratio="experiencesMeta[index]?.ratio"/>
+											:experience="experience"/>
 						</div>
 						<div v-if="activeYear" aria-hidden="true" class="experiences-year">
 							<div class="experiences-year__inner">
