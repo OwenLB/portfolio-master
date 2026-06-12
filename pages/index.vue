@@ -56,10 +56,10 @@ const experienceUnits = computed(() => {
 // so the last entries still win when the scroll stops at the footer. The
 // year is positioned in content space, glued next to the active unit: it
 // scrolls with it, then unhooks and glides down to the next one.
-// Stickiness (px): the active unit keeps the year until the next candidate
-// gets closer to the reference line by this margin — raise it to require
-// more scroll between two year changes, lower it for snappier switches.
-const YEAR_STICKINESS = 160
+// The section's scroll runway starts when its top reaches this fraction of
+// the viewport — lower it (e.g. 0.8) to start the timeline earlier and give
+// each year a longer scroll segment.
+const YEAR_RUNWAY_START = 0.6
 
 const activeUnit = ref(0)
 const activeExp = computed(() => experienceUnits.value[activeUnit.value]?.parent ?? 0)
@@ -77,30 +77,17 @@ let unitEls: Element[] = []
 let layoutEl: Element | null = null
 let expRaf = 0
 
+// Progress mapping, not geometry: the scroll runway (section top reaching
+// YEAR_RUNWAY_START of the viewport → page bottom) is split into N EQUAL
+// segments, one per unit. Block sizes no longer matter — every year gets
+// the same amount of scroll, and the last ones can't cluster at the end.
 const updateActiveExp = () => {
 	expRaf = 0
-	const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-	const tail = Math.min(1, Math.max(0, (window.scrollY - (maxScroll - window.innerHeight * 0.8)) / (window.innerHeight * 0.8)))
-	const line = window.innerHeight * (0.4 + tail * 0.52)
-	let best = 0
-	let bestDist = Infinity
-	const distTo = (el: Element) => {
-		const rect = el.getBoundingClientRect()
-		return Math.abs(rect.top + rect.height / 2 - line)
-	}
-	unitEls.forEach((el, index) => {
-		const dist = distTo(el)
-		if (dist < bestDist) {
-			bestDist = dist
-			best = index
-		}
-	})
-	// Hysteresis: don't hand over for a marginal win — the candidate must
-	// beat the current unit by YEAR_STICKINESS px.
-	const current = unitEls[activeUnit.value]
-	if (current && best !== activeUnit.value && bestDist > distTo(current) - YEAR_STICKINESS) {
-		best = activeUnit.value
-	}
+	if (!layoutEl || !unitEls.length) return
+	const start = layoutEl.getBoundingClientRect().top + window.scrollY - window.innerHeight * YEAR_RUNWAY_START
+	const end = document.documentElement.scrollHeight - window.innerHeight
+	const progress = Math.min(1, Math.max(0, (window.scrollY - start) / Math.max(1, end - start)))
+	const best = Math.min(unitEls.length - 1, Math.floor(progress * unitEls.length))
 	activeUnit.value = best
 	const unitRect = unitEls[best]?.getBoundingClientRect()
 	const layoutRect = layoutEl?.getBoundingClientRect()
@@ -556,7 +543,7 @@ useSeoMeta({
 				}
 
 				&__reel {
-					transition: transform 2s var(--ease-expo);
+					transition: transform 1.2s var(--ease-expo);
 				}
 			}
 		}
