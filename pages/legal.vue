@@ -7,7 +7,7 @@ const lang = useLang()
 const {data: content}: { data: Legal } = await useAsyncData(`legal-${lang.value}`, () => queryContent().where({
 	_path: '/legal',
 	_locale: lang.value
-}).findOne(), {watch: [() => lang.value]})
+}).findOne())
 
 useSeoMeta({
 	title: computed(() => content.value?.title),
@@ -34,7 +34,12 @@ useSeoMeta({
 
 <style lang="scss">
 #legal {
-	grid-template-rows: space(20) auto space(20);
+	// No trailing spacer row on mobile — footer flush with the page bottom.
+	grid-template-rows: space(20) auto;
+
+	@media screen and (min-width: $md) {
+		grid-template-rows: space(20) auto space(20);
+	}
 
 	.content {
 		display: flex;

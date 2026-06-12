@@ -1,8 +1,18 @@
 <script lang="ts" setup>
 import {Lang} from "~/types/lang";
+// Hashed URLs of the above-the-fold fonts (hero display + body), preloaded so
+// the browser doesn't wait for style + layout to discover them (LCP is the h1).
+import ppfcLightUrl from "~/assets/fonts/PPFormulaCondensed-Light.woff2?url";
+import ppfcBoldUrl from "~/assets/fonts/PPFormulaCondensed-Bold.woff2?url";
+import strawfordRegularUrl from "~/assets/fonts/Strawford-Regular.woff2?url";
 
 const theme = useTheme()
 const lang = useLang()
+
+// html.boot (set pre-paint in nuxt.config's inline script) plays the curtain
+// sweep on first load — Vue's `appear` can't (no transition on hydrated
+// nodes). Dropped once played so later-mounted cells never replay it.
+onMounted(() => setTimeout(() => document.documentElement.classList.remove('boot'), 1000))
 
 // hreflang alternates + canonical + og:locale, derived from i18n.baseUrl.
 const i18nHead = useLocaleHead()
@@ -25,7 +35,14 @@ useHead({
 			rel: 'icon',
 			href: '/favicon.svg',
 			type: 'image/svg+xml',
-		}
+		},
+		...[ppfcLightUrl, ppfcBoldUrl, strawfordRegularUrl].map((href) => ({
+			rel: 'preload' as const,
+			as: 'font' as const,
+			type: 'font/woff2',
+			href,
+			crossorigin: '' as const,
+		})),
 	],
 	meta: [
 		{
@@ -70,6 +87,7 @@ useHead({
 		{{ lang === Lang.Fr ? 'Aller au contenu principal' : 'Skip to main content' }}
 	</a>
 	<NuxtPage :key="lang" :lang="lang"/>
+	<AppCursor/>
 </template>
 
 <style lang="scss">
@@ -87,11 +105,6 @@ useHead({
 	&:focus {
 		left: space(2);
 	}
-}
-
-:root {
-	--main-space: #{space(6)};
-	--theme-t: 0.3s ease-in-out;
 }
 
 ::-moz-selection {
@@ -116,12 +129,31 @@ useHead({
 	border-radius: 2px;
 }
 
+// Theme switch via View Transition (AppHeader.switchTheme): colors flip
+// instantly inside the snapshots — the expanding clip-path circle on the new
+// snapshot is the only animation.
+html.theme-vt {
+	--theme-t: 0s;
+
+	&::view-transition-old(root),
+	&::view-transition-new(root) {
+		animation: none;
+		mix-blend-mode: normal;
+	}
+}
+
 html {
 	font-size: 100%;
-	font-family: 'Strawford', sans-serif;
+	font-family: var(--font-body);
 	color: var(--text);
 	background: var(--background);
 	transition: background-color var(--theme-t), color var(--theme-t);
+
+	// The replacement cursor (AppCursor) is running — hide the native one.
+	&.cursor-custom,
+	&.cursor-custom * {
+		cursor: none !important;
+	}
 }
 
 body {
@@ -132,15 +164,37 @@ body {
 .page {
 	position: relative;
 	display: grid;
-	grid-template-columns: minmax(space(6), calc((100% - 1200px) / 2)) repeat(2, minmax(auto, 400px)) minmax(space(6), calc((100% - 1200px) / 2));
+	grid-template-columns: minmax(space(6), calc((100% - 1200px) / 2)) repeat(2, minmax(0, 400px)) minmax(space(6), calc((100% - 1200px) / 2));
 	gap: 1px;
 	background: var(--accent);
+	// clip, not hidden: hidden turns .page into a scrollport, which silently
+	// kills every position: sticky inside (the experiences' giant year).
+	// Old browsers ignore clip and keep hidden.
 	overflow: hidden;
+	overflow: clip;
 	min-height: 100vh;
 	transition: background-color var(--theme-t);
 
 	main {
 		display: contents;
+	}
+
+	// Desktop only (mobile has no trailing spacer row — footer flush): the
+	// spacer row has no cell, so the accent background and its 1px gap lines
+	// would show as a bare framed box under the footer. This absolute strip
+	// (outside the grid, under the cells' z-index) blankets it.
+	@media screen and (min-width: $md) {
+		&::after {
+			content: '';
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: space(25);
+			z-index: 1;
+			background: var(--background);
+			transition: background-color var(--theme-t);
+		}
 	}
 }
 
@@ -149,8 +203,13 @@ a {
 	text-decoration: none;
 }
 
+h1, h2, h3 {
+	text-wrap: balance;
+}
+
 p {
 	line-height: 1.75rem;
+	text-wrap: pretty;
 }
 
 ul {
@@ -174,10 +233,10 @@ ul {
 }
 
 h2 {
-	font-family: 'PP Formula Condensed', sans-serif;
+	font-family: var(--font-display);
 	font-weight: bold;
-	font-size: 1.125rem;
-	letter-spacing: 1px;
+	font-size: var(--text-title);
+	letter-spacing: 0.045em;
 	color: var(--primary);
 	line-height: 1;
 
@@ -222,17 +281,13 @@ h2 {
 		inset: -1px calc(100% + 1px) -1px -1px;
 		background: $primary;
 		z-index: 2;
-		transition: all 0.6s cubic-bezier(0.83, 0, 0.17, 1);
+		transition: all 0.6s var(--ease-expo);
 	}
 }
 
 @media screen and (min-width: $md) {
-	:root {
-		--main-space: #{space(10)};
-	}
-
 	.page {
-		grid-template-columns: minmax(space(10), calc((100% - 1200px) / 2))  repeat(3, minmax(auto, 400px)) minmax(space(10), calc((100% - 1200px) / 2));
+		grid-template-columns: minmax(space(10), calc((100% - 1200px) / 2))  repeat(3, minmax(0, 400px)) minmax(space(10), calc((100% - 1200px) / 2));
 	}
 
 	.cell {
@@ -243,10 +298,6 @@ h2 {
 		&--mobile {
 			display: none;
 		}
-	}
-
-	h2 {
-		font-size: 1.5rem;
 	}
 }
 
@@ -259,9 +310,52 @@ h2 {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+	// First-load curtain (html.boot is removed right after).
+	html.boot .cell:before {
+		animation: boot-curtain 0.45s cubic-bezier(0.83, 0, 0.17, 1) 0.08s both;
+	}
+
+	@keyframes boot-curtain {
+		from {
+			inset: -1px;
+		}
+
+		to {
+			inset: -1px calc(100% + 1px) -1px -1px;
+		}
+	}
+
+	// View Transitions (navigation + shared elements carte → page projet) —
+	// aligned on the site-wide motion language. Inert on browsers without
+	// support, where the Vue curtain transition below takes over.
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation-duration: 0.5s;
+		animation-timing-function: var(--ease-expo);
+	}
+
+	// v-reveal (plugins/reveal.ts) — the .reveal class is only ever added
+	// client-side and never under prefers-reduced-motion.
+	.reveal {
+		opacity: 0;
+		transform: translate3d(0, space(8), 0);
+		backface-visibility: hidden;
+		transition: opacity 0.7s var(--ease-out) var(--reveal-delay, 0s),
+		transform 0.7s var(--ease-out) var(--reveal-delay, 0s);
+
+		&--visible {
+			opacity: 1;
+			// `none`, not translate3d(0,0,0): a residual transform would turn the
+			// element into the containing block of fixed descendants (the floating
+			// project preview) and clip them into their cell.
+			transform: none;
+		}
+	}
+
 	.page-enter-active,
 	.page-leave-active {
-		transition: 0.45s inset 0.08s cubic-bezier(0.83, 0, 0.17, 1);
+		transition: var(--dur-base) inset 0.08s var(--ease-expo);
 	}
 
 	.page-enter-from,

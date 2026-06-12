@@ -13,11 +13,15 @@ const {visible, transform} = useCursor()
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: space(80);
-	height: space(80);
+	pointer-events: none;
+	width: space(140);
+	height: space(140);
 	border-radius: 50%;
-	filter: blur(space(20));
-	background: var(--primary);
+	// Sharp-ish radial glow sitting *behind* the cells (z-index 2): it only
+	// shows through the 1px grid gaps → the grid lines light up around the
+	// cursor. Gradient instead of filter: blur() — much cheaper to paint.
+	background: radial-gradient(circle closest-side, var(--primary), transparent 72%);
+	opacity: 0.5;
 	will-change: transform;
 }
 

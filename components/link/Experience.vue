@@ -4,11 +4,32 @@ import {Lang} from "~/types/lang";
 
 const props = defineProps<{
   experience: Experience
+  // Index of this experience's sub currently spotlighted by the home
+  // timeline (-1 when the spotlight is elsewhere).
+  currentSub?: number
 }>()
 
 const lang = useLang()
 const expanded = ref(false)
 const expandedSubs = reactive<Record<number, boolean>>({})
+
+// Matrix-decode the company name on hover (same signature as the titles).
+const companyEl = ref<HTMLElement | null>(null)
+let cancelDecode: (() => void) | null = null
+let fine = false
+
+onMounted(() => {
+  fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+})
+
+onUnmounted(() => cancelDecode?.())
+
+function onHover() {
+  if (!fine || !companyEl.value) return
+  cancelDecode?.()
+  cancelDecode = decodeText(companyEl.value, {duration: 350})
+}
 
 const labels = computed(() => lang.value === Lang.Fr ? {
   responsibilities: 'Responsabilités',
@@ -24,12 +45,18 @@ const labels = computed(() => lang.value === Lang.Fr ? {
   collapse: 'Hide details',
 })
 
+// Hardcoded duration from the content wins; otherwise computed from the
+// dates — ongoing positions ("Aujourd'hui") never go stale.
+const duration = (exp: { from?: string, to?: string, duration?: string }) =>
+    exp.duration || formatDuration(exp.from, exp.to, lang.value)
+
 const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 'results'>>) =>
     !!(exp.responsibilities?.length || exp.team || exp.results?.length)
 </script>
 
 <template>
-  <div :class="{ 'experience--clickable': hasDetails(experience) }" class="experience" @click="hasDetails(experience) && (expanded = !expanded)">
+  <div :class="{ 'experience--clickable': hasDetails(experience) }" class="experience"
+       @click="hasDetails(experience) && (expanded = !expanded)" @mouseenter="onHover">
     <div class="experience__header">
       <h3>{{ experience.position }}</h3>
       <div class="experience__stack">
@@ -40,7 +67,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       </div>
     </div>
     <div class="experience__infos">
-      <span>{{ experience.company }}</span>
+      <span ref="companyEl" :aria-label="experience.company">{{ experience.company }}</span>
       <hr>
       <span>{{ experience.type }}</span>
       |
@@ -48,7 +75,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         <span>{{ experience.from }}</span>
         <hr>
         <span>{{ experience.to }}</span>
-        <span>{{ experience.duration }}</span>
+        <span>{{ duration(experience) }}</span>
       </div>
     </div>
     <div v-if="experience.content" class="experience__content">
@@ -86,7 +113,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     </template>
 
     <div class="experience__sub__content" @click.stop>
-      <div v-for="(sub, i) in experience.sub_content" :key="i" :class="{ 'experience--clickable': hasDetails(sub) }" class="sub__experience" @click="hasDetails(sub) && (expandedSubs[i] = !expandedSubs[i])">
+      <div v-for="(sub, i) in experience.sub_content" :key="i" :class="{ 'experience--clickable': hasDetails(sub), 'is-current-unit': props.currentSub === i }" class="sub__experience" @click="hasDetails(sub) && (expandedSubs[i] = !expandedSubs[i])">
         <div class="experience__header">
           <h3>{{ sub.position }}</h3>
           <div class="experience__stack">
@@ -103,7 +130,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
             <span>{{ sub.from }}</span>
             <hr>
             <span>{{ sub.to }}</span>
-            <span>{{ sub.duration }}</span>
+            <span>{{ duration(sub) }}</span>
           </div>
         </div>
         <div class="experience__content">
@@ -177,7 +204,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         height: 36px;
         border: 1px solid var(--accent);
         border-radius: 32px;
-        font-size: 0.8rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
         @include transition(border, padding, width);
 
         img {
@@ -280,7 +308,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
   }
 
   &__dates {
-    font-size: 0.875rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
     color: var(--text-accent);
 
     hr {
@@ -335,8 +364,9 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     padding-top: space(3);
 
     .details-label {
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 400;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--primary);

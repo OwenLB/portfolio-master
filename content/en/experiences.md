@@ -11,7 +11,6 @@ items:
         type: "Mission"
         from: "May 2025"
         to: "Now"
-        duration: ""
         content: "Development of a collaborative business data management tool with customisable workflows, used internally at EDF."
         responsibilities:
           - "Full stack development on the existing platform."
@@ -34,7 +33,6 @@ items:
         type: "Internal Project"
         from: "January 2025"
         to: "May 2025"
-        duration: "(5 months)"
         content: "Design and development of a game loan management app for the company's internal CSE library."
         responsibilities:
           - "Full stack development focused on user management and secure authentication via Keycloak."
@@ -59,7 +57,6 @@ items:
         type: "Mission"
         from: "September 2023"
         to: "December 2024"
-        duration: "(1 year & 4 months)"
         content: "Development of a custom scheduling application for Naval Group's production workshops."
         responsibilities:
           - "Front-end development with Blazor: UI components, business logic and data binding."
@@ -83,7 +80,6 @@ items:
     type: "Apprenticeship"
     from: "September 2021"
     to: "July 2023"
-    duration: "(1 year 11 months)"
     content: "Design and development of multiple POCs focused on AI, client process optimisation and workspace management within the Innovation department."
     responsibilities:
       - "Full stack development of prototypes across various functional domains."
@@ -106,7 +102,6 @@ items:
     type: "Internship"
     from: "June 2021"
     to: "July 2021"
-    duration: "(2 months)"
     content: "Design and development of a mobile app for nighttime safety, built around a community of over 2,000 members."
     responsibilities:
       - "Gathering functional requirements and co-writing specifications with the client association."
@@ -129,7 +124,6 @@ items:
     type: "Internship"
     from: "April 2020"
     to: "July 2020"
-    duration: "(4 months)"
     content: "Contribution to the redesign of a multichannel SaaS publishing platform used by major brands including Nike and McDonald's."
     responsibilities:
       - "Modernisation of the UI for a multi-platform content distribution tool."

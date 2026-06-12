@@ -10,7 +10,7 @@ const localePath = useLocalePath()
 const {data: legalLink} = await useAsyncData(`legal-link-${lang.value}`, () => queryContent('/').where({
 	_path: '/legal',
 	_locale: lang.value
-}).only(['_path', 'title']).findOne(), {watch: [() => lang.value]})
+}).only(['_path', 'title']).findOne())
 </script>
 
 <template>
@@ -74,16 +74,24 @@ footer {
 
 			a {
 				font-size: 0.875rem;
-				@include transition(color);
+				text-decoration: underline;
+				text-underline-offset: 4px;
+				text-decoration-thickness: 1px;
+				text-decoration-color: transparent;
+				@include transition(color, text-decoration-color);
 
 				&:where(:hover, :focus, :focus-visible) {
 					color: var(--primary);
+					text-decoration-color: var(--primary);
 				}
 			}
 		}
 
 		&.date {
 			justify-content: flex-end;
+			font-family: var(--font-mono);
+			font-size: 1rem;
+			font-weight: 400;
 		}
 	}
 }

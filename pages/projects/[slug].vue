@@ -17,6 +17,26 @@ const props = defineProps<{
 const contentPath = computed(() => `/projects/${route.params.slug}`)
 const imageUrl = computed(() => `https://owenlebec.fr/images/projects/${route.params.slug}.webp`)
 
+// Raw URL on purpose (no image CDN): it must match the home card/preview
+// exactly so the shared-element morph starts from a warm cache — a CDN
+// variant would load from scratch mid-transition and blink.
+// Hero cover synced to the active theme, like the hover preview (LinkProject):
+// -dark variant in dark mode. og:image/JSON-LD keep the canonical light file.
+// The themed src only kicks in after mount: the prerendered HTML always holds
+// the light file, and a value that already differs *during* hydration never
+// triggers the reactive patch (Vue keeps the server attribute) — flipping the
+// value post-mount does.
+const theme = useTheme()
+const hydrated = ref(false)
+onMounted(() => hydrated.value = true)
+const coverSrc = computed(() => `/images/projects/${route.params.slug}${hydrated.value && theme.value === 'dark' ? '-dark' : ''}.webp`)
+
+// Shared-element View Transition: the hero pairs with the home card carrying
+// the same names (see LinkProject's `shared` prop) — morphs on the way in
+// and back out.
+const vtCover = computed(() => `project-cover-${route.params.slug}`)
+const vtTitle = computed(() => `project-title-${route.params.slug}`)
+
 const {data: content}: { data: Project } = await useAsyncData(
 	() => `project-${contentPath.value}-${props.lang}`,
 	() => queryContent().where({_path: contentPath.value, _locale: props.lang}).findOne()
@@ -51,48 +71,36 @@ useHead(() => ({
 	}] : [],
 }))
 
-const {data: related, execute}: { data: Project[] } = await useAsyncData(
+// Eager: the query is a handful of titles/paths — lazy-loading it only made
+// the section pop in late and kept the links out of the prerendered HTML.
+const {data: related}: { data: Project[] } = await useAsyncData(
 	() => `related-${contentPath.value}-${props.lang}`,
 	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(contentPath.value, {before: 3, after: 3}),
 	{
-		immediate: false,
 		transform: (projects) => projects.filter((project) => project !== null),
 	}
 )
-
-// Lazy-load the "related projects" query when its section scrolls into view,
-// instead of after an arbitrary 1s delay.
-const relatedRef = ref<HTMLElement | null>(null)
-
-onMounted(() => {
-	if (!relatedRef.value) {
-		execute()
-		return
-	}
-	const observer = new IntersectionObserver((entries, obs) => {
-		if (entries.some((entry) => entry.isIntersecting)) {
-			execute()
-			obs.disconnect()
-		}
-	}, {rootMargin: '200px'})
-	observer.observe(relatedRef.value)
-})
 </script>
 
 <template>
 	<div id="project" class="page">
 		<AppEffect/>
 		<AppHeader/>
+		<div aria-hidden="true" class="read-progress"></div>
 
 		<main id="main-content">
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<nuxt-img :alt="content.title" :src="`/images/projects/${route.params.slug}.webp`" preload sizes="xs:640 md:100vw"/>
+					<img :alt="content.title" :src="coverSrc" fetchpriority="high"/>
+					<p class="hero-meta">
+						<span class="hero-meta__label">{{ props.lang === Lang.Fr ? 'Projet' : 'Project' }}</span>
+						<template v-if="content.type">
+							<span aria-hidden="true" class="hero-meta__line"></span>
+							<span>{{ content.type }}</span>
+						</template>
+					</p>
 					<h1>{{ content.title }}</h1>
-					<template v-if="content['type']">
-						<span class="project-type">{{ content.type }}</span>
-					</template>
 				</div>
 			</AppSection>
 
@@ -100,16 +108,17 @@ onMounted(() => {
 				<div class="cell cell--mobile">
 				</div>
 				<div class="cell cell--double-column details">
-					<h2>DETAILS</h2>
-					<p>{{ content.description }}</p>
-					<LinkText v-if="content.git" :label="content.git[0]" :link="content.git[1]" external/>
-					<span v-else-if="content.git_soon" class="repo-soon">{{ props.lang === Lang.Fr ? 'Répertoire Git — bientôt public' : 'Git repository — coming soon' }}</span>
-					<LinkText v-if="content.web" :label="content.web[0]" :link="content.web[1]" external/>
+					<h2 v-decode v-reveal>DETAILS</h2>
+					<p v-reveal="100">{{ content.description }}</p>
+					<LinkText v-if="content.git" v-reveal="180" :label="content.git[0]" :link="content.git[1]" external/>
+					<span v-else-if="content.git_soon" v-reveal="180" class="repo-soon">{{ props.lang === Lang.Fr ? 'Répertoire Git — bientôt public' : 'Git repository — coming soon' }}</span>
+					<LinkText v-if="content.web" v-reveal="260" :label="content.web[0]" :link="content.web[1]" external/>
 				</div>
 				<div class="cell stack">
-					<h2>STACK</h2>
-					<ul>
-						<li v-for="tech in content.stack">
+					<h2 v-decode v-reveal>STACK</h2>
+					<ul v-reveal="120">
+						<li v-for="(tech, i) in content.stack" :key="tech">
+							<span aria-hidden="true" class="stack-index">{{ String(i + 1).padStart(2, '0') }}</span>
 							{{ tech }}
 						</li>
 					</ul>
@@ -123,10 +132,13 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="project__related">
-				<div ref="relatedRef" class="cell cell--triple-column content">
-					<h2>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
+				<div class="cell cell--triple-column content">
+					<h2 v-decode v-reveal>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
 					<div class="projects">
-						<LinkProject v-for="project in related" :key="project._path" :label="project.title"
+						<LinkProject v-for="(project, index) in related" :key="project._path"
+									 v-reveal="index * 120"
+									 :index="index"
+									 :label="project.title"
 									 :path="project._path" :type="project.type"/>
 					</div>
 				</div>
@@ -141,60 +153,144 @@ onMounted(() => {
 @use "sass:color";
 
 #project {
-	grid-template-rows: space(20) 300px repeat(3, auto) space(20);
+	// No trailing spacer row on mobile — footer flush with the page bottom.
+	grid-template-rows: space(20) 300px repeat(3, auto);
+
+	// Reading progress — scroll-driven CSS (no JS). A 1:1 positional mapping
+	// like the scrollbar, so it is deliberately NOT gated on reduced-motion;
+	// browsers without scroll-timeline support simply never show it.
+	.read-progress {
+		display: none;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		.read-progress {
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 2px;
+			z-index: 100;
+			background: var(--primary);
+			transform-origin: 0 50%;
+			transform: scaleX(0);
+			animation: read-progress linear both;
+			animation-timeline: scroll(root);
+		}
+	}
+
+	@keyframes read-progress {
+		to {
+			transform: scaleX(1);
+		}
+	}
 
 	&__hero {
 		.cell--triple-column {
 			position: relative;
+			overflow: hidden;
 			background: var(--background);
-			font-family: 'PP Formula Condensed', sans-serif;
-			justify-content: center;
+			font-family: var(--font-display);
+			justify-content: flex-end;
+			gap: space(2);
+			view-transition-name: v-bind(vtCover);
 
 			.overlay {
 				position: absolute;
 				inset: 0;
 				z-index: 1;
-				background: linear-gradient(to right, color.adjust($dark, $alpha: -0.2), color.adjust($dark, $alpha: -1));
+				// Left scrim (identity) + bottom scrim under the title block.
+				background: linear-gradient(to right, color.adjust($dark, $alpha: -0.2), color.adjust($dark, $alpha: -1)),
+				linear-gradient(to top, color.adjust($dark, $alpha: -0.35), transparent 55%);
 			}
 
 			img {
 				position: absolute;
 				inset: 0;
 				object-fit: cover;
+				object-position: top center;
 				width: 100%;
 				height: 100%;
+			}
+
+			// Editorial overline: PROJET — type, in the metadata voice.
+			.hero-meta {
+				z-index: 1;
+				display: flex;
+				align-items: center;
+				gap: space(3);
+				font-family: var(--font-mono);
+				font-size: 0.75rem;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
+				color: color.adjust($light, $alpha: -0.18);
+
+				&__line {
+					width: space(8);
+					height: 1px;
+					background: color.adjust($light, $alpha: -0.5);
+				}
 			}
 
 			h1 {
 				z-index: 1;
 				display: block;
-				font-size: 3rem;
+				font-size: var(--text-hero);
 				font-weight: bold;
+				line-height: 1;
+				text-transform: uppercase;
 				color: $light;
+				view-transition-name: v-bind(vtTitle);
 			}
 
-			.project-type {
-				position: absolute;
-				z-index: 1;
-				top: space(6);
-				right: space(6);
-				color: $light;
-				padding: space(2) space(4);
-				background: color.adjust($dark, $alpha: -0.5);
-				border-radius: space(10);
-				backdrop-filter: blur(space(2));
-				font-size: 0.875rem;
-				font-family: 'Strawford', sans-serif;
+			@media (prefers-reduced-motion: no-preference) {
+				img {
+					animation: hero-img-in 1.1s var(--ease-out) both;
+				}
+			}
+
+			// Scroll parallax — progressive enhancement (scroll-driven CSS),
+			// desktop only. The image is oversized and slides down (translate)
+			// as the hero exits; the entrance zoom animates `scale`, so the two
+			// animations never fight over the same property.
+			@supports (animation-timeline: view()) {
+				@media (prefers-reduced-motion: no-preference) and (min-width: $md) {
+					img {
+						height: 126%;
+						animation: hero-img-in 1.1s var(--ease-out) both, hero-parallax linear both;
+						animation-timeline: auto, view();
+						animation-range: normal, exit-crossing 0% exit-crossing 100%;
+					}
+				}
 			}
 		}
+	}
 
+	@keyframes hero-img-in {
+		from {
+			scale: 1.08;
+		}
 
+		to {
+			scale: 1;
+		}
+	}
+
+	@keyframes hero-parallax {
+		to {
+			translate: 0 12%;
+		}
 	}
 
 	&__details {
 		.details {
+			// Editorial lede — the description carries the page, let it breathe.
 			p {
 				flex-grow: 1;
+				font-size: 1.125rem;
+				line-height: 1.65;
+				max-width: 58ch;
 			}
 
 			// Muted, non-clickable counterpart to the .text-link pill, shown
@@ -218,6 +314,24 @@ onMounted(() => {
 
 		.stack {
 			justify-content: space-between;
+
+			// Numbered mono list — echoes the project index (01, 02…), instead
+			// of the generic dash bullet.
+			ul li {
+				font-family: var(--font-mono);
+				font-size: 0.9375rem;
+				align-items: baseline;
+				gap: space(3);
+
+				&:before {
+					content: none;
+				}
+
+				.stack-index {
+					font-size: 0.7rem;
+					color: var(--primary);
+				}
+			}
 		}
 	}
 
@@ -227,13 +341,26 @@ onMounted(() => {
 			flex-direction: column;
 			gap: space(6);
 
+			a {
+				color: var(--primary);
+				text-decoration: underline;
+				text-decoration-color: transparent;
+				text-decoration-thickness: 1px;
+				text-underline-offset: 4px;
+				transition: text-decoration-color var(--dur-fast) ease-in-out;
+
+				&:where(:hover, :focus, :focus-visible) {
+					text-decoration-color: var(--primary);
+				}
+			}
+
 			img {
 				max-width: 100%;
 				object-fit: cover;
 			}
 
 			code {
-				font-family: 'Courier New', monospace;
+				font-family: var(--font-mono);
 				font-size: 0.85em;
 				background: var(--accent);
 				color: var(--text);
@@ -252,13 +379,13 @@ onMounted(() => {
 				}
 			}
 
-			figure {
+			.figure {
 				border-radius: 8px;
 				overflow: hidden;
 				border: 1px solid var(--accent);
 			}
 
-			figure img {
+			.figure img {
 				display: block;
 			}
 
@@ -355,19 +482,16 @@ html[data-theme="dark"] #project__description .content .svg-wrapper svg {
 
 		&__hero {
 			.cell--triple-column {
-				h1 {
-					font-size: 6rem;
-				}
-
 				.project-type {
-					font-size: 1.125rem;
+					font-size: 0.9375rem;
 				}
 			}
 		}
 
 		&__related {
+			// Desktop rows draw their own 1px rules — no gap between them.
 			.projects {
-				flex-direction: row;
+				gap: 0;
 			}
 		}
 	}

@@ -19,12 +19,55 @@ const toggle = (event: Event, type: Toggle) => {
 	;(currentTarget as HTMLInputElement).blur()
 
 	if (type === Toggle.Theme) {
-		theme.value = theme.value === Theme.Dark ? Theme.Light : Theme.Dark
+		switchTheme(event as MouseEvent)
 	} else if (type === Toggle.Lang) {
 		// Switching language is now a real navigation to the localized URL
 		// (/ ⇄ /en); the page transition plays the curtain animation for us.
 		navigateTo(switchLocalePath(lang.value === Lang.Fr ? Lang.En : Lang.Fr))
 	}
+}
+
+// Theme switch as a circular reveal expanding from the toggle button
+// (View Transition + clip-path). Falls back to the plain crossfade
+// (--theme-t transitions) without API support or under reduced motion.
+const switchTheme = (event: MouseEvent) => {
+	const next = theme.value === Theme.Dark ? Theme.Light : Theme.Dark
+	const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+	if (!document.startViewTransition || reduced) {
+		theme.value = next
+		return
+	}
+
+	// Keyboard activation has no pointer coords (detail === 0) — expand from
+	// the button itself.
+	let {clientX: x, clientY: y} = event
+	if (event.detail === 0) {
+		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+		x = rect.left + rect.width / 2
+		y = rect.top + rect.height / 2
+	}
+
+	const root = document.documentElement
+	// .theme-vt zeroes --theme-t and the default crossfade so the circle is
+	// the only animation (see app.vue).
+	root.classList.add('theme-vt')
+	const transition = document.startViewTransition(async () => {
+		theme.value = next
+		await nextTick()
+	})
+	transition.ready.then(() => {
+		const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+		root.animate(
+			{clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]},
+			{duration: 550, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)'},
+		)
+	}).catch(() => {})
+	// The theme itself is applied synchronously in the callback — if the
+	// browser aborts the transition (slow DOM update), only the circle is
+	// lost. Swallow every rejection path so an abort never hits the console.
+	transition.updateCallbackDone.catch(() => {})
+	transition.finished.finally(() => root.classList.remove('theme-vt')).catch(() => {})
 }
 </script>
 
@@ -99,17 +142,22 @@ header {
 
 		&.control {
 			justify-content: space-between;
+			// Narrow cell on mobile: tighter padding + gaps so FR/switch/EN and
+			// the theme toggle never overlap (desktop restores them below).
+			padding-inline: space(3);
+			gap: space(2);
 
 			.control__lang {
 				all: unset;
 				display: flex;
 				align-items: center;
-				gap: space(4);
+				gap: space(2);
 				cursor: pointer;
 				padding: space(2) 0;
 
 				&_side {
-					font-size: 1rem;
+					font-family: var(--font-mono);
+					font-size: 0.875rem;
 					opacity: 0.35;
 					transition: color 0.3s, opacity 0.3s;
 
@@ -229,8 +277,15 @@ header {
 			}
 
 			&.control {
+				padding-inline: var(--main-space);
+				gap: space(4);
+
+				.control__lang {
+					gap: space(4);
+				}
+
 				.control__lang_side {
-					font-size: 1.125rem;
+					font-size: 1rem;
 				}
 			}
 		}

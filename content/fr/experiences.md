@@ -11,7 +11,6 @@ items:
         type: "Mission"
         from: "Mai 2025"
         to: "Aujourd'hui"
-        duration: ""
         content: "Développement d'un outil collaboratif de gestion des données métier avec workflows personnalisables, utilisé en interne chez EDF."
         responsibilities:
           - "Développement full stack sur la plateforme existante."
@@ -34,7 +33,6 @@ items:
         type: "Projet Interne"
         from: "Janvier 2025"
         to: "Mai 2025"
-        duration: "(5 mois)"
         content: "Conception et développement d'une application de gestion des prêts de jeux pour la bibliothèque interne du CSE."
         responsibilities:
           - "Développement full stack axé sur la gestion des utilisateurs et l'authentification sécurisée via Keycloak."
@@ -59,7 +57,6 @@ items:
         type: "Mission"
         from: "Septembre 2023"
         to: "Décembre 2024"
-        duration: "(1 an et 4 mois)"
         content: "Développement d'une application de planification personnalisée pour les ateliers de production de Naval Group."
         responsibilities:
           - "Développement front-end avec Blazor : composants UI, logique métier et liaison de données."
@@ -83,7 +80,6 @@ items:
     type: "Alternance"
     from: "Septembre 2021"
     to: "Juillet 2023"
-    duration: "(1 an 11 mois)"
     content: "Conception et développement de plusieurs POC axés sur l'IA, l'optimisation des processus clients et la gestion de l'espace au sein du service Innovation."
     responsibilities:
       - "Développement full stack de prototypes dans divers domaines fonctionnels."
@@ -106,7 +102,6 @@ items:
     type: "Stage"
     from: "Juin 2021"
     to: "Juillet 2021"
-    duration: "(2 mois)"
     content: "Conception et développement d'une application mobile pour la sécurité des déplacements nocturnes, basée sur une communauté de plus de 2 000 membres."
     responsibilities:
       - "Collecte des besoins fonctionnels et rédaction conjointe des spécifications avec l'association cliente."
@@ -129,7 +124,6 @@ items:
     type: "Stage"
     from: "Avril 2020"
     to: "Juillet 2020"
-    duration: "(4 mois)"
     content: "Contribution à la refonte d'une plateforme SaaS de publication multicanal pour de grandes marques comme Nike et McDonald's."
     responsibilities:
       - "Modernisation de l'interface d'un outil de distribution de contenu multi-plateformes."

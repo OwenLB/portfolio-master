@@ -1,6 +1,12 @@
 export default defineNuxtConfig({
 	compatibilityDate: '2026-05-28',
 	ssr: true,
+	experimental: {
+		// Shared-element transition card → project page. Skipped automatically
+		// under prefers-reduced-motion; unsupported browsers keep the Vue
+		// curtain transition (see plugins/view-transition.client.ts).
+		viewTransition: true,
+	},
 	app: {
 		pageTransition: {name: 'page', mode: 'out-in', appear: true},
 		head: {
@@ -8,7 +14,7 @@ export default defineNuxtConfig({
 				{
 					// Set the theme before first paint to avoid a light flash for
 					// dark-mode users in SPA mode (data-theme is otherwise only applied on hydration).
-					innerHTML: `(function(){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);var t=m?decodeURIComponent(m[1]):(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+					innerHTML: `(function(){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);var t=m?decodeURIComponent(m[1]):(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);document.documentElement.classList.add('boot');}catch(e){}})();`,
 					tagPosition: 'head',
 				},
 			],
@@ -19,6 +25,8 @@ export default defineNuxtConfig({
 		spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 		spotifyRefreshToken: process.env.SPOTIFY_REFRESH_TOKEN
 	},
+	// Global CSS (font-faces, design tokens as custom properties) — loaded once.
+	css: ['~/assets/scss/base.scss'],
 	vite: {
 		css: {
 			preprocessorOptions: {
