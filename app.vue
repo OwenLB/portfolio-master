@@ -9,6 +9,11 @@ import strawfordRegularUrl from "~/assets/fonts/Strawford-Regular.woff2?url";
 const theme = useTheme()
 const lang = useLang()
 
+// html.boot (set pre-paint in nuxt.config's inline script) plays the curtain
+// sweep on first load — Vue's `appear` can't (no transition on hydrated
+// nodes). Dropped once played so later-mounted cells never replay it.
+onMounted(() => setTimeout(() => document.documentElement.classList.remove('boot'), 1000))
+
 // hreflang alternates + canonical + og:locale, derived from i18n.baseUrl.
 const i18nHead = useLocaleHead()
 useHead(() => ({
@@ -287,6 +292,21 @@ h2 {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+	// First-load curtain (html.boot is removed right after).
+	html.boot .cell:before {
+		animation: boot-curtain 0.45s cubic-bezier(0.83, 0, 0.17, 1) 0.08s both;
+	}
+
+	@keyframes boot-curtain {
+		from {
+			inset: -1px;
+		}
+
+		to {
+			inset: -1px calc(100% + 1px) -1px -1px;
+		}
+	}
+
 	// View Transitions (navigation + shared elements carte → page projet) —
 	// aligned on the site-wide motion language. Inert on browsers without
 	// support, where the Vue curtain transition below takes over.
