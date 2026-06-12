@@ -68,7 +68,9 @@ function place(event: MouseEvent) {
 	const anchorX = rect.left + rect.width / 2
 	const anchorY = rect.top
 	const offsetX = clamp((anchorX - event.clientX) * 0.22, 64)
-	const offsetY = clamp((anchorY - event.clientY) * 0.4, 22)
+	// Vertical repulsion is measured from the row's center (the cursor can
+	// only travel within the row, so the lever is shorter — bigger factor).
+	const offsetY = clamp((rect.top + rect.height / 2 - event.clientY) * 0.85, 34)
 	el.style.setProperty('transform', `translate3d(${(anchorX + offsetX).toFixed(1)}px, ${(anchorY + offsetY).toFixed(1)}px, 0)`)
 	// Directional lean while the cursor travels, upright at rest.
 	el.style.setProperty('--preview-tilt', `${clamp(event.movementX * 0.4, 6).toFixed(2)}deg`)

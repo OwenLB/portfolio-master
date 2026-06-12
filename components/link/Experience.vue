@@ -4,6 +4,9 @@ import {Lang} from "~/types/lang";
 
 const props = defineProps<{
   experience: Experience
+  // Index of this experience's sub currently spotlighted by the home
+  // timeline (-1 when the spotlight is elsewhere).
+  currentSub?: number
 }>()
 
 const lang = useLang()
@@ -105,7 +108,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
     </template>
 
     <div class="experience__sub__content" @click.stop>
-      <div v-for="(sub, i) in experience.sub_content" :key="i" :class="{ 'experience--clickable': hasDetails(sub) }" class="sub__experience" @click="hasDetails(sub) && (expandedSubs[i] = !expandedSubs[i])">
+      <div v-for="(sub, i) in experience.sub_content" :key="i" :class="{ 'experience--clickable': hasDetails(sub), 'is-current-unit': props.currentSub === i }" class="sub__experience" @click="hasDetails(sub) && (expandedSubs[i] = !expandedSubs[i])">
         <div class="experience__header">
           <h3>{{ sub.position }}</h3>
           <div class="experience__stack">

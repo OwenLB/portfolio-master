@@ -33,22 +33,43 @@ const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
-// End year of each experience ("Aujourd'hui"/"Now" → current year) — the
-// giant counter reads 2026 → 2021 going down the timeline (back in time).
-const experienceYears = computed(() =>
-	((experiencesData.value?.items ?? []) as { to?: string }[]).map((item) => {
-		const to = item.to ?? ''
-		return /aujourd|now|today/i.test(to) ? String(new Date().getFullYear()) : to.match(/\d{4}/)?.[0] ?? ''
-	}))
+// Timeline units = every dated block (sub-experiences included, in DOM
+// order), each carrying its END year ("Aujourd'hui"/"Now" → current year):
+// the counter reads 2026 → 2020 going down the timeline (back in time).
+const yearOf = (to?: string) =>
+	/aujourd|now|today/i.test(to ?? '') ? String(new Date().getFullYear()) : to?.match(/\d{4}/)?.[0] ?? ''
 
-// Scrollytelling: the experience NEAREST a reference line (40% of the
-// viewport) drives the spotlight and the year counter. Nearest — not "inside
-// a band" — so the last entries still win at the bottom of the page, where
-// the scroll stops before they could ever reach the middle of the screen.
-const activeExp = ref(0)
-const activeYear = computed(() => experienceYears.value[activeExp.value] ?? '')
+const experienceUnits = computed(() => {
+	const units: { year: string, parent: number }[] = []
+	;((experiencesData.value?.items ?? []) as { to?: string, sub_content?: { to?: string }[] }[]).forEach((item, parent) => {
+		if (item.sub_content?.length) {
+			item.sub_content.forEach((sub) => units.push({year: yearOf(sub.to), parent}))
+		} else {
+			units.push({year: yearOf(item.to), parent})
+		}
+	})
+	return units
+})
+
+// Scrollytelling: the unit NEAREST a reference line (40% of the viewport)
+// drives the spotlight and the year counter — nearest, not "inside a band",
+// so the last entries still win when the scroll stops at the footer. The
+// year is positioned in content space, glued next to the active unit: it
+// scrolls with it, then unhooks and glides down to the next one.
+const activeUnit = ref(0)
+const activeExp = computed(() => experienceUnits.value[activeUnit.value]?.parent ?? 0)
+// Index of the active unit within its parent's sub list (class bindings must
+// flow through Vue — a manual classList would be wiped on the next patch).
+const activeSubLocal = computed(() => {
+	const units = experienceUnits.value
+	const first = units.findIndex((unit) => unit.parent === (units[activeUnit.value]?.parent ?? 0))
+	return first === -1 ? -1 : activeUnit.value - first
+})
+const activeYear = computed(() => experienceUnits.value[activeUnit.value]?.year ?? '')
 const yearDigits = computed(() => activeYear.value.padStart(4, '0').split('').map(Number))
-let expEls: Element[] = []
+const yearY = ref(0)
+let unitEls: Element[] = []
+let layoutEl: Element | null = null
 let expRaf = 0
 
 const updateActiveExp = () => {
@@ -56,7 +77,7 @@ const updateActiveExp = () => {
 	const line = window.innerHeight * 0.4
 	let best = 0
 	let bestDist = Infinity
-	expEls.forEach((el, index) => {
+	unitEls.forEach((el, index) => {
 		const rect = el.getBoundingClientRect()
 		const dist = Math.abs(rect.top + rect.height / 2 - line)
 		if (dist < bestDist) {
@@ -64,12 +85,15 @@ const updateActiveExp = () => {
 			best = index
 		}
 	})
-	// Fully scrolled: the last (often short) entry can never get near the
+	// Fully scrolled: the last (often short) unit can never get near the
 	// reference line — hand it the spotlight anyway.
 	if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
-		best = expEls.length - 1
+		best = unitEls.length - 1
 	}
-	activeExp.value = best
+	activeUnit.value = best
+	const unitRect = unitEls[best]?.getBoundingClientRect()
+	const layoutRect = layoutEl?.getBoundingClientRect()
+	if (unitRect && layoutRect) yearY.value = Math.round(unitRect.top - layoutRect.top)
 }
 
 const onExpScroll = () => {
@@ -77,14 +101,22 @@ const onExpScroll = () => {
 }
 
 onMounted(() => {
-	expEls = Array.from(document.querySelectorAll('#home__projects .experiences-content > .experience'))
-	if (!expEls.length) return
+	layoutEl = document.querySelector('#home__projects .experiences-layout')
+	unitEls = []
+	document.querySelectorAll('#home__projects .experiences-content > .experience').forEach((exp) => {
+		const subs = exp.querySelectorAll('.sub__experience')
+		if (subs.length) subs.forEach((sub) => unitEls.push(sub))
+		else unitEls.push(exp)
+	})
+	if (!unitEls.length) return
 	updateActiveExp()
 	window.addEventListener('scroll', onExpScroll, {passive: true})
+	window.addEventListener('resize', onExpScroll, {passive: true})
 })
 
 onUnmounted(() => {
 	window.removeEventListener('scroll', onExpScroll)
+	window.removeEventListener('resize', onExpScroll)
 	cancelAnimationFrame(expRaf)
 })
 
@@ -194,10 +226,11 @@ useSeoMeta({
 							<LinkExperience v-for="(experience, index) in experiencesData.items" :key="experience.position"
 											v-reveal
 											:class="{'is-current': activeExp === index}"
+											:current-sub="activeExp === index ? activeSubLocal : -1"
 											:experience="experience"/>
 						</div>
 						<div v-if="activeYear" aria-hidden="true" class="experiences-year">
-							<div class="experiences-year__inner">
+							<div :style="{transform: `translateY(${yearY}px)`}" class="experiences-year__inner">
 								<span v-for="(digit, i) in yearDigits" :key="i" class="experiences-year__digit">
 									<span :style="{transform: `translateY(${-digit * 1.3}em)`}" class="experiences-year__reel">
 										<span v-for="n in 10" :key="n">{{ n - 1 }}</span>
@@ -458,27 +491,29 @@ useSeoMeta({
 			}
 		}
 
-		// Giant rolling year — editorial watermark pinned while the timeline
-		// scrolls; each digit is an odometer reel driven by the active
-		// experience.
+		// Giant rolling year — glued next to the active unit (content-space
+		// absolute), it scrolls with the experience, then unhooks and glides
+		// down to the next one; each digit is an odometer reel.
 		.experiences-year {
 			display: none;
+			position: relative;
+			font-size: clamp(5rem, 9vw, 8.5rem);
+			width: 2.3em;
 
 			@media screen and (min-width: $md) {
 				display: block;
 			}
 
 			&__inner {
-				position: sticky;
-				top: 32vh;
+				position: absolute;
+				top: 0;
+				right: 0;
 				display: flex;
 				font-family: var(--font-display);
 				font-weight: bold;
-				font-size: clamp(5rem, 9vw, 8.5rem);
 				line-height: 1;
 				color: var(--accent);
 				user-select: none;
-				transition: color var(--theme-t);
 			}
 
 			// Reel step is 1.3em (line-height 1.3): the font's ink box is ~1.24em
@@ -503,8 +538,12 @@ useSeoMeta({
 			}
 
 			@media (prefers-reduced-motion: no-preference) {
+				&__inner {
+					transition: transform 0.7s var(--ease-expo);
+				}
+
 				&__reel {
-					transition: transform 0.8s var(--ease-expo);
+					transition: transform 1.2s var(--ease-expo);
 				}
 			}
 		}
@@ -525,6 +564,17 @@ useSeoMeta({
 				> .experience__header h3 {
 					color: var(--primary);
 				}
+			}
+		}
+
+		// Sub-experiences are timeline units too — light up the active one.
+		.experiences-content .sub__experience {
+			h3 {
+				transition: color var(--dur-fast) ease-in-out;
+			}
+
+			&.is-current-unit > .experience__header h3 {
+				color: var(--primary);
 			}
 		}
 
