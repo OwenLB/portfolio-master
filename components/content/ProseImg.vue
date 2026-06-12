@@ -16,9 +16,13 @@ if (isSvg) {
 }
 </script>
 
+<!-- Phrasing-content only (spans, no <figure>): markdown wraps standalone
+     images in a <p>, and a real <figure> inside <p> is invalid HTML — the
+     browser hoists it out while parsing the prerendered page, shifting the
+     whole DOM and breaking hydration for everything after. -->
 <template>
-	<figure role="group">
-		<div
+	<span class="figure" role="group">
+		<span
 			v-if="isSvg && svgContent"
 			v-html="svgContent"
 			class="svg-wrapper"
@@ -28,18 +32,18 @@ if (isSvg) {
 		<nuxt-img v-else :alt="alt" :src="src" sizes="xs:640 md:100vw"/>
 		<!-- Media already exposes `alt` as its accessible name (img alt / svg-wrapper
 		     aria-label); hide the duplicate caption from AT. -->
-		<figcaption aria-hidden="true">{{ alt }}</figcaption>
-	</figure>
+		<span aria-hidden="true" class="figcaption">{{ alt }}</span>
+	</span>
 </template>
 
 <style lang="scss" scoped>
-figure {
+.figure {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: space(4);
 
-	figcaption {
+	.figcaption {
 		color: var(--text-accent);
 		font-size: 0.875rem;
 	}

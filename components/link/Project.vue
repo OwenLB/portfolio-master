@@ -45,15 +45,17 @@ const previewStyle = computed(() => ({
 let fine = false
 let placed = false
 let cancelDecode: (() => void) | null = null
+let restTimer: ReturnType<typeof setTimeout> | undefined
 
 onMounted(() => {
 	fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 		&& !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 })
 
-onUnmounted(() => cancelDecode?.())
-
-let restTimer: ReturnType<typeof setTimeout> | undefined
+onUnmounted(() => {
+	cancelDecode?.()
+	clearTimeout(restTimer)
+})
 
 const clamp = (v: number, max: number) => Math.max(-max, Math.min(max, v))
 

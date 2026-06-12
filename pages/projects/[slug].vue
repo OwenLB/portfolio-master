@@ -17,6 +17,9 @@ const props = defineProps<{
 const contentPath = computed(() => `/projects/${route.params.slug}`)
 const imageUrl = computed(() => `https://owenlebec.fr/images/projects/${route.params.slug}.webp`)
 
+// Raw URL on purpose (no image CDN): it must match the home card/preview
+// exactly so the shared-element morph starts from a warm cache — a CDN
+// variant would load from scratch mid-transition and blink.
 // Hero cover synced to the active theme, like the hover preview (LinkProject):
 // -dark variant in dark mode. og:image/JSON-LD keep the canonical light file.
 // The themed src only kicks in after mount: the prerendered HTML always holds
@@ -89,10 +92,7 @@ const {data: related}: { data: Project[] } = await useAsyncData(
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<!-- Raw URL on purpose: it must match the home card/preview exactly so the
-					 shared-element morph starts from a warm cache (the CDN variant would
-					 load from scratch mid-transition). -->
-				<img :alt="content.title" :src="coverSrc" fetchpriority="high"/>
+					<img :alt="content.title" :src="coverSrc" fetchpriority="high"/>
 					<p class="hero-meta">
 						<span class="hero-meta__label">{{ props.lang === Lang.Fr ? 'Projet' : 'Project' }}</span>
 						<template v-if="content.type">
@@ -379,13 +379,13 @@ const {data: related}: { data: Project[] } = await useAsyncData(
 				}
 			}
 
-			figure {
+			.figure {
 				border-radius: 8px;
 				overflow: hidden;
 				border: 1px solid var(--accent);
 			}
 
-			figure img {
+			.figure img {
 				display: block;
 			}
 
