@@ -17,6 +17,17 @@ const props = defineProps<{
 const contentPath = computed(() => `/projects/${route.params.slug}`)
 const imageUrl = computed(() => `https://owenlebec.fr/images/projects/${route.params.slug}.webp`)
 
+// Hero cover synced to the active theme, like the hover preview (LinkProject):
+// -dark variant in dark mode. og:image/JSON-LD keep the canonical light file.
+// The themed src only kicks in after mount: the prerendered HTML always holds
+// the light file, and a value that already differs *during* hydration never
+// triggers the reactive patch (Vue keeps the server attribute) — flipping the
+// value post-mount does.
+const theme = useTheme()
+const hydrated = ref(false)
+onMounted(() => hydrated.value = true)
+const coverSrc = computed(() => `/images/projects/${route.params.slug}${hydrated.value && theme.value === 'dark' ? '-dark' : ''}.webp`)
+
 // Shared-element View Transition: the hero pairs with the home card carrying
 // the same names (see LinkProject's `shared` prop) — morphs on the way in
 // and back out.
@@ -95,7 +106,7 @@ onMounted(() => {
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<nuxt-img :alt="content.title" :src="`/images/projects/${route.params.slug}.webp`" preload sizes="xs:640 md:100vw"/>
+					<nuxt-img :alt="content.title" :src="coverSrc" preload sizes="xs:640 md:100vw"/>
 					<p class="hero-meta">
 						<span class="hero-meta__label">{{ props.lang === Lang.Fr ? 'Projet' : 'Project' }}</span>
 						<template v-if="content.type">

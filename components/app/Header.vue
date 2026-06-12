@@ -63,7 +63,11 @@ const switchTheme = (event: MouseEvent) => {
 			{duration: 550, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)'},
 		)
 	}).catch(() => {})
-	transition.finished.finally(() => root.classList.remove('theme-vt'))
+	// The theme itself is applied synchronously in the callback — if the
+	// browser aborts the transition (slow DOM update), only the circle is
+	// lost. Swallow every rejection path so an abort never hits the console.
+	transition.updateCallbackDone.catch(() => {})
+	transition.finished.finally(() => root.classList.remove('theme-vt')).catch(() => {})
 }
 </script>
 
