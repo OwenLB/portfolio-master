@@ -247,7 +247,9 @@ useSeoMeta({
 
 <style lang="scss">
 #home {
-	grid-template-rows: space(20) minmax(300px, auto) repeat(7, auto) space(20);
+	// No trailing spacer row on mobile: the footer must sit flush with the
+	// page bottom (the desktop template below redefines the full set).
+	grid-template-rows: space(20) minmax(300px, auto) repeat(7, auto);
 
 	&__hero_top {
 		.cell {

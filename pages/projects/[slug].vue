@@ -153,7 +153,8 @@ const {data: related}: { data: Project[] } = await useAsyncData(
 @use "sass:color";
 
 #project {
-	grid-template-rows: space(20) 300px repeat(3, auto) space(20);
+	// No trailing spacer row on mobile — footer flush with the page bottom.
+	grid-template-rows: space(20) 300px repeat(3, auto);
 
 	// Reading progress — scroll-driven CSS (no JS). A 1:1 positional mapping
 	// like the scrollbar, so it is deliberately NOT gated on reduced-motion;
