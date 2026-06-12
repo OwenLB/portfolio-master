@@ -33,6 +33,61 @@ const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
+// Timeline meta, parsed from the localized from/to strings ("Septembre 2023",
+// "Now"…): year shown by the giant rolling counter, months → duration gauges.
+const MONTHS: Record<string, number> = {
+	janvier: 0, january: 0, février: 1, february: 1, mars: 2, march: 2,
+	avril: 3, april: 3, mai: 4, may: 4, juin: 5, june: 5, juillet: 6, july: 6,
+	août: 7, august: 7, septembre: 8, september: 8, octobre: 9, october: 9,
+	novembre: 10, november: 10, décembre: 11, december: 11,
+}
+
+function parseMonth(value?: string): Date | null {
+	if (!value) return null
+	if (/aujourd|now|today/i.test(value)) return new Date()
+	const year = value.match(/\d{4}/)?.[0]
+	if (!year) return null
+	const month = Object.entries(MONTHS).find(([name]) => value.toLowerCase().includes(name))?.[1] ?? 0
+	return new Date(Number(year), month, 1)
+}
+
+const experiencesMeta = computed(() => {
+	const items = experiencesData.value?.items ?? []
+	const meta = items.map((item: { from?: string, to?: string }) => {
+		const from = parseMonth(item.from)
+		const to = parseMonth(item.to)
+		return {
+			year: item.from?.match(/\d{4}/)?.[0] ?? '',
+			months: from && to ? Math.max(1, (to.getFullYear() - from.getFullYear()) * 12 + to.getMonth() - from.getMonth()) : 0,
+		}
+	})
+	const max = Math.max(1, ...meta.map((m) => m.months))
+	return meta.map((m) => ({...m, ratio: m.months ? Math.max(0.08, m.months / max) : 0}))
+})
+
+// Scrollytelling: the experience crossing the viewport's middle band drives
+// the spotlight (is-current) and the giant year counter.
+const activeExp = ref(0)
+const activeYear = computed(() => experiencesMeta.value[activeExp.value]?.year ?? '')
+const yearDigits = computed(() => activeYear.value.padStart(4, '0').split('').map(Number))
+let expObserver: IntersectionObserver | null = null
+
+onMounted(() => {
+	const els = Array.from(document.querySelectorAll('#home__projects .experiences-content > .experience'))
+	if (!els.length) return
+	expObserver = new IntersectionObserver((entries) => {
+		for (const entry of entries) {
+			if (entry.isIntersecting) {
+				const index = els.indexOf(entry.target)
+				if (index !== -1) activeExp.value = index
+			}
+		}
+	}, {rootMargin: '-38% 0px -52% 0px'})
+	els.forEach((el) => expObserver!.observe(el))
+})
+
+onUnmounted(() => expObserver?.disconnect())
+
 const seoTitle = computed(() => props.lang === Lang.Fr ? 'Owen LE BEC — Ingénieur logiciel Full Stack' : 'Owen LE BEC — Full Stack Software Engineer')
 
 useSeoMeta({
@@ -134,10 +189,23 @@ useSeoMeta({
 			<AppSection id="home__projects">
 				<div class="cell cell--triple-column">
 					<h2 v-decode v-reveal>{{ content.experience }}</h2>
-					<div class="experiences-content">
-						<LinkExperience v-for="experience in experiencesData.items" :key="experience.position"
-										v-reveal
-										:experience="experience"/>
+					<div class="experiences-layout">
+						<div class="experiences-content">
+							<LinkExperience v-for="(experience, index) in experiencesData.items" :key="experience.position"
+											v-reveal
+											:class="{'is-current': activeExp === index}"
+											:experience="experience"
+											:ratio="experiencesMeta[index]?.ratio"/>
+						</div>
+						<div v-if="activeYear" aria-hidden="true" class="experiences-year">
+							<div class="experiences-year__inner">
+								<span v-for="(digit, i) in yearDigits" :key="i" class="experiences-year__digit">
+									<span :style="{transform: `translateY(${-digit}em)`}" class="experiences-year__reel">
+										<span v-for="n in 10" :key="n">{{ n - 1 }}</span>
+									</span>
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</AppSection>
@@ -380,6 +448,86 @@ useSeoMeta({
 	// node per experience, a pulsing "live" dot on the current position. The
 	// rail draws itself on scroll where scroll-driven animations exist.
 	#home__projects {
+		// Timeline column + sticky giant year (desktop) side by side.
+		.experiences-layout {
+			display: grid;
+			grid-template-columns: 1fr;
+
+			@media screen and (min-width: $md) {
+				grid-template-columns: 1fr auto;
+				gap: var(--main-space);
+			}
+		}
+
+		// Giant rolling year — editorial watermark pinned while the timeline
+		// scrolls; each digit is an odometer reel driven by the active
+		// experience.
+		.experiences-year {
+			display: none;
+
+			@media screen and (min-width: $md) {
+				display: block;
+			}
+
+			&__inner {
+				position: sticky;
+				top: 32vh;
+				display: flex;
+				font-family: var(--font-display);
+				font-weight: bold;
+				font-size: clamp(5rem, 9vw, 8.5rem);
+				line-height: 1;
+				color: var(--accent);
+				user-select: none;
+				transition: color var(--theme-t);
+			}
+
+			&__digit {
+				display: block;
+				overflow: hidden;
+				// Shorter than the 1em reel step: digit ink stops at ~0.74em but
+				// the next digit's ink overshoots ~0.1em above its box (line
+				// box taller than 1em) — 0.88em hides that sliver.
+				height: 0.88em;
+			}
+
+			&__reel {
+				display: flex;
+				flex-direction: column;
+
+				span {
+					display: block;
+					height: 1em;
+					text-align: center;
+				}
+			}
+
+			@media (prefers-reduced-motion: no-preference) {
+				&__reel {
+					transition: transform 0.8s var(--ease-expo);
+				}
+			}
+		}
+
+		// Spotlight: the experience in the viewport's middle band lights up —
+		// node filled, position title accented.
+		.experiences-content > .experience {
+			h3 {
+				transition: color var(--dur-fast) ease-in-out;
+			}
+
+			&.is-current {
+				&::before {
+					background: var(--primary);
+					box-shadow: 0 0 10px 1px color-mix(in srgb, var(--primary) 45%, transparent);
+				}
+
+				> .experience__header h3 {
+					color: var(--primary);
+				}
+			}
+		}
+
 		.experiences-content {
 			position: relative;
 			padding-left: space(8);
@@ -411,7 +559,7 @@ useSeoMeta({
 					transform: translateX(-50%);
 					background: var(--background);
 					border: 1px solid var(--primary);
-					transition: background-color var(--theme-t);
+					transition: background-color var(--dur-fast) ease-in-out, box-shadow var(--dur-fast) ease-in-out;
 				}
 
 				// Current position: filled dot + live pulse

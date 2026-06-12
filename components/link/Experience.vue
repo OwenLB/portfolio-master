@@ -4,11 +4,32 @@ import {Lang} from "~/types/lang";
 
 const props = defineProps<{
   experience: Experience
+  // Duration relative to the longest experience (0..1) — drawn as a small
+  // mono gauge under the dates. Omitted for entries without parsable dates.
+  ratio?: number
 }>()
 
 const lang = useLang()
 const expanded = ref(false)
 const expandedSubs = reactive<Record<number, boolean>>({})
+
+// Matrix-decode the company name on hover (same signature as the titles).
+const companyEl = ref<HTMLElement | null>(null)
+let cancelDecode: (() => void) | null = null
+let fine = false
+
+onMounted(() => {
+  fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+})
+
+onUnmounted(() => cancelDecode?.())
+
+function onHover() {
+  if (!fine || !companyEl.value) return
+  cancelDecode?.()
+  cancelDecode = decodeText(companyEl.value, {duration: 350})
+}
 
 const labels = computed(() => lang.value === Lang.Fr ? {
   responsibilities: 'Responsabilités',
@@ -29,7 +50,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
 </script>
 
 <template>
-  <div :class="{ 'experience--clickable': hasDetails(experience) }" class="experience" @click="hasDetails(experience) && (expanded = !expanded)">
+  <div :class="{ 'experience--clickable': hasDetails(experience) }" class="experience"
+       @click="hasDetails(experience) && (expanded = !expanded)" @mouseenter="onHover">
     <div class="experience__header">
       <h3>{{ experience.position }}</h3>
       <div class="experience__stack">
@@ -40,7 +62,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       </div>
     </div>
     <div class="experience__infos">
-      <span>{{ experience.company }}</span>
+      <span ref="companyEl" :aria-label="experience.company">{{ experience.company }}</span>
       <hr>
       <span>{{ experience.type }}</span>
       |
@@ -50,6 +72,9 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         <span>{{ experience.to }}</span>
         <span>{{ experience.duration }}</span>
       </div>
+    </div>
+    <div v-if="props.ratio" aria-hidden="true" class="experience__gauge">
+      <span :style="{'--exp-ratio': props.ratio}"></span>
     </div>
     <div v-if="experience.content" class="experience__content">
       <span>{{ experience.content }}</span>
@@ -278,6 +303,28 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
       width: space(2);
       background: var(--text);
     }
+  }
+
+  // Duration gauge — relative to the longest experience, fills on reveal
+  // (the v-reveal classes live on this root element).
+  &__gauge {
+    width: space(30);
+    height: 2px;
+    background: var(--accent);
+    overflow: hidden;
+
+    span {
+      display: block;
+      height: 100%;
+      background: var(--primary);
+      transform: scaleX(var(--exp-ratio, 0));
+      transform-origin: left;
+      transition: transform 1s var(--ease-out) 0.3s;
+    }
+  }
+
+  &.reveal:not(.reveal--visible) .experience__gauge span {
+    transform: scaleX(0);
   }
 
   &__dates {

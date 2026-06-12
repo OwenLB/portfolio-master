@@ -162,7 +162,11 @@ body {
 	grid-template-columns: minmax(space(6), calc((100% - 1200px) / 2)) repeat(2, minmax(auto, 400px)) minmax(space(6), calc((100% - 1200px) / 2));
 	gap: 1px;
 	background: var(--accent);
+	// clip, not hidden: hidden turns .page into a scrollport, which silently
+	// kills every position: sticky inside (the experiences' giant year).
+	// Old browsers ignore clip and keep hidden.
 	overflow: hidden;
+	overflow: clip;
 	min-height: 100vh;
 	transition: background-color var(--theme-t);
 
