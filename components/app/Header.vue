@@ -142,12 +142,16 @@ header {
 
 		&.control {
 			justify-content: space-between;
+			// Narrow cell on mobile: tighter padding + gaps so FR/switch/EN and
+			// the theme toggle never overlap (desktop restores them below).
+			padding-inline: space(3);
+			gap: space(2);
 
 			.control__lang {
 				all: unset;
 				display: flex;
 				align-items: center;
-				gap: space(4);
+				gap: space(2);
 				cursor: pointer;
 				padding: space(2) 0;
 
@@ -273,6 +277,13 @@ header {
 			}
 
 			&.control {
+				padding-inline: var(--main-space);
+				gap: space(4);
+
+				.control__lang {
+					gap: space(4);
+				}
+
 				.control__lang_side {
 					font-size: 1rem;
 				}
