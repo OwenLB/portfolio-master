@@ -56,6 +56,11 @@ const experienceUnits = computed(() => {
 // so the last entries still win when the scroll stops at the footer. The
 // year is positioned in content space, glued next to the active unit: it
 // scrolls with it, then unhooks and glides down to the next one.
+// Stickiness (px): the active unit keeps the year until the next candidate
+// gets closer to the reference line by this margin — raise it to require
+// more scroll between two year changes, lower it for snappier switches.
+const YEAR_STICKINESS = 160
+
 const activeUnit = ref(0)
 const activeExp = computed(() => experienceUnits.value[activeUnit.value]?.parent ?? 0)
 // Index of the active unit within its parent's sub list (class bindings must
@@ -79,14 +84,23 @@ const updateActiveExp = () => {
 	const line = window.innerHeight * (0.4 + tail * 0.52)
 	let best = 0
 	let bestDist = Infinity
-	unitEls.forEach((el, index) => {
+	const distTo = (el: Element) => {
 		const rect = el.getBoundingClientRect()
-		const dist = Math.abs(rect.top + rect.height / 2 - line)
+		return Math.abs(rect.top + rect.height / 2 - line)
+	}
+	unitEls.forEach((el, index) => {
+		const dist = distTo(el)
 		if (dist < bestDist) {
 			bestDist = dist
 			best = index
 		}
 	})
+	// Hysteresis: don't hand over for a marginal win — the candidate must
+	// beat the current unit by YEAR_STICKINESS px.
+	const current = unitEls[activeUnit.value]
+	if (current && best !== activeUnit.value && bestDist > distTo(current) - YEAR_STICKINESS) {
+		best = activeUnit.value
+	}
 	activeUnit.value = best
 	const unitRect = unitEls[best]?.getBoundingClientRect()
 	const layoutRect = layoutEl?.getBoundingClientRect()
