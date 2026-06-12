@@ -542,7 +542,7 @@ useSeoMeta({
 				}
 
 				&__reel {
-					transition: transform 1.2s var(--ease-expo);
+					transition: transform 2s var(--ease-expo);
 				}
 			}
 		}
