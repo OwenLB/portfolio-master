@@ -27,7 +27,9 @@ onMounted(() => {
 	const loop = () => {
 		pos.x += (target.x - pos.x) * 0.06
 		pos.y += (target.y - pos.y) * 0.06
-		el.style.translate = `${(pos.x * 9).toFixed(2)}px ${(pos.y * 7).toFixed(2)}px`
+		// Never below the baseline: the photo's bottom edge is flush with the
+		// arc — a downward drift would poke out under it.
+		el.style.translate = `${(pos.x * 9).toFixed(2)}px ${Math.min(0, pos.y * 7).toFixed(2)}px`
 		raf = requestAnimationFrame(loop)
 	}
 	const start = () => {
