@@ -18,9 +18,6 @@ onMounted(() => {
 	let raf = 0
 	let running = false
 
-	// Slight overscale so the drifting photo never uncovers the arc's edges.
-	el.style.scale = '1.06'
-
 	const onMove = (event: MouseEvent) => {
 		const rect = host.getBoundingClientRect()
 		target.x = Math.max(-1, Math.min(1, (event.clientX - rect.left - rect.width / 2) / rect.width))
@@ -73,9 +70,9 @@ onMounted(() => {
 <style lang="scss" scoped>
 .app-portrait {
 	position: relative;
-	overflow: hidden;
-	border-radius: 50% 50% 0 0;
 
+	// No clipping: the photo is meant to overflow the arc (hand, head) —
+	// the parallax drift rides on top of it.
 	img {
 		will-change: translate;
 	}
