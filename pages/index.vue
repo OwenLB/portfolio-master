@@ -209,6 +209,7 @@ useSeoMeta({
 						</div>
 					</div>
 					<div v-reveal="120" class="me">
+						<ClientOnly><AppBadge/></ClientOnly>
 						<div class="arc">
 							<img alt="Owen LE BEC" class="arc-image" src="/images/owen.webp" width="420" height="420">
 						</div>

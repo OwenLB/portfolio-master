@@ -20,6 +20,7 @@
   "dependencies": {
     "@lottiefiles/lottie-player": "^1.7.1",
     "@nuxtjs/i18n": "^10.4.0",
-    "@nuxtjs/sitemap": "^8.0.15"
+    "@nuxtjs/sitemap": "^8.0.15",
+    "three": "^0.184.0"
   }
 }
