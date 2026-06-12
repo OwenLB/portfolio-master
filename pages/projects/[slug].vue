@@ -89,7 +89,10 @@ const {data: related}: { data: Project[] } = await useAsyncData(
 			<AppSection id="project__hero" desktop>
 				<div class="cell cell--triple-column">
 					<div class="overlay"></div>
-					<nuxt-img :alt="content.title" :src="coverSrc" preload sizes="xs:640 md:100vw"/>
+					<!-- Raw URL on purpose: it must match the home card/preview exactly so the
+					 shared-element morph starts from a warm cache (the CDN variant would
+					 load from scratch mid-transition). -->
+				<img :alt="content.title" :src="coverSrc" fetchpriority="high"/>
 					<p class="hero-meta">
 						<span class="hero-meta__label">{{ props.lang === Lang.Fr ? 'Projet' : 'Project' }}</span>
 						<template v-if="content.type">

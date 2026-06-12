@@ -34,11 +34,14 @@ const number = computed(() => props.index !== undefined ? String(props.index + 1
 const preview = ref<HTMLElement | null>(null)
 const hoverLabel = ref<HTMLElement | null>(null)
 const previewActive = ref(false)
-// The preview is NOT a view-transition element: morphing this small
-// teleported node into the hero proved glitchy (it unmounts mid-capture and
-// the image vanishes). Desktop relies on the title morph + the hero's own
-// entrance zoom; the mobile card still morphs whole (root vtCover < md).
-const previewStyle = computed(() => ({background: cover.value}))
+// The active preview is the desktop shared element morphing into the hero.
+// Robustness hinges on both ends using the SAME raw image URL (the hero must
+// not go through the image CDN, or the new snapshot waits on an uncached
+// variant and the picture blinks out mid-transition).
+const previewStyle = computed(() => ({
+	background: cover.value,
+	viewTransitionName: previewActive.value ? vtCover.value : 'none',
+}))
 let fine = false
 let placed = false
 let cancelDecode: (() => void) | null = null
