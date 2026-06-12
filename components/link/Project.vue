@@ -49,8 +49,19 @@ onMounted(() => {
 
 onUnmounted(() => cancelDecode?.())
 
+let tiltReset: ReturnType<typeof setTimeout> | undefined
+
 function place(event: MouseEvent) {
-	preview.value?.style.setProperty('transform', `translate3d(${event.clientX}px, ${event.clientY}px, 0)`)
+	const el = preview.value
+	if (!el) return
+	el.style.setProperty('transform', `translate3d(${event.clientX}px, ${event.clientY}px, 0)`)
+	// Directional lean: the image tilts a few degrees toward the cursor's
+	// motion (movementX), eased by the inner transform transition, and falls
+	// back upright as soon as the cursor rests.
+	const tilt = Math.max(-5, Math.min(5, event.movementX * 0.35))
+	el.style.setProperty('--preview-tilt', `${tilt.toFixed(2)}deg`)
+	clearTimeout(tiltReset)
+	tiltReset = setTimeout(() => el.style.setProperty('--preview-tilt', '0deg'), 90)
 }
 
 function onEnter(event: MouseEvent) {
@@ -78,6 +89,8 @@ function onLeave() {
 	previewActive.value = false
 	cancelDecode?.()
 	cancelDecode = null
+	clearTimeout(tiltReset)
+	preview.value?.style.setProperty('--preview-tilt', '0deg')
 }
 </script>
 
@@ -294,15 +307,18 @@ function onLeave() {
 	width: min(340px, 32vw);
 	aspect-ratio: 16 / 10;
 	border-radius: 6px;
-	box-shadow: 0 24px 64px -24px rgba(6, 20, 35, 0.6);
+	// 1px rule + shadow so screenshots of this very site don't melt into the
+	// page background (same color).
+	border: 1px solid var(--accent);
+	box-shadow: 0 28px 64px -20px rgba(6, 20, 35, 0.55);
 	opacity: 0;
-	transform: translate(space(6), calc(-100% - #{space(4)})) scale(0.85);
+	transform: translate(space(6), calc(-100% - #{space(4)})) scale(0.85) rotate(var(--preview-tilt, 0deg));
 	transform-origin: bottom left;
 	transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out);
 
 	&.is-active {
 		opacity: 1;
-		transform: translate(space(6), calc(-100% - #{space(4)})) scale(1);
+		transform: translate(space(6), calc(-100% - #{space(4)})) scale(1) rotate(var(--preview-tilt, 0deg));
 	}
 }
 </style>
