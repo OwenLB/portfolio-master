@@ -27,9 +27,10 @@ onMounted(() => {
 	const loop = () => {
 		pos.x += (target.x - pos.x) * 0.06
 		pos.y += (target.y - pos.y) * 0.06
-		// Never below the baseline: the photo's bottom edge is flush with the
-		// arc — a downward drift would poke out under it.
-		el.style.translate = `${(pos.x * 9).toFixed(2)}px ${Math.min(0, pos.y * 7).toFixed(2)}px`
+		// Sunk 8px at rest so the ±7px drift always stays in the clipped zone:
+		// no gap when drifting up, no overhang when drifting down (the wrapper
+		// clips everything below the arc line — see clip-path).
+		el.style.translate = `${(pos.x * 9).toFixed(2)}px ${(8 + pos.y * 7).toFixed(2)}px`
 		raf = requestAnimationFrame(loop)
 	}
 	const start = () => {
@@ -72,9 +73,10 @@ onMounted(() => {
 <style lang="scss" scoped>
 .app-portrait {
 	position: relative;
+	// Clip ONLY below the arc line: negative insets keep the top and sides
+	// free (the hand and head are meant to overflow the arc).
+	clip-path: inset(-40% -25% 0 -25%);
 
-	// No clipping: the photo is meant to overflow the arc (hand, head) —
-	// the parallax drift rides on top of it.
 	img {
 		will-change: translate;
 	}
