@@ -376,6 +376,101 @@ useSeoMeta({
 		}
 	}
 
+	// Experiences as a vertical timeline: a 1px rail in the grid's voice, one
+	// node per experience, a pulsing "live" dot on the current position. The
+	// rail draws itself on scroll where scroll-driven animations exist.
+	#home__projects {
+		.experiences-content {
+			position: relative;
+			padding-left: space(8);
+
+			// Rail
+			&::before {
+				content: '';
+				position: absolute;
+				left: 3px;
+				top: space(3);
+				bottom: space(8);
+				width: 1px;
+				background: var(--accent);
+				transform-origin: top;
+			}
+
+			> .experience {
+				position: relative;
+
+				// Node — aligned with the position title
+				&::before {
+					content: '';
+					position: absolute;
+					left: calc(space(-8) + 3.5px);
+					top: space(4);
+					width: 7px;
+					height: 7px;
+					border-radius: 50%;
+					transform: translateX(-50%);
+					background: var(--background);
+					border: 1px solid var(--primary);
+					transition: background-color var(--theme-t);
+				}
+
+				// Current position: filled dot + live pulse
+				&:first-child::before {
+					background: var(--primary);
+				}
+
+				&:first-child::after {
+					content: '';
+					position: absolute;
+					left: calc(space(-8) + 3.5px);
+					top: calc(space(4) + 3.5px);
+					width: 7px;
+					height: 7px;
+					border-radius: 50%;
+					translate: -50% -50%;
+					border: 1px solid var(--primary);
+				}
+			}
+		}
+
+		@media (prefers-reduced-motion: no-preference) {
+			.experiences-content > .experience:first-child::after {
+				animation: timeline-ping 2.6s var(--ease-out) infinite;
+			}
+
+			// Progressive enhancement: the rail grows as the section scrolls in.
+			@supports (animation-timeline: view()) {
+				.experiences-content::before {
+					animation: timeline-draw linear both;
+					animation-timeline: view();
+					animation-range: entry 0% cover 80%;
+				}
+			}
+		}
+	}
+
+	@keyframes timeline-ping {
+		0% {
+			scale: 1;
+			opacity: 0.9;
+		}
+
+		70%, 100% {
+			scale: 3.2;
+			opacity: 0;
+		}
+	}
+
+	@keyframes timeline-draw {
+		from {
+			transform: scaleY(0);
+		}
+
+		to {
+			transform: scaleY(1);
+		}
+	}
+
 	#about__experiences {
 		.right-col {
 			justify-content: space-between;

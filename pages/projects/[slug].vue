@@ -68,32 +68,15 @@ useHead(() => ({
 	}] : [],
 }))
 
-const {data: related, execute}: { data: Project[] } = await useAsyncData(
+// Eager: the query is a handful of titles/paths — lazy-loading it only made
+// the section pop in late and kept the links out of the prerendered HTML.
+const {data: related}: { data: Project[] } = await useAsyncData(
 	() => `related-${contentPath.value}-${props.lang}`,
 	() => queryContent('projects').where({_locale: props.lang}).only(['title', 'type', '_path']).findSurround(contentPath.value, {before: 3, after: 3}),
 	{
-		immediate: false,
 		transform: (projects) => projects.filter((project) => project !== null),
 	}
 )
-
-// Lazy-load the "related projects" query when its section scrolls into view,
-// instead of after an arbitrary 1s delay.
-const relatedRef = ref<HTMLElement | null>(null)
-
-onMounted(() => {
-	if (!relatedRef.value) {
-		execute()
-		return
-	}
-	const observer = new IntersectionObserver((entries, obs) => {
-		if (entries.some((entry) => entry.isIntersecting)) {
-			execute()
-			obs.disconnect()
-		}
-	}, {rootMargin: '200px'})
-	observer.observe(relatedRef.value)
-})
 </script>
 
 <template>
@@ -146,7 +129,7 @@ onMounted(() => {
 			</AppSection>
 
 			<AppSection id="project__related">
-				<div ref="relatedRef" class="cell cell--triple-column content">
+				<div class="cell cell--triple-column content">
 					<h2 v-decode v-reveal>{{ props.lang === Lang.Fr ? 'AUTRES PROJETS' : 'OTHER PROJECTS' }}</h2>
 					<div class="projects">
 						<LinkProject v-for="(project, index) in related" :key="project._path"
