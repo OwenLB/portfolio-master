@@ -144,10 +144,13 @@ function onLeave() {
 // Mobile: image card (the editorial row + floating preview is desktop-only).
 .project-link {
 	position: relative;
-	height: 100px;
+	min-height: 100px;
 	display: flex;
-	align-items: center;
-	padding: space(8) var(--main-space) var(--main-space);
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: space(1);
+	padding: space(8) var(--main-space) space(4);
 	background: v-bind(cover);
 	view-transition-name: v-bind(vtCover);
 
@@ -201,17 +204,12 @@ function onLeave() {
 		}
 	}
 
+	// Below the title, same metadata voice as the desktop index rows.
 	&__type {
-		position: absolute;
-		top: space(6);
-		right: space(6);
-		color: $light;
-		padding: space(2) space(4);
-		background: color.adjust($dark, $alpha: -0.5);
-		border-radius: space(10);
-		backdrop-filter: blur(space(2));
+		z-index: 1;
+		color: color.adjust($light, $alpha: -0.2);
 		font-family: var(--font-mono);
-		font-size: 0.8rem;
+		font-size: 0.75rem;
 	}
 
 	&__arrow {
@@ -240,6 +238,8 @@ function onLeave() {
 	.project-link {
 		height: auto;
 		flex: 1;
+		flex-direction: row;
+		align-items: center;
 		padding: space(6) 0;
 		background: none;
 		border-top: 1px solid var(--accent);
@@ -275,11 +275,7 @@ function onLeave() {
 		}
 
 		&__type {
-			display: block;
-			position: static;
-			padding: 0;
-			background: none;
-			backdrop-filter: none;
+			font-size: 0.8rem;
 			color: var(--text-accent);
 			transition: color var(--dur-fast) ease-in-out;
 		}

@@ -179,12 +179,18 @@ body {
 		display: contents;
 	}
 
-	// The trailing space(20) spacer row has no cell — without this the page's
-	// accent background showed through as a bare band under the footer.
+	// The trailing spacer row has no cell: the page's accent background and
+	// its 1px gap lines showed through as a bare framed box under the footer.
+	// An absolute strip (outside the grid, under the cells' z-index) blankets
+	// the whole bottom area on every page.
 	&::after {
 		content: '';
-		grid-column: 1 / -1;
-		grid-row: -2;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: space(25);
+		z-index: 1;
 		background: var(--background);
 		transition: background-color var(--theme-t);
 	}
