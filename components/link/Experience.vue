@@ -45,6 +45,11 @@ const labels = computed(() => lang.value === Lang.Fr ? {
   collapse: 'Hide details',
 })
 
+// Hardcoded duration from the content wins; otherwise computed from the
+// dates — ongoing positions ("Aujourd'hui") never go stale.
+const duration = (exp: { from?: string, to?: string, duration?: string }) =>
+    exp.duration || formatDuration(exp.from, exp.to, lang.value)
+
 const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 'results'>>) =>
     !!(exp.responsibilities?.length || exp.team || exp.results?.length)
 </script>
@@ -70,7 +75,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
         <span>{{ experience.from }}</span>
         <hr>
         <span>{{ experience.to }}</span>
-        <span>{{ experience.duration }}</span>
+        <span>{{ duration(experience) }}</span>
       </div>
     </div>
     <div v-if="experience.content" class="experience__content">
@@ -125,7 +130,7 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
             <span>{{ sub.from }}</span>
             <hr>
             <span>{{ sub.to }}</span>
-            <span>{{ sub.duration }}</span>
+            <span>{{ duration(sub) }}</span>
           </div>
         </div>
         <div class="experience__content">
