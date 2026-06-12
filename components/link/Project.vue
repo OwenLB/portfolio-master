@@ -50,31 +50,28 @@ onMounted(() => {
 onUnmounted(() => cancelDecode?.())
 
 let restTimer: ReturnType<typeof setTimeout> | undefined
-let vx = 0
-let vy = 0
 
 const clamp = (v: number, max: number) => Math.max(-max, Math.min(max, v))
 
 function rest(el: HTMLElement) {
-	vx = 0
-	vy = 0
 	el.style.setProperty('--preview-tilt', '0deg')
-	el.style.setProperty('--preview-shift-x', '0px')
-	el.style.setProperty('--preview-shift-y', '0px')
 }
 
+// Anchored repulsion: the preview lives at a fixed anchor above the row's
+// center and shifts AWAY from the cursor — cursor left of the anchor pushes
+// it right, approaching it makes it recede, leaving lets it drift back. The
+// wrapper's transform transition turns those retargets into an organic glide.
 function place(event: MouseEvent) {
 	const el = preview.value
 	if (!el) return
-	el.style.setProperty('transform', `translate3d(${event.clientX}px, ${event.clientY}px, 0)`)
-	// Organic motion: smoothed cursor velocity drives a trailing offset (the
-	// image lags behind its anchor, with mass) and a directional lean. The
-	// inner transform transition eases everything; on rest it settles back.
-	vx = vx * 0.75 + event.movementX * 0.25
-	vy = vy * 0.75 + event.movementY * 0.25
-	el.style.setProperty('--preview-tilt', `${clamp(vx * 0.55, 8).toFixed(2)}deg`)
-	el.style.setProperty('--preview-shift-x', `${clamp(vx * -1.6, 24).toFixed(1)}px`)
-	el.style.setProperty('--preview-shift-y', `${clamp(vy * -1.6, 18).toFixed(1)}px`)
+	const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+	const anchorX = rect.left + rect.width / 2
+	const anchorY = rect.top
+	const offsetX = clamp((anchorX - event.clientX) * 0.22, 64)
+	const offsetY = clamp((anchorY - event.clientY) * 0.4, 22)
+	el.style.setProperty('transform', `translate3d(${(anchorX + offsetX).toFixed(1)}px, ${(anchorY + offsetY).toFixed(1)}px, 0)`)
+	// Directional lean while the cursor travels, upright at rest.
+	el.style.setProperty('--preview-tilt', `${clamp(event.movementX * 0.4, 6).toFixed(2)}deg`)
 	clearTimeout(restTimer)
 	restTimer = setTimeout(() => rest(el), 90)
 }
@@ -327,17 +324,14 @@ function onLeave() {
 	border: 1px solid var(--accent);
 	box-shadow: 0 28px 64px -20px rgba(6, 20, 35, 0.55);
 	opacity: 0;
-	transform: translate(calc(#{space(6)} + var(--preview-shift-x, 0px)), calc(-100% - #{space(4)} + var(--preview-shift-y, 0px)))
-	scale(0.85)
-	rotate(var(--preview-tilt, 0deg));
-	transform-origin: bottom left;
+	// Centered above the anchor (the row's top-center).
+	transform: translate(-50%, calc(-100% - #{space(3)})) scale(0.85) rotate(var(--preview-tilt, 0deg));
+	transform-origin: bottom center;
 	transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out);
 
 	&.is-active {
 		opacity: 1;
-		transform: translate(calc(#{space(6)} + var(--preview-shift-x, 0px)), calc(-100% - #{space(4)} + var(--preview-shift-y, 0px)))
-		scale(1)
-		rotate(var(--preview-tilt, 0deg));
+		transform: translate(-50%, calc(-100% - #{space(3)})) scale(1) rotate(var(--preview-tilt, 0deg));
 	}
 }
 </style>

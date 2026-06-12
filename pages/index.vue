@@ -33,33 +33,60 @@ const {data: socials}: {
 	data: Socials
 } = await useAsyncData('socials', () => queryContent('/socials').only(['body']).findOne())
 
-// Year of each experience (from its localized start date) — drives the
-// giant rolling counter.
+// End year of each experience ("Aujourd'hui"/"Now" → current year) — the
+// giant counter reads 2026 → 2021 going down the timeline (back in time).
 const experienceYears = computed(() =>
-	((experiencesData.value?.items ?? []) as { from?: string }[]).map((item) => item.from?.match(/\d{4}/)?.[0] ?? ''))
+	((experiencesData.value?.items ?? []) as { to?: string }[]).map((item) => {
+		const to = item.to ?? ''
+		return /aujourd|now|today/i.test(to) ? String(new Date().getFullYear()) : to.match(/\d{4}/)?.[0] ?? ''
+	}))
 
-// Scrollytelling: the experience crossing the viewport's middle band drives
-// the spotlight (is-current) and the giant year counter.
+// Scrollytelling: the experience NEAREST a reference line (40% of the
+// viewport) drives the spotlight and the year counter. Nearest — not "inside
+// a band" — so the last entries still win at the bottom of the page, where
+// the scroll stops before they could ever reach the middle of the screen.
 const activeExp = ref(0)
 const activeYear = computed(() => experienceYears.value[activeExp.value] ?? '')
 const yearDigits = computed(() => activeYear.value.padStart(4, '0').split('').map(Number))
-let expObserver: IntersectionObserver | null = null
+let expEls: Element[] = []
+let expRaf = 0
+
+const updateActiveExp = () => {
+	expRaf = 0
+	const line = window.innerHeight * 0.4
+	let best = 0
+	let bestDist = Infinity
+	expEls.forEach((el, index) => {
+		const rect = el.getBoundingClientRect()
+		const dist = Math.abs(rect.top + rect.height / 2 - line)
+		if (dist < bestDist) {
+			bestDist = dist
+			best = index
+		}
+	})
+	// Fully scrolled: the last (often short) entry can never get near the
+	// reference line — hand it the spotlight anyway.
+	if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+		best = expEls.length - 1
+	}
+	activeExp.value = best
+}
+
+const onExpScroll = () => {
+	expRaf ||= requestAnimationFrame(updateActiveExp)
+}
 
 onMounted(() => {
-	const els = Array.from(document.querySelectorAll('#home__projects .experiences-content > .experience'))
-	if (!els.length) return
-	expObserver = new IntersectionObserver((entries) => {
-		for (const entry of entries) {
-			if (entry.isIntersecting) {
-				const index = els.indexOf(entry.target)
-				if (index !== -1) activeExp.value = index
-			}
-		}
-	}, {rootMargin: '-38% 0px -52% 0px'})
-	els.forEach((el) => expObserver!.observe(el))
+	expEls = Array.from(document.querySelectorAll('#home__projects .experiences-content > .experience'))
+	if (!expEls.length) return
+	updateActiveExp()
+	window.addEventListener('scroll', onExpScroll, {passive: true})
 })
 
-onUnmounted(() => expObserver?.disconnect())
+onUnmounted(() => {
+	window.removeEventListener('scroll', onExpScroll)
+	cancelAnimationFrame(expRaf)
+})
 
 const seoTitle = computed(() => props.lang === Lang.Fr ? 'Owen LE BEC — Ingénieur logiciel Full Stack' : 'Owen LE BEC — Full Stack Software Engineer')
 
@@ -172,7 +199,7 @@ useSeoMeta({
 						<div v-if="activeYear" aria-hidden="true" class="experiences-year">
 							<div class="experiences-year__inner">
 								<span v-for="(digit, i) in yearDigits" :key="i" class="experiences-year__digit">
-									<span :style="{transform: `translateY(${-digit}em)`}" class="experiences-year__reel">
+									<span :style="{transform: `translateY(${-digit * 1.3}em)`}" class="experiences-year__reel">
 										<span v-for="n in 10" :key="n">{{ n - 1 }}</span>
 									</span>
 								</span>
@@ -454,13 +481,13 @@ useSeoMeta({
 				transition: color var(--theme-t);
 			}
 
+			// Reel step is 1.3em (line-height 1.3): the font's ink box is ~1.24em
+			// so each digit's ink fits inside its own step — no more cropped
+			// digit tops, and the next digit can't peek into the 0.95em window.
 			&__digit {
 				display: block;
 				overflow: hidden;
-				// Shorter than the 1em reel step: digit ink stops at ~0.74em but
-				// the next digit's ink overshoots ~0.1em above its box (line
-				// box taller than 1em) — 0.88em hides that sliver.
-				height: 0.88em;
+				height: 0.95em;
 			}
 
 			&__reel {
@@ -469,7 +496,8 @@ useSeoMeta({
 
 				span {
 					display: block;
-					height: 1em;
+					height: 1.3em;
+					line-height: 1.3;
 					text-align: center;
 				}
 			}
