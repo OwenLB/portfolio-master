@@ -49,19 +49,34 @@ onMounted(() => {
 
 onUnmounted(() => cancelDecode?.())
 
-let tiltReset: ReturnType<typeof setTimeout> | undefined
+let restTimer: ReturnType<typeof setTimeout> | undefined
+let vx = 0
+let vy = 0
+
+const clamp = (v: number, max: number) => Math.max(-max, Math.min(max, v))
+
+function rest(el: HTMLElement) {
+	vx = 0
+	vy = 0
+	el.style.setProperty('--preview-tilt', '0deg')
+	el.style.setProperty('--preview-shift-x', '0px')
+	el.style.setProperty('--preview-shift-y', '0px')
+}
 
 function place(event: MouseEvent) {
 	const el = preview.value
 	if (!el) return
 	el.style.setProperty('transform', `translate3d(${event.clientX}px, ${event.clientY}px, 0)`)
-	// Directional lean: the image tilts a few degrees toward the cursor's
-	// motion (movementX), eased by the inner transform transition, and falls
-	// back upright as soon as the cursor rests.
-	const tilt = Math.max(-5, Math.min(5, event.movementX * 0.35))
-	el.style.setProperty('--preview-tilt', `${tilt.toFixed(2)}deg`)
-	clearTimeout(tiltReset)
-	tiltReset = setTimeout(() => el.style.setProperty('--preview-tilt', '0deg'), 90)
+	// Organic motion: smoothed cursor velocity drives a trailing offset (the
+	// image lags behind its anchor, with mass) and a directional lean. The
+	// inner transform transition eases everything; on rest it settles back.
+	vx = vx * 0.75 + event.movementX * 0.25
+	vy = vy * 0.75 + event.movementY * 0.25
+	el.style.setProperty('--preview-tilt', `${clamp(vx * 0.55, 8).toFixed(2)}deg`)
+	el.style.setProperty('--preview-shift-x', `${clamp(vx * -1.6, 24).toFixed(1)}px`)
+	el.style.setProperty('--preview-shift-y', `${clamp(vy * -1.6, 18).toFixed(1)}px`)
+	clearTimeout(restTimer)
+	restTimer = setTimeout(() => rest(el), 90)
 }
 
 function onEnter(event: MouseEvent) {
@@ -89,8 +104,8 @@ function onLeave() {
 	previewActive.value = false
 	cancelDecode?.()
 	cancelDecode = null
-	clearTimeout(tiltReset)
-	preview.value?.style.setProperty('--preview-tilt', '0deg')
+	clearTimeout(restTimer)
+	if (preview.value) rest(preview.value)
 }
 </script>
 
@@ -312,13 +327,17 @@ function onLeave() {
 	border: 1px solid var(--accent);
 	box-shadow: 0 28px 64px -20px rgba(6, 20, 35, 0.55);
 	opacity: 0;
-	transform: translate(space(6), calc(-100% - #{space(4)})) scale(0.85) rotate(var(--preview-tilt, 0deg));
+	transform: translate(calc(#{space(6)} + var(--preview-shift-x, 0px)), calc(-100% - #{space(4)} + var(--preview-shift-y, 0px)))
+	scale(0.85)
+	rotate(var(--preview-tilt, 0deg));
 	transform-origin: bottom left;
 	transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out);
 
 	&.is-active {
 		opacity: 1;
-		transform: translate(space(6), calc(-100% - #{space(4)})) scale(1) rotate(var(--preview-tilt, 0deg));
+		transform: translate(calc(#{space(6)} + var(--preview-shift-x, 0px)), calc(-100% - #{space(4)} + var(--preview-shift-y, 0px)))
+		scale(1)
+		rotate(var(--preview-tilt, 0deg));
 	}
 }
 </style>
