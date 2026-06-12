@@ -208,6 +208,7 @@ const {data: related}: { data: Project[] } = await useAsyncData(
 				position: absolute;
 				inset: 0;
 				object-fit: cover;
+				object-position: top center;
 				width: 100%;
 				height: 100%;
 			}

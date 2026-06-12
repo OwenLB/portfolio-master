@@ -18,7 +18,7 @@ const coverSrc = computed(() => {
 	const suffix = theme.value === 'dark' ? '-dark' : ''
 	return `/images${props.path}${suffix}.webp`
 })
-const cover = computed(() => `url("${coverSrc.value}") no-repeat center / cover`)
+const cover = computed(() => `url("${coverSrc.value}") no-repeat top center / cover`)
 const slug = computed(() => props.path.split('/').pop())
 const vtCover = computed(() => props.shared ? `project-cover-${slug.value}` : 'none')
 const vtTitle = computed(() => props.shared ? `project-title-${slug.value}` : 'none')
@@ -158,7 +158,13 @@ function onLeave() {
 	}
 
 	&__index {
-		display: none;
+		position: absolute;
+		top: space(3);
+		left: var(--main-space);
+		z-index: 1;
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		color: color.adjust($light, $alpha: -0.25);
 	}
 
 	// A one-line clip window holding the two stacked labels of the hover
@@ -196,7 +202,6 @@ function onLeave() {
 	}
 
 	&__type {
-		display: none;
 		position: absolute;
 		top: space(6);
 		right: space(6);
@@ -250,7 +255,7 @@ function onLeave() {
 		}
 
 		&__index {
-			display: block;
+			position: static;
 			font-family: var(--font-mono);
 			font-size: 0.8rem;
 			color: var(--text-accent);

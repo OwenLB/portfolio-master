@@ -164,7 +164,7 @@ body {
 .page {
 	position: relative;
 	display: grid;
-	grid-template-columns: minmax(space(6), calc((100% - 1200px) / 2)) repeat(2, minmax(auto, 400px)) minmax(space(6), calc((100% - 1200px) / 2));
+	grid-template-columns: minmax(space(6), calc((100% - 1200px) / 2)) repeat(2, minmax(0, 400px)) minmax(space(6), calc((100% - 1200px) / 2));
 	gap: 1px;
 	background: var(--accent);
 	// clip, not hidden: hidden turns .page into a scrollport, which silently
@@ -177,6 +177,16 @@ body {
 
 	main {
 		display: contents;
+	}
+
+	// The trailing space(20) spacer row has no cell — without this the page's
+	// accent background showed through as a bare band under the footer.
+	&::after {
+		content: '';
+		grid-column: 1 / -1;
+		grid-row: -2;
+		background: var(--background);
+		transition: background-color var(--theme-t);
 	}
 }
 
@@ -269,7 +279,7 @@ h2 {
 
 @media screen and (min-width: $md) {
 	.page {
-		grid-template-columns: minmax(space(10), calc((100% - 1200px) / 2))  repeat(3, minmax(auto, 400px)) minmax(space(10), calc((100% - 1200px) / 2));
+		grid-template-columns: minmax(space(10), calc((100% - 1200px) / 2))  repeat(3, minmax(0, 400px)) minmax(space(10), calc((100% - 1200px) / 2));
 	}
 
 	.cell {
