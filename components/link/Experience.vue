@@ -179,7 +179,8 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
   gap: space(2);
 
   @media screen and (max-width: $md) {
-    width: 295px;
+    width: 100%;
+    min-width: 0;
   }
 
   .experience__header {
@@ -285,6 +286,11 @@ const hasDetails = (exp: Partial<Pick<Experience, 'responsibilities' | 'team' | 
   h3 {
     font-size: 1.125rem;
     font-weight: 500;
+  }
+
+  &__content {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   &__infos, &__dates {
